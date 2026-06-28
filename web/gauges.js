@@ -1,5 +1,5 @@
-const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-const ANON_KEY = 'YOUR_ANON_KEY';
+const SUPABASE_URL = 'https://vfkoegvzllxvshcnfbox.supabase.co';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZma29lZ3Z6bGx4dnNoY25mYm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NzE1MTcsImV4cCI6MjA5ODI0NzUxN30.PdQ8fbjVE0s8LoTED5WHyb1zx8WU-X3QqO4td9XBHqo';
 const REFRESH_MS = 10 * 60 * 1000; // re-fetch every 10 min
 
 function ageLabel(isoString) {
