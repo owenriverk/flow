@@ -1,0 +1,17 @@
+{
+  "name": "flow",
+  "version": "0.1.0",
+  "description": "Satellite-text river-gauge bot for whitewater kayakers",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260627.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
