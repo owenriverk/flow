@@ -84,10 +84,21 @@ async function fetchCdec(station: string, sensor: number, dur: string): Promise<
     const good = rows.filter(r => typeof r.value === 'number' && r.value > -9998);
     const last = good[good.length - 1];
     if (!last) return { discharge: null, stage: null, reading_time: new Date().toISOString() };
-    // "2026-6-27 23:00" (CDEC PST, unpadded) → ISO with -08:00
+    // "2026-6-27 23:00" (CDEC Pacific local time, unpadded) → ISO with Pacific offset
     const m = (last.obsDate ?? '').match(/^(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{2})/);
+    // CDEC timestamps are Pacific local time (PST in winter, PDT in summer).
+    // Determine the current Pacific offset by checking US DST boundaries.
+    const pacificOffset = (() => {
+      const now = new Date();
+      const yr = now.getUTCFullYear();
+      // DST starts 2nd Sunday in March at 2am local (10am UTC)
+      const dstStart = new Date(Date.UTC(yr, 2, 8 + (7 - new Date(Date.UTC(yr, 2, 8)).getUTCDay()) % 7, 10));
+      // DST ends 1st Sunday in November at 2am local (9am UTC)
+      const dstEnd = new Date(Date.UTC(yr, 10, 1 + (7 - new Date(Date.UTC(yr, 10, 1)).getUTCDay()) % 7, 9));
+      return now >= dstStart && now < dstEnd ? '-07:00' : '-08:00';
+    })();
     const dt = m
-      ? `${m[1]}-${m[2]!.padStart(2,'0')}-${m[3]!.padStart(2,'0')}T${m[4]!.padStart(2,'0')}:${m[5]}:00-08:00`
+      ? `${m[1]}-${m[2]!.padStart(2,'0')}-${m[3]!.padStart(2,'0')}T${m[4]!.padStart(2,'0')}:${m[5]}:00${pacificOffset}`
       : new Date().toISOString();
     const isStage = (last.units ?? '').toUpperCase() === 'FEET';
     return {

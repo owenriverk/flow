@@ -50,7 +50,7 @@ The app requires Supabase credentials to fetch live river flow data.
 Example:
 ```javascript
 const SUPABASE_URL = 'https://your-project-id.supabase.co';
-const SUPABASE_KEY = 'your-anon-key-here';
+const ANON_KEY = 'your-anon-key-here';
 ```
 
 ## Verification

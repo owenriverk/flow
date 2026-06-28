@@ -3,7 +3,10 @@
 -- IMPORTANT: This migration must be run AFTER:
 -- 1. Enabling the pg_cron extension in the Supabase dashboard:
 --    Database → Extensions → Search "pg_cron" → Enable
--- 2. Deploying the refresh-gauges Edge Function (Task 3)
+-- 2. Enabling the pg_net extension in the Supabase dashboard:
+--    Database → Extensions → pg_net → Enable
+--    (required because net.http_post depends on it)
+-- 3. Deploying the refresh-gauges Edge Function (Task 3)
 --
 -- To run this: paste this SQL into the Supabase SQL Editor and execute it.
 
