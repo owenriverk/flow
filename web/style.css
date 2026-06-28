@@ -1,0 +1,105 @@
+:root {
+  --bg: #f9f7f4;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --row-low:   #fee2e2;
+  --row-good:  #dcfce7;
+  --row-high:  #dbeafe;
+  --row-grey:  #f3f4f6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 2.5rem 1.25rem;
+}
+
+.container { max-width: 900px; margin: 0 auto; }
+
+h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.35rem; }
+h1 a { text-decoration: none; color: inherit; }
+
+.tagline { font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem; }
+
+h2 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2rem 0 0.75rem;
+}
+
+.steps { list-style: none; }
+.steps li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.steps li:first-child { border-top: 1px solid var(--border); }
+
+.cta { margin-top: 1.5rem; }
+.cta a { font-weight: 600; }
+
+.footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+a { color: inherit; }
+a:hover { text-decoration: underline; }
+
+/* ── gauges page ── */
+.meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend { display: flex; gap: 1.25rem; font-size: 0.85rem; align-items: center; }
+.dot {
+  display: inline-block;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.dot-low  { background: #ef4444; }
+.dot-good { background: #22c55e; }
+.dot-high { background: #3b82f6; }
+
+.refresh-note { font-size: 0.8rem; color: var(--muted); margin-left: auto; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+
+th {
+  text-align: left;
+  padding: 0.45rem 0.75rem;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--border); }
+
+tr.low   td { background: var(--row-low); }
+tr.good  td { background: var(--row-good); }
+tr.high  td { background: var(--row-high); }
+tr.grey  td { background: var(--row-grey); color: var(--muted); }
+
+.flow { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cmd  { font-family: ui-monospace, "Cascadia Code", monospace; font-size: 0.82rem; }
+.age  { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
