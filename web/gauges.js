@@ -65,7 +65,7 @@ function render(rows) {
 
   const fetchedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   document.getElementById('refresh-note').textContent =
-    `Gauge data refreshes every 15 min · fetched at ${fetchedAt}`;
+    `Gauge data refreshes every 10 min · fetched at ${fetchedAt}`;
 }
 
 load();
