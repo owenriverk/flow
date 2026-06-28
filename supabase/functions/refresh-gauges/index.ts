@@ -142,7 +142,7 @@ Deno.serve(async () => {
 
   const errors = results
     .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
-    .map(r => r.reason as string);
+    .map(r => r.reason instanceof Error ? r.reason.message : String(r.reason));
 
   return new Response(
     JSON.stringify({ updated: results.length - errors.length, errors }),
