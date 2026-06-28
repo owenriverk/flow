@@ -3,3 +3,5 @@ dist/
 .dev.vars
 .wrangler/
 *.log
+.superpowers/
+.env.local
