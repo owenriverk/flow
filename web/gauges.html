@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gauges — Flow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1><a href="index.html">Flow</a></h1>
+    <p class="tagline">Live flows for all supported gauges</p>
+
+    <div class="meta-row">
+      <div class="legend">
+        <span><span class="dot dot-low"></span>Low</span>
+        <span><span class="dot dot-good"></span>Good</span>
+        <span><span class="dot dot-high"></span>High</span>
+      </div>
+      <span class="refresh-note" id="refresh-note">Loading…</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>River</th>
+            <th>Location</th>
+            <th>Flow</th>
+            <th>Text this</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody id="gauge-body"></tbody>
+      </table>
+    </div>
+
+    <p class="footer">
+      <a href="index.html">← How it works</a> · flow@lateboof.com
+    </p>
+  </div>
+  <script src="gauges.js"></script>
+</body>
+</html>
