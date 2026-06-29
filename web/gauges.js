@@ -1,6 +1,13 @@
 const SUPABASE_URL = 'https://vfkoegvzllxvshcnfbox.supabase.co';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZma29lZ3Z6bGx4dnNoY25mYm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NzE1MTcsImV4cCI6MjA5ODI0NzUxN30.PdQ8fbjVE0s8LoTED5WHyb1zx8WU-X3QqO4td9XBHqo';
-const REFRESH_MS = 10 * 60 * 1000; // re-fetch every 10 min
+const REFRESH_MS = 10 * 60 * 1000;
+const COLSPAN = 5;
+
+let allRows = [];
+let sortCol = 'name';
+let sortDir = 'asc';
+let filterText = '';
+let filterStatus = 'all';
 
 function ageLabel(isoString) {
   if (!isoString) return '—';
@@ -34,39 +41,129 @@ function flowText(g) {
   return '—';
 }
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[char]);
+}
+
+function sortValue(g, col) {
+  switch (col) {
+    case 'name':     return g.name.toLowerCase();
+    case 'location': return g.location.toLowerCase();
+    case 'flow':     return g.discharge != null ? Number(g.discharge) : -Infinity;
+    case 'text_key': return g.text_key.toLowerCase();
+    case 'updated':  return g.reading_time ? new Date(g.reading_time).getTime() : -Infinity;
+    default: return '';
+  }
+}
+
+function applyFiltersAndSort() {
+  let rows = allRows;
+
+  if (filterText) {
+    const q = filterText.toLowerCase();
+    rows = rows.filter(g =>
+      g.name.toLowerCase().includes(q) ||
+      g.location.toLowerCase().includes(q) ||
+      g.text_key.toLowerCase().includes(q)
+    );
+  }
+
+  if (filterStatus !== 'all') {
+    rows = rows.filter(g => rowClass(g) === filterStatus);
+  }
+
+  rows = [...rows].sort((a, b) => {
+    const av = sortValue(a, sortCol);
+    const bv = sortValue(b, sortCol);
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  renderRows(rows);
+  updateHeaders();
+}
+
+function renderRows(rows) {
+  const tbody = document.getElementById('gauge-body');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr class="message-row"><td colspan="${COLSPAN}">No rivers match.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(g => {
+    const status   = rowClass(g);
+    const gaugeUrl = escapeHtml(g.gauge_url);
+    const name     = escapeHtml(g.name);
+    const location = escapeHtml(g.location);
+    const flow     = escapeHtml(flowText(g));
+    const textKey  = escapeHtml(g.text_key);
+    const age      = escapeHtml(ageLabel(g.reading_time));
+    return `<tr class="${status}">
+      <td data-label="River"><a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a></td>
+      <td class="location" data-label="Location">${location}</td>
+      <td class="flow" data-label="Flow">${flow}</td>
+      <td class="cmd" data-label="Text this">${textKey}</td>
+      <td class="age" data-label="Updated">${age}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateHeaders() {
+  document.querySelectorAll('th[data-col]').forEach(th => {
+    th.dataset.dir = th.dataset.col === sortCol ? sortDir : '';
+  });
+}
+
 async function load() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/gauges?select=*&order=name.asc`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/gauges?select=*`, {
       headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rows = await res.json();
-    render(rows);
+    allRows = await res.json();
+    applyFiltersAndSort();
+
+    const fetchedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('refresh-note').textContent =
+      `Gauge data refreshes every 10 min · fetched at ${fetchedAt}`;
   } catch (e) {
     document.getElementById('refresh-note').textContent =
       'Could not load gauge data — try refreshing.';
+    document.getElementById('gauge-body').innerHTML =
+      `<tr class="message-row"><td colspan="${COLSPAN}">Could not load gauge data. Try refreshing.</td></tr>`;
     console.error(e);
   }
 }
 
-function render(rows) {
-  const tbody = document.getElementById('gauge-body');
-  tbody.innerHTML = rows
-    .map(
-      (g) => `<tr class="${rowClass(g)}">
-        <td><a href="${g.gauge_url}" target="_blank" rel="noopener">${g.name}</a></td>
-        <td>${g.location}</td>
-        <td class="flow">${flowText(g)}</td>
-        <td class="cmd">${g.text_key}</td>
-        <td class="age">${ageLabel(g.reading_time)}</td>
-      </tr>`,
-    )
-    .join('');
+// Sort: click header to sort asc; click again to flip desc
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    sortDir = sortCol === col && sortDir === 'asc' ? 'desc' : 'asc';
+    sortCol = col;
+    applyFiltersAndSort();
+  });
+});
 
-  const fetchedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  document.getElementById('refresh-note').textContent =
-    `Gauge data refreshes every 10 min · fetched at ${fetchedAt}`;
-}
+// Text search
+document.getElementById('filter-input').addEventListener('input', e => {
+  filterText = e.target.value.trim();
+  applyFiltersAndSort();
+});
 
+// Status filter buttons
+document.querySelectorAll('.status-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterStatus = btn.dataset.status;
+    document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFiltersAndSort();
+  });
+});
+
+document.getElementById('gauge-body').innerHTML =
+  `<tr class="message-row"><td colspan="${COLSPAN}">Loading…</td></tr>`;
 load();
 setInterval(load, REFRESH_MS);
