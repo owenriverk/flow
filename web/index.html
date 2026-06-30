@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LateBoof — river gauges</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='22' font-family='monospace' fill='%23111'>lb</text></svg>">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -38,7 +38,7 @@
       <thead>
         <tr>
           <th class="sortable" data-col="name">River</th>
-          <th class="sortable" data-col="location">Location</th>
+          <th class="sortable col-location" data-col="location">Location</th>
           <th class="sortable" data-col="flow">Flow</th>
           <th class="sortable" data-col="text_key">Text this</th>
           <th class="sortable" data-col="updated">Updated</th>
@@ -49,7 +49,8 @@
   </div>
 
   <footer class="site-footer">
-    Add flow@lateboof.com as an InReach contact. Text a gauge name (e.g. <em>mf salmon</em>, <em>grand canyon</em>, <em>chilko</em>). No cell signal needed.
+    <span>Add flow@lateboof.com as an InReach contact. Text a gauge name (e.g. <em>mf salmon</em>, <em>grand canyon</em>, <em>chilko</em>). No cell signal needed.</span>
+    <a class="footer-status" href="status.html">Status</a>
   </footer>
 
   <script src="gauges.js"></script>
