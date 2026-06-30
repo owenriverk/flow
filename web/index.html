@@ -3,57 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LateBoof — river flow by satellite</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='22' font-family='system-ui,sans-serif' fill='%23196b69'>lb</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>LateBoof — river gauges</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='22' font-family='monospace' fill='%23111'>lb</text></svg>">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="site-shell">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Satellite river gauges</p>
-        <h1>LateBoof</h1>
-        <p class="tagline">Text a river name from your InReach. Get the flow back over satellite — no cell signal needed.</p>
-        <div class="actions">
-          <a class="button" href="gauges.html">See all gauges</a>
-        </div>
-      </div>
+  <header class="site-header">
+    <span class="brand">LateBoof</span>
+    <span class="header-sub">Text <strong>flow@lateboof.com</strong> from your InReach — flow comes back over satellite</span>
+  </header>
 
-      <div class="river-mark" aria-hidden="true">
-        <span class="river-line line-one"></span>
-        <span class="river-line line-two"></span>
-        <span class="river-line line-three"></span>
-      </div>
-    </section>
+  <div class="meta-row">
+    <div class="legend">
+      <span><span class="dot dot-low"></span>Below range</span>
+      <span><span class="dot dot-good"></span>In range</span>
+      <span><span class="dot dot-high"></span>Above range</span>
+    </div>
+    <span class="refresh-note" id="refresh-note">Loading…</span>
+  </div>
 
-    <section class="content-grid" aria-labelledby="how-it-works">
-      <div>
-        <p class="section-kicker">How it works</p>
-        <h2 id="how-it-works">Works anywhere your InReach does.</h2>
-      </div>
-      <ol class="steps">
-        <li>
-          <span>01</span>
-          <p>Add <strong>flow@lateboof.com</strong> as an InReach contact.</p>
-        </li>
-        <li>
-          <span>02</span>
-          <p>Text a gauge name, like <em>mf salmon</em>, <em>grand canyon</em>, or <em>chilko</em>.</p>
-        </li>
-        <li>
-          <span>03</span>
-          <p>You get the flow back in seconds, over satellite.</p>
-        </li>
-      </ol>
-    </section>
+  <div class="filter-bar">
+    <input type="search" id="filter-input" class="search-input" placeholder="Search rivers…" autocomplete="off">
+    <div class="status-btns">
+      <button class="status-btn active" data-status="all">All</button>
+      <button class="status-btn btn-low"  data-status="low">Low</button>
+      <button class="status-btn btn-good" data-status="good">Good</button>
+      <button class="status-btn btn-high" data-status="high">High</button>
+      <button class="status-btn"          data-status="grey">No data</button>
+    </div>
+  </div>
 
-    <section class="closing">
-      <p>Built for paddlers, by a paddler.</p>
-      <a href="gauges.html">Browse the gauge directory</a>
-    </section>
-  </main>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="sortable" data-col="name">River</th>
+          <th class="sortable" data-col="location">Location</th>
+          <th class="sortable" data-col="flow">Flow</th>
+          <th class="sortable" data-col="text_key">Text this</th>
+          <th class="sortable" data-col="updated">Updated</th>
+        </tr>
+      </thead>
+      <tbody id="gauge-body"></tbody>
+    </table>
+  </div>
+
+  <footer class="site-footer">
+    Add flow@lateboof.com as an InReach contact. Text a gauge name (e.g. <em>mf salmon</em>, <em>grand canyon</em>, <em>chilko</em>). No cell signal needed.
+  </footer>
+
+  <script src="gauges.js"></script>
 </body>
 </html>
