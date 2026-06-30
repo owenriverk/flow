@@ -19,7 +19,8 @@
 import { parseInbound } from './parseInbound.js';
 import { handleQuery as defaultHandleQuery } from './handleQuery.js';
 import { replyToInreach as defaultReplyToInreach } from './replyToInreach.js';
-import type { GaugeAlias } from './lookupGauge.js';
+import type { GaugeAlias, GaugeSource } from './lookupGauge.js';
+import type { Reading } from './formatReply.js';
 
 export interface InboundDeps {
   aliases: Record<string, GaugeAlias>;
@@ -27,6 +28,7 @@ export interface InboundDeps {
   replyToInreach?: (token: string, text: string) => Promise<void>;
   replyByEmail?: (text: string) => Promise<void>;
   resolveFuzzy?: (text: string) => Promise<string | null>;
+  fetchCached?: (source: GaugeSource, site: string) => Promise<Reading | null>;
   onNoReplyPath?: (query: string) => void;
 }
 
@@ -35,7 +37,12 @@ export async function handleInbound(body: string, deps: InboundDeps): Promise<vo
 
   const handleQueryFn =
     deps.handleQueryFn ??
-    ((text: string) => defaultHandleQuery(text, { aliases: deps.aliases, resolveFuzzy: deps.resolveFuzzy }));
+    ((text: string) =>
+      defaultHandleQuery(text, {
+        aliases: deps.aliases,
+        resolveFuzzy: deps.resolveFuzzy,
+        fetchCached: deps.fetchCached,
+      }));
   const reply = await handleQueryFn(query);
 
   if (token) {

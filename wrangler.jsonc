@@ -10,5 +10,12 @@
   // Workers AI: last-resort fuzzy run-name matching (src/aiResolve.ts).
   "ai": { "binding": "AI" },
   // Daily call counter that caps AI usage to stay in the free neuron tier (src/budget.ts).
-  "kv_namespaces": [{ "binding": "AI_BUDGET", "id": "28d0e260644e478784cc7bb7a7c4b277" }]
+  "kv_namespaces": [{ "binding": "AI_BUDGET", "id": "28d0e260644e478784cc7bb7a7c4b277" }],
+  // Outbound email for failure alerts. Locked to a single recipient at the config level.
+  "send_email": [{ "name": "SEND_EMAIL", "destination_address": "okurthdev@gmail.com" }],
+  // Supabase project for last-known-good cache fallback.
+  "vars": {
+    "SUPABASE_URL": "https://vfkoegvzllxvshcnfbox.supabase.co",
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZma29lZ3Z6bGx4dnNoY25mYm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NzE1MTcsImV4cCI6MjA5ODI0NzUxN30.PdQ8fbjVE0s8LoTED5WHyb1zx8WU-X3QqO4td9XBHqo"
+  }
 }

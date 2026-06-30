@@ -14,6 +14,7 @@
  */
 
 import { formatReply, type Reading } from './formatReply.js';
+import type { GaugeSource } from './lookupGauge.js';
 import { lookupGauge, type GaugeAlias } from './lookupGauge.js';
 import { GaugeError } from './errors.js';
 import { fetchReading as fetchUsgsDefault } from './usgs.js';
@@ -39,6 +40,7 @@ export interface HandleQueryDeps {
   fetchCdec?: (station: string, cfg: CdecConfig) => Promise<Reading>;
   fetchDreamflows?: (riverId: string) => Promise<Reading>;
   fetchNoaa?: (stationId: string) => Promise<Reading>;
+  fetchCached?: (source: GaugeSource, site: string) => Promise<Reading | null>;
   /** Last-resort fuzzy matcher (Workers AI). Only called when lookup misses. */
   resolveFuzzy?: (text: string) => Promise<string | null>;
 }
@@ -81,6 +83,10 @@ export async function handleQuery(text: string, deps: HandleQueryDeps): Promise<
     return formatReply(ref, reading);
   } catch (e) {
     if (e instanceof GaugeError && e.kind === 'not_found') return NOT_FOUND;
+    if (deps.fetchCached) {
+      const cached = await deps.fetchCached(ref.source, ref.site).catch(() => null);
+      if (cached) return formatReply(ref, cached, { offline: true });
+    }
     return UNAVAILABLE;
   }
 }

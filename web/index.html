@@ -11,7 +11,20 @@
   <header class="site-header">
     <span class="brand">LateBoof</span>
     <span class="header-sub">Text <strong>flow@lateboof.com</strong> from your InReach — flow comes back over satellite</span>
+    <button class="contact-btn" id="contact-btn" aria-label="Save contact">+ contact</button>
   </header>
+
+  <dialog class="contact-dialog" id="contact-dialog" aria-label="Save LateBoof contact">
+    <div class="contact-dialog-inner">
+      <button class="dialog-close" id="dialog-close" aria-label="Close">✕</button>
+      <div class="dialog-title">Add to contacts</div>
+      <div class="dialog-email">flow@lateboof.com</div>
+      <img class="contact-qr" src="contact-qr.svg" alt="QR code — scan to add contact" width="180" height="180">
+      <div class="dialog-hint qr-hint">Scan with your phone camera to add the contact</div>
+      <a class="save-contact-btn" href="flow.vcf" download="LateBoof.vcf">Save contact (.vcf)</a>
+      <div class="dialog-hint">Downloads a contact card — open it to import into your phone</div>
+    </div>
+  </dialog>
 
   <div class="meta-row">
     <div class="legend">
@@ -54,5 +67,11 @@
   </footer>
 
   <script src="gauges.js"></script>
+  <script>
+    const dialog = document.getElementById('contact-dialog');
+    document.getElementById('contact-btn').addEventListener('click', () => dialog.showModal());
+    document.getElementById('dialog-close').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+  </script>
 </body>
 </html>

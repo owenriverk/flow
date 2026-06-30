@@ -45,6 +45,114 @@ a:hover { text-decoration-color: currentColor; }
   font-size: 0.75rem;
 }
 
+/* ── Contact button ── */
+.contact-btn {
+  padding: 0.28rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.contact-btn:hover { background: #ececec; }
+
+/* ── Contact dialog ── */
+.contact-dialog {
+  border: 2px solid var(--border);
+  border-radius: 0;
+  padding: 0;
+  max-width: 320px;
+  width: 92vw;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.82rem;
+}
+.contact-dialog::backdrop { background: rgba(0,0,0,0.45); }
+
+.contact-dialog-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 1.4rem 1.2rem 1.2rem;
+  position: relative;
+}
+
+.dialog-close {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--faint);
+  padding: 0.1rem 0.3rem;
+  font-family: inherit;
+}
+.dialog-close:hover { color: var(--text); }
+
+.dialog-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
+  align-self: flex-start;
+}
+
+.dialog-email {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  align-self: flex-start;
+}
+
+.contact-qr {
+  display: block;
+  width: 180px;
+  height: 180px;
+  image-rendering: pixelated;
+}
+
+.save-contact-btn {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--border);
+  background: var(--text);
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 0.2rem;
+}
+.save-contact-btn:hover { background: #333; }
+
+.dialog-hint {
+  font-size: 0.68rem;
+  color: var(--faint);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* On touch devices, QR is secondary — hide it and promote the download button */
+@media (hover: none) and (pointer: coarse) {
+  .contact-qr  { display: none; }
+  .qr-hint     { display: none; }
+}
+
 /* ── Legend / meta row ── */
 .meta-row {
   display: flex;

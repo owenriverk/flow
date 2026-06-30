@@ -49,7 +49,13 @@ function flowLine(r: Reading): string {
   return parts.length > 0 ? parts.join(' / ') : 'no current reading';
 }
 
-function timeLine(r: Reading): string {
+function timeLine(r: Reading, offline: boolean): string {
+  if (offline) {
+    const ageMs = Date.now() - r.observedAt.getTime();
+    const ageHr = Math.round(ageMs / 3_600_000);
+    const age = ageHr < 1 ? '< 1 hr ago' : `${ageHr} hr ago`;
+    return `[offline] cached ${age}`;
+  }
   const local = new Date(r.observedAt.getTime() + r.offsetMinutes * 60_000);
   const hh = String(local.getUTCHours()).padStart(2, '0');
   const mm = String(local.getUTCMinutes()).padStart(2, '0');
@@ -61,9 +67,10 @@ function displayName(ref: GaugeRef, r: Reading): string {
   return r.usgsName ?? '';
 }
 
-export function formatReply(ref: GaugeRef, reading: Reading): string {
+export function formatReply(ref: GaugeRef, reading: Reading, opts?: { offline?: boolean }): string {
+  const offline = opts?.offline ?? false;
   const idLabel = { usgs: 'USGS', wsc: 'WSC', cdec: 'CDEC', dreamflows: 'Dreamflows', noaa: 'NOAA' }[ref.source];
-  const fixed = [`${idLabel} ${ref.site}`, flowLine(reading), timeLine(reading)].join('\n');
+  const fixed = [`${idLabel} ${ref.site}`, flowLine(reading), timeLine(reading, offline)].join('\n');
   const name = displayName(ref, reading);
   if (name === '') return fixed;
 
