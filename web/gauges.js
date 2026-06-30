@@ -137,8 +137,7 @@ async function load() {
     applyFiltersAndSort();
 
     const fetchedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('refresh-note').textContent =
-      `Gauge data refreshes every 10 min · fetched at ${fetchedAt}`;
+    document.getElementById('refresh-note').textContent = `fetched at ${fetchedAt}`;
   } catch (e) {
     document.getElementById('refresh-note').textContent =
       'Could not load gauge data — try refreshing.';

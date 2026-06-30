@@ -64,6 +64,63 @@ async function fetchWsc(station: string): Promise<Reading> {
   }
 }
 
+// Null out discharge/stage if the API returns a timestamp older than 48 hours.
+// This catches decommissioned stations that return stale historical readings.
+const MAX_READING_AGE_MS = 48 * 60 * 60 * 1000;
+function withStalenessCheck(r: Reading): Reading {
+  const age = Date.now() - new Date(r.reading_time).getTime();
+  if (age > MAX_READING_AGE_MS) return { discharge: null, stage: null, reading_time: r.reading_time };
+  return r;
+}
+
+function parseCsvRow(line: string): string[] {
+  const fields: string[] = [];
+  let field = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i]!;
+    if (ch === '"') { inQuotes = !inQuotes; }
+    else if (ch === ',' && !inQuotes) { fields.push(field.trim()); field = ''; }
+    else { field += ch; }
+  }
+  fields.push(field.trim());
+  return fields;
+}
+
+async function fetchDreamflowsMap(): Promise<Map<string, string[]>> {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    const res = await fetch('https://www.dreamflows.com/downloads/realtime.csv', { signal: ctrl.signal });
+    if (!res.ok) return new Map();
+    const text = await res.text();
+    const map = new Map<string, string[]>();
+    for (const line of text.split('\n').slice(7)) {
+      if (!line.trim()) continue;
+      const cols = parseCsvRow(line);
+      if (cols[0]) map.set(cols[0], cols);
+    }
+    return map;
+  } catch {
+    return new Map();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function dreamflowsReading(rows: Map<string, string[]>, riverId: string): Reading {
+  const cols = rows.get(riverId);
+  if (!cols) return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+  const rawFlow = cols[7] ?? '';
+  const discharge = Number(rawFlow);
+  if (!rawFlow || !Number.isFinite(discharge)) {
+    return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+  }
+  const dateStr = cols[3] ?? '';
+  const timeStr = cols[4] ?? '';
+  return { discharge, stage: null, reading_time: `${dateStr}T${timeStr}:00-08:00` };
+}
+
 async function fetchCdec(station: string, sensor: number, dur: string): Promise<Reading> {
   const end = new Date();
   const start = new Date(end.getTime() - 5 * 86_400_000);
@@ -117,15 +174,21 @@ Deno.serve(async () => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
+  // Fetch Dreamflows CSV once (25 KB) for all Dreamflows gauges — no need to download per-gauge.
+  const hasDreamflows = GAUGES.some(g => g.source === 'dreamflows');
+  const dreamflowsMap = hasDreamflows ? await fetchDreamflowsMap() : new Map<string, string[]>();
+
   const results = await Promise.allSettled(
     GAUGES.map(async (g) => {
       let reading: Reading;
       if (g.source === 'wsc') {
-        reading = await fetchWsc(g.site);
+        reading = withStalenessCheck(await fetchWsc(g.site));
       } else if (g.source === 'cdec') {
-        reading = await fetchCdec(g.site, g.sensor!, g.dur!);
+        reading = withStalenessCheck(await fetchCdec(g.site, g.sensor!, g.dur!));
+      } else if (g.source === 'dreamflows') {
+        reading = withStalenessCheck(dreamflowsReading(dreamflowsMap, g.site));
       } else {
-        reading = await fetchUsgs(g.site);
+        reading = withStalenessCheck(await fetchUsgs(g.site));
       }
 
       const { error } = await client.from('gauges').upsert({

@@ -22,8 +22,8 @@
   "john day": { "site": "14046500", "name": "John Day R", "location": "Service Creek, OR" },
   "grande ronde": { "site": "13333000", "name": "Grande Ronde R", "location": "Troy, OR" },
   "hells canyon": { "site": "13290450", "name": "Snake R", "location": "Hells Canyon Dam" },
-  "alsek": { "site": "15129000", "name": "Alsek R", "location": "Dry Bay, AK" },
-  "tatshenshini": { "site": "15129000", "name": "Alsek R", "location": "Dry Bay, AK" },
+  "alsek": { "site": "08AB001", "name": "Alsek R", "location": "above Bates R, YT", "source": "wsc" },
+  "tatshenshini": { "site": "08AB001", "name": "Alsek R", "location": "above Bates R, YT", "source": "wsc" },
   "flathead": { "site": "12358500", "name": "MF Flathead R", "location": "West Glacier, MT" },
   "smith": { "site": "06077500", "name": "Smith R", "location": "Eden, MT" },
   "allagash": { "site": "01011000", "name": "Allagash R", "location": "Allagash, ME" },
@@ -46,6 +46,8 @@
 
   "nahanni": { "site": "10EB001", "name": "S Nahanni R", "location": "Virginia Falls, NT", "source": "wsc" },
   "stikine": { "site": "08CE001", "name": "Stikine R", "location": "Telegraph Creek, BC", "source": "wsc" },
+  "chilko": { "site": "08MA002", "name": "Chilko R", "location": "Chilko Lake, BC", "source": "wsc" },
+  "firth": { "site": "10HF001", "name": "Firth R", "location": "near Mouth, YT", "source": "wsc" },
 
   "fantasy falls": { "site": "M38", "name": "NF Mokelumne", "location": "ab Tiger Creek, CA", "source": "cdec", "sensor": 20, "dur": "H" },
   "nf mokelumne": { "site": "M38", "name": "NF Mokelumne", "location": "ab Tiger Creek, CA", "source": "cdec", "sensor": 20, "dur": "H" },

@@ -207,9 +207,9 @@ tbody tr.grey td:first-child { border-left: 4px solid var(--border-mid); }
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-tr.low  .flow { color: var(--low); }
-tr.good .flow { color: var(--good); }
-tr.high .flow { color: var(--high); }
+tr.low  .flow { color: var(--low);   background: #fff0f0; padding: 0.1em 0.35em; }
+tr.good .flow { color: var(--good);  background: #edfaed; padding: 0.1em 0.35em; }
+tr.high .flow { color: var(--high);  background: #eef2ff; padding: 0.1em 0.35em; }
 tr.grey .flow { color: var(--faint); }
 
 /* Text command */
