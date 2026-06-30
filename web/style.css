@@ -114,13 +114,15 @@ a:hover { text-decoration-color: currentColor; }
 
 .status-btns { display: flex; }
 
+/* Buttons are high-contrast by default (black text on white) so the
+   active inversion (white on black) reads as a physical "pressed" state. */
 .status-btn {
-  padding: 0.22rem 0.55rem;
+  padding: 0.28rem 0.65rem;
   border: 1px solid var(--border);
   border-left-width: 0;
   border-radius: 0;
   background: var(--bg);
-  color: var(--muted);
+  color: var(--text);
   font-family: inherit;
   font-size: 0.7rem;
   font-weight: 700;
@@ -130,7 +132,7 @@ a:hover { text-decoration-color: currentColor; }
 }
 .status-btns .status-btn:first-child { border-left-width: 1px; }
 
-.status-btn:hover              { background: #ececec; color: var(--text); }
+.status-btn:hover              { background: #ececec; }
 .status-btn.active             { background: var(--text); border-color: var(--text); color: var(--bg); }
 .status-btn.btn-low.active     { background: var(--low);  border-color: var(--low);  color: #fff; }
 .status-btn.btn-good.active    { background: var(--good); border-color: var(--good); color: #fff; }
@@ -186,6 +188,13 @@ tbody tr.grey td:first-child { border-left: 4px solid var(--border-mid); }
   text-decoration-thickness: 1px;
 }
 
+/* Location shown as sub-line inside the River cell on narrow screens */
+.river-sub {
+  display: none;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
 .location {
   color: var(--muted);
   font-size: 0.78rem;
@@ -211,11 +220,16 @@ tr.grey .flow { color: var(--faint); }
   letter-spacing: 0.01em;
 }
 
+/* Updated timestamp */
 .age {
   color: var(--faint);
   font-size: 0.72rem;
   white-space: nowrap;
 }
+/* Stale: data is old enough to be unreliable — show more prominently */
+.age.age-stale   { color: var(--muted); }
+/* Offline: clearly broken timestamp (72+ hours) — red flag */
+.age.age-offline { color: var(--low); font-weight: 600; }
 
 /* Empty / loading row */
 .message-row td {
@@ -234,13 +248,31 @@ th.sortable[data-dir="desc"]::after { content: ' ↓'; }
 
 /* ── Footer ── */
 .site-footer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 0.55rem 1rem;
   border-top: 1px solid var(--border-light);
   color: var(--faint);
   font-size: 0.72rem;
 }
 
-/* ── Mobile ── */
+.footer-status {
+  white-space: nowrap;
+  color: var(--faint);
+  text-decoration-color: var(--border-light);
+}
+
+/* ── Narrow table: collapse Location column into River cell ── */
+/* Between 640px cards and 860px we still show a table, but the Location
+   column is dropped and its text appears as a sub-line under the river name. */
+@media (max-width: 860px) {
+  .col-location { display: none; }
+  .river-sub    { display: block; }
+}
+
+/* ── Mobile cards (≤ 640px) ── */
 @media (max-width: 640px) {
   .site-header {
     flex-direction: column;
@@ -290,8 +322,15 @@ th.sortable[data-dir="desc"]::after { content: ' ↓'; }
   td:first-child::before { display: none; }
   td:first-child { padding-bottom: 0.25rem; }
 
+  /* .col-location is already display:none from the 860px rule — no repeat needed */
+
   .river-name { font-size: 1rem; }
   .flow       { font-size: 1.15rem; }
+
+  .site-footer {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
 
   .message-row td {
     padding: 1.5rem 0;

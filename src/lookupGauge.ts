@@ -11,7 +11,7 @@
  * the fetcher hits -- explicit, not guessed downstream.
  */
 
-export type GaugeSource = 'usgs' | 'wsc' | 'cdec';
+export type GaugeSource = 'usgs' | 'wsc' | 'cdec' | 'dreamflows';
 
 export interface GaugeAlias {
   site: string;
@@ -42,6 +42,28 @@ function normalize(text: string): string {
   return text.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+function toRef(alias: GaugeAlias): GaugeRef {
+  const ref: GaugeRef = {
+    site: alias.site,
+    source: alias.source ?? 'usgs',
+    name: alias.name,
+    location: alias.location,
+  };
+  if (alias.sensor !== undefined) ref.sensor = alias.sensor;
+  if (alias.dur !== undefined) ref.dur = alias.dur;
+  return ref;
+}
+
+/** Does `phrase` appear in `text` as a whole word/phrase (not mid-word)? */
+function containsPhrase(text: string, phrase: string): boolean {
+  return (
+    text === phrase ||
+    text.startsWith(`${phrase} `) ||
+    text.endsWith(` ${phrase}`) ||
+    text.includes(` ${phrase} `)
+  );
+}
+
 export function lookupGauge(
   text: string,
   aliases: Record<string, GaugeAlias>,
@@ -49,23 +71,23 @@ export function lookupGauge(
   const key = normalize(text);
   if (key === '') return null;
 
-  const alias = aliases[key];
-  if (alias) {
-    const ref: GaugeRef = {
-      site: alias.site,
-      source: alias.source ?? 'usgs',
-      name: alias.name,
-      location: alias.location,
-    };
-    if (alias.sensor !== undefined) ref.sensor = alias.sensor;
-    if (alias.dur !== undefined) ref.dur = alias.dur;
-    return ref;
-  }
+  // 1. Exact alias.
+  if (aliases[key]) return toRef(aliases[key]!);
 
-  // Raw-id detection runs on the uppercased original so WSC letters survive.
+  // 2. Raw id (uppercased original so WSC letters survive).
   const raw = text.trim().toUpperCase();
   if (USGS_ID.test(raw)) return { site: raw, source: 'usgs' };
   if (WSC_ID.test(raw)) return { site: raw, source: 'wsc' };
+
+  // 3. Phrase-contains: a known run name appearing as a whole phrase inside the
+  //    message (handles "middle kings at rodger's"). Longest match wins.
+  let best: string | null = null;
+  for (const candidate of Object.keys(aliases)) {
+    if (containsPhrase(key, candidate) && (best === null || candidate.length > best.length)) {
+      best = candidate;
+    }
+  }
+  if (best) return toRef(aliases[best]!);
 
   return null;
 }

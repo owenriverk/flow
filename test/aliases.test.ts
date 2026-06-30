@@ -7,6 +7,7 @@ const table = aliases as Record<string, GaugeAlias>;
 const USGS_ID = /^\d{8,15}$/;
 const WSC_ID = /^\d{2}[A-Z]{2}\d{3}$/;
 const CDEC_ID = /^[A-Z0-9]{3}$/;
+const DREAMFLOWS_ID = /^\d{1,3}$/;
 
 describe('aliases.json', () => {
   test('every entry has a name, a location, and a valid id for its source', () => {
@@ -18,6 +19,8 @@ describe('aliases.json', () => {
       } else if (entry.source === 'cdec') {
         expect(entry.site, `${key} cdec site`).toMatch(CDEC_ID);
         expect(typeof entry.sensor, `${key} cdec sensor`).toBe('number');
+      } else if (entry.source === 'dreamflows') {
+        expect(entry.site, `${key} dreamflows site`).toMatch(DREAMFLOWS_ID);
       } else {
         expect(entry.source ?? 'usgs', `${key} source`).toBe('usgs');
         expect(entry.site, `${key} usgs site`).toMatch(USGS_ID);

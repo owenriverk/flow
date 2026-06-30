@@ -5,3 +5,6 @@ dist/
 *.log
 .superpowers/
 .env.local
+.gstack/
+.DS_Store
+supabase/.temp/

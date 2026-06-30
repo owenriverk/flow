@@ -3,19 +3,29 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const REFRESH_MS = 10 * 60 * 1000;
 const COLSPAN = 5;
 
+// Reading timestamps older than this are flagged visually.
+const STALE_WARN_HRS  = 2;   // muted warning style
+const OFFLINE_HRS     = 72;  // [OFFLINE] — clearly broken
+
 let allRows = [];
 let sortCol = 'name';
 let sortDir = 'asc';
 let filterText = '';
 let filterStatus = 'all';
 
-function ageLabel(isoString) {
-  if (!isoString) return '—';
-  const mins = Math.floor((Date.now() - new Date(isoString).getTime()) / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins} min ago`;
+/**
+ * Returns { label, cls } for a reading timestamp.
+ * cls is '' (fresh), 'age-stale' (> 2 hr), or 'age-offline' (> 72 hr or missing).
+ */
+function ageInfo(isoString) {
+  if (!isoString) return { label: '—', cls: 'age-offline' };
+  const mins = (Date.now() - new Date(isoString).getTime()) / 60000;
+  if (mins < 1)  return { label: 'just now', cls: '' };
+  if (mins < 60) return { label: `${Math.floor(mins)} min ago`, cls: '' };
   const h = Math.floor(mins / 60);
-  return h === 1 ? '1 hr ago' : `${h} hr ago`;
+  if (h >= OFFLINE_HRS) return { label: '[OFFLINE]', cls: 'age-offline' };
+  if (h >= STALE_WARN_HRS) return { label: `${h} hr ago`, cls: 'age-stale' };
+  return { label: '1 hr ago', cls: '' };
 }
 
 function rowClass(g) {
@@ -99,13 +109,14 @@ function renderRows(rows) {
     const location = escapeHtml(g.location);
     const flow     = escapeHtml(flowText(g));
     const textKey  = escapeHtml(g.text_key);
-    const age      = escapeHtml(ageLabel(g.reading_time));
+    const { label, cls: ageCls } = ageInfo(g.reading_time);
+    const age = escapeHtml(label);
     return `<tr class="${status}">
-      <td data-label="River"><a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a></td>
-      <td class="location" data-label="Location">${location}</td>
+      <td data-label="River"><a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a><span class="river-sub">${location}</span></td>
+      <td class="location col-location" data-label="Location">${location}</td>
       <td class="flow" data-label="Flow">${flow}</td>
       <td class="cmd" data-label="Text this">${textKey}</td>
-      <td class="age" data-label="Updated">${age}</td>
+      <td class="age${ageCls ? ' ' + ageCls : ''}" data-label="Updated">${age}</td>
     </tr>`;
   }).join('');
 }

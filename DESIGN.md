@@ -41,27 +41,33 @@ signal, no login. It turns a $400 satellite messenger into a river-flow oracle.
    no server to keep alive. (Chosen over Railway in /plan-eng-review.)
 6. **A2P 10DLC registration** is deferred to the v2 SMS phase. Not needed for email.
 
-## How the email path works
-- Dedicated inbox: a Gmail address, or a domain address on **Cloudflare Email
-  Routing** (both free).
-- Paddler adds the address as an InReach contact and sends e.g. `gauley summersville`.
-- Garmin emails the inbox **from a unique per-message reply address**. Replying to
-  that email routes the reply back to the device — no phone number or web form needed.
-- Bot parses the query, calls USGS, and **replies to the Garmin address** via SMTP.
-- iPhone satellite is SMS/iMessage only (no email), so it is **out of scope for v1**
-  by design — it is the reason SMS is the v2 unlock.
-
-**Load-bearing assumption to verify first:** that replying to the Garmin email
-actually reaches the device. Documented Garmin behavior, but prove it before building.
+## How the email path works (CONFIRMED with a real InReach 2026-06-28)
+- Domain `lateboof.com` on **Cloudflare Email Routing**, catch-all → Worker. Free.
+- Paddler adds `flows@lateboof.com` as an InReach contact and sends e.g. `middle kings`.
+- Garmin emails the inbox from `no.reply.inreach@garmin.com`. The body is the query
+  followed by a footer containing a reply link `https://inreachlink.com/<token>`.
+- **You CANNOT reply by email.** Garmin's auto-reply: "Replies to this email are not
+  answered... return to the original email and click the link." The only reply path
+  is the web form behind that link. (This disproved the original email-reply plan.)
+- **Reply mechanism (verified live, returned `{"Success":true}` + landed on device):**
+  1. Extract `<token>` from the inbound email body.
+  2. GET `https://inreachlink.com/<token>` → redirects to `https://<pod>.explore.garmin.com/textmessage/txtmsg?extId=<token>` (pod = us0/eu0/… — read it from the redirect, do not hardcode).
+  3. Scrape `MessageId`, `Guid`, `ReplyAddress` from the page HTML.
+  4. POST form-urlencoded `{ReplyAddress, ReplyMessage, MessageId, Guid}` to
+     `https://<pod>.explore.garmin.com/TextMessage/TxtMsg`. `{"Success":true}` = delivered.
+- Caveat: this is an **unofficial Garmin endpoint**. Monitor reply failures; if Garmin
+  changes the form, SMS (v2) becomes the fallback.
+- iPhone satellite is SMS only (no email), so it stays **out of scope for v1**.
 
 ## Architecture (locked via /plan-eng-review)
 - **Host:** Cloudflare Email Routing + Email Worker (TypeScript). Inbound mail
-  triggers the Worker; reply via `message.reply()` (built with a MIME helper like
-  `mimetext`, carrying correct `In-Reply-To`/`References` headers).
-- **Prerequisite:** a domain managed by Cloudflare with Email Routing enabled.
+  triggers the Worker; reply via the Garmin web-form POST (see above), NOT email reply.
+- **Prerequisite:** a domain managed by Cloudflare with Email Routing enabled. ✓ done.
 - **Module boundaries** (single responsibility, thin Worker adapter):
-  - `parseInbound(emailMsg)` → `{ query, replyTo }` — strips Garmin footer/tracking
-    link, captures the exact reply address.
+  - `parseInbound(body)` → `{ query, token }` — strips Garmin footer, pulls the
+    `inreachlink.com` reply token out of the body.
+  - `replyToInreach(token, text, deps)` → resolves the pod, scrapes Guid/MessageId/
+    ReplyAddress, POSTs the reply. Throws on non-`Success`.
   - `lookupGauge(text)` → `siteId | null` — normalize (lowercase/trim/collapse
     spaces), exact alias match, else 8-digit raw ID passthrough, else null.
   - `usgs(siteId)` → `reading` — fetch IV API with an ~8s timeout.
@@ -76,10 +82,13 @@ InReach ──sat──▶ Garmin relay ──email──▶ Cloudflare Email Ro
                                               ▼
                                         Worker email()
                                    parseInbound → handleQuery
-                                   ( lookupGauge → usgs → formatReply )
+                                   ( lookupGauge → usgs/wsc/cdec → formatReply )
                                               │
                                               ▼
-                                   message.reply() ──▶ Garmin ──▶ device
+                          replyToInreach: GET token page → POST web form
+                                              │
+                                              ▼
+                                   us0.explore.garmin.com ──▶ Garmin ──▶ device
 ```
 
 ## Failure modes (each needs a test AND a user-visible reply, never silence)
@@ -109,8 +118,8 @@ that prevent silent field failures.
 - USGS response caching — nice-to-have, tracked as a TODO, not a v1 blocker.
 
 ## Domain
-**boofdaddy.com** (chosen). Email Routing on Cloudflare; the texted address can be
-short, e.g. `flow@boofdaddy.com`.
+**lateboof.com** (chosen). Email Routing on Cloudflare; the texted address can be
+short, e.g. `flow@lateboof.com`.
 
 ## Units
 Native per region: US (USGS + CDEC) → **cfs / ft**, Canada (WSC) → **cms / m**. Each

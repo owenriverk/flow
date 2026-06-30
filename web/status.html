@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LateBoof — Status</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='22' font-family='monospace' fill='%23111'>lb</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .status-page { max-width: 44rem; padding: 1.5rem 1rem; }
+    .status-page h2 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .status-page p  { color: var(--muted); font-size: 0.82rem; margin-bottom: 1.2rem; line-height: 1.7; }
+    .status-page ul { color: var(--muted); font-size: 0.82rem; margin: 0.3rem 0 1.2rem 1.2rem; line-height: 1.8; }
+    .ok   { color: var(--good); font-weight: 700; }
+    .warn { color: var(--low);  font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
+    <span class="header-sub">System status</span>
+  </header>
+
+  <div class="status-page">
+    <h2>Current status</h2>
+    <p>
+      <span class="ok">● All systems operational</span><br>
+      No known issues as of the last manual update. If the gauge table shows
+      <strong>[OFFLINE]</strong> for many rivers simultaneously, an upstream data
+      feed may be delayed — check the sources below directly.
+    </p>
+
+    <h2>Data sources</h2>
+    <ul>
+      <li><strong>USGS</strong> — <a href="https://waterservices.usgs.gov" target="_blank" rel="noopener">waterservices.usgs.gov</a> · instantaneous values API</li>
+      <li><strong>CDEC</strong> — <a href="https://cdec.water.ca.gov" target="_blank" rel="noopener">cdec.water.ca.gov</a> · California Data Exchange Center</li>
+      <li><strong>Dreamflows</strong> — <a href="https://www.dreamflows.com" target="_blank" rel="noopener">dreamflows.com</a> · California virtual gauges (realtime.csv, updated every 30–60 min)</li>
+      <li><strong>WSC / Water Survey Canada</strong> — <a href="https://wateroffice.ec.gc.ca" target="_blank" rel="noopener">wateroffice.ec.gc.ca</a> · Canadian stations</li>
+    </ul>
+
+    <h2>Reporting issues</h2>
+    <p>
+      If a gauge appears incorrect or a river is missing, email
+      <a href="mailto:developers@saambaa.com">developers@saambaa.com</a>.
+      Include the river name and what you expected to see.
+    </p>
+  </div>
+
+  <footer class="site-footer">
+    <span><a href="/">← Back to gauge directory</a></span>
+  </footer>
+</body>
+</html>

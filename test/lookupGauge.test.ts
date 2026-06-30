@@ -8,6 +8,8 @@ const aliases: Record<string, GaugeAlias> = {
   'fantasy falls': {
     site: 'NSS', name: 'NF Mokelumne', location: 'Salt Springs, CA', source: 'cdec', sensor: 76,
   },
+  salt: { site: '09498500', name: 'Salt R', location: 'Roosevelt, AZ' },
+  'salt river': { site: '09497500', name: 'Salt R upper', location: 'Chrysotile, AZ' },
 };
 
 describe('lookupGauge', () => {
@@ -58,6 +60,32 @@ describe('lookupGauge', () => {
 
   test('recognizes a raw WSC station number, normalized to uppercase', () => {
     expect(lookupGauge('08ce001', aliases)).toEqual({ site: '08CE001', source: 'wsc' });
+  });
+
+  test('phrase-contains: resolves a known run name embedded in a longer message', () => {
+    expect(lookupGauge('running gauley summersville tomorrow', aliases)).toEqual({
+      site: '03189100',
+      source: 'usgs',
+      name: 'Gauley R',
+      location: 'Summersville, WV',
+    });
+  });
+
+  test('phrase-contains: handles a trailing qualifier ("at the dam")', () => {
+    expect(lookupGauge('gauley summersville at the dam', aliases)).toMatchObject({ site: '03189100' });
+  });
+
+  test('phrase match is whole-word: "assault" does not match the "salt" run', () => {
+    expect(lookupGauge('assault on the river', aliases)).toBeNull();
+  });
+
+  test('phrase-contains prefers the longest matching run name', () => {
+    // "salt river canyon" contains both "salt" and "salt river" — the longer wins.
+    expect(lookupGauge('salt river canyon trip', aliases)).toMatchObject({ site: '09497500' });
+  });
+
+  test('exact match still takes priority over phrase scanning', () => {
+    expect(lookupGauge('stikine', aliases)).toMatchObject({ site: '08CE001', source: 'wsc' });
   });
 
   test('returns null for an unknown name', () => {

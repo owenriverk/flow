@@ -10,6 +10,7 @@ const aliases: Record<string, GaugeAlias> = {
   'fantasy falls': {
     site: 'NSS', name: 'NF Mokelumne', location: 'Salt Springs, CA', source: 'cdec', sensor: 76, dur: 'D',
   },
+  'middle kings': { site: '100', name: 'Kings R', location: 'Rodgers Crossing, CA', source: 'dreamflows' },
 };
 
 const reading: Reading = {
@@ -26,6 +27,7 @@ function deps(over: Partial<Parameters<typeof handleQuery>[1]> = {}) {
     fetchUsgs: vi.fn(async () => reading),
     fetchWsc: vi.fn(async () => reading),
     fetchCdec: vi.fn(async () => reading),
+    fetchDreamflows: vi.fn(async () => reading),
     ...over,
   };
 }
@@ -53,6 +55,15 @@ describe('handleQuery', () => {
     await handleQuery('10EB001', d);
     expect(d.fetchWsc).toHaveBeenCalledWith('10EB001');
     expect(d.fetchUsgs).not.toHaveBeenCalled();
+  });
+
+  test('routes a dreamflows run to the Dreamflows fetcher by river id', async () => {
+    const d = deps();
+    const out = await handleQuery('middle kings', d);
+    expect(d.fetchDreamflows).toHaveBeenCalledWith('100');
+    expect(d.fetchUsgs).not.toHaveBeenCalled();
+    expect(d.fetchWsc).not.toHaveBeenCalled();
+    expect(out).toContain('Dreamflows 100');
   });
 
   test('routes a cdec run to the CDEC fetcher with its sensor + dur config', async () => {
@@ -103,6 +114,26 @@ describe('handleQuery', () => {
       }),
     });
     expect(await handleQuery('gauley summersville', d)).toBe(UNAVAILABLE);
+  });
+
+  test('falls back to the AI fuzzy matcher when lookup misses, then resolves', async () => {
+    const resolveFuzzy = vi.fn(async () => 'gauley summersville');
+    const d = deps({ resolveFuzzy });
+    const out = await handleQuery('the gauley', d);
+    expect(resolveFuzzy).toHaveBeenCalledWith('the gauley');
+    expect(d.fetchUsgs).toHaveBeenCalledWith('03189100');
+    expect(out).toContain('Gauley R');
+  });
+
+  test('AI returns no match → NOT_FOUND', async () => {
+    const resolveFuzzy = vi.fn(async () => null);
+    expect(await handleQuery('zzz total nonsense', deps({ resolveFuzzy }))).toBe(NOT_FOUND);
+  });
+
+  test('exact match short-circuits — the AI matcher is never called', async () => {
+    const resolveFuzzy = vi.fn(async () => 'gauley summersville');
+    await handleQuery('gauley summersville', deps({ resolveFuzzy }));
+    expect(resolveFuzzy).not.toHaveBeenCalled();
   });
 
   test('every canned reply fits the 160-char satellite limit', () => {

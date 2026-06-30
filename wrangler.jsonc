@@ -1,0 +1,14 @@
+{
+  // Cloudflare Email Worker for the Flow river-gauge bot.
+  // After `wrangler deploy`, bind it in the dashboard:
+  //   Email → Email Routing → Routing rules → Catch-all → action "Send to a Worker" → flow.
+  "name": "flow",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-06-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  // Workers AI: last-resort fuzzy run-name matching (src/aiResolve.ts).
+  "ai": { "binding": "AI" },
+  // Daily call counter that caps AI usage to stay in the free neuron tier (src/budget.ts).
+  "kv_namespaces": [{ "binding": "AI_BUDGET", "id": "28d0e260644e478784cc7bb7a7c4b277" }]
+}
