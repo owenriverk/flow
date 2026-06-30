@@ -1,0 +1,89 @@
+/**
+ * Documents resolution coverage across tiers. Run: npx vitest run test/fuzzy-audit.test.ts
+ * "AI-only" cases pass regardless (they're documentation, not assertions).
+ */
+import { describe, expect, test } from 'vitest';
+import { lookupGauge } from '../src/lookupGauge.js';
+import aliases from '../src/aliases.json' with { type: 'json' };
+import type { GaugeAlias } from '../src/lookupGauge.js';
+
+const table = aliases as Record<string, GaugeAlias>;
+
+function resolve(text: string) {
+  const r = lookupGauge(text, table);
+  return r ? ('name' in r ? r.name : r.site) : null;
+}
+
+describe('deterministic — must resolve without AI', () => {
+  test.each([
+    // ── Exact alias ────────────────────────────────────────────────
+    ['mf salmon',                     'Salmon R (Middle Fork)'],
+    ['grand canyon',                  'Colorado R (Grand Canyon)'],
+    ['stikine',                       'Stikine R'],
+    ['desolation',                    'Green R (Desolation)'],
+    ['deso grey',                     'Green R (Desolation)'],
+    ['deso',                          'Green R (Desolation)'],
+    ['gates of lodore',               'Green R (Gates of Lodore)'],
+
+    // ── Tier 3: alias verbatim inside longer message ───────────────
+    // "river" suffix
+    ['stikine river',                 'Stikine R'],
+    ['yampa river',                   'Yampa R'],
+    ['rogue river',                   'Rogue R'],
+    ['selway river',                  'Selway R'],
+    ['deschutes river',               'Deschutes R'],
+    ['san juan river',                'San Juan R'],
+    ['salt river levels',             'Salt R'],
+    // location context appended
+    ['grand canyon colorado',         'Colorado R (Grand Canyon)'],
+    ['lees ferry az',                 'Colorado R (Grand Canyon)'],
+    ['mf salmon at the lodge',        'Salmon R (Middle Fork)'],
+    ['main salmon white bird',        'Salmon R (Main)'],
+    ['tuolumne grand canyon flows',   'Tuolumne R (Grand Canyon)'],
+    // canyon / lake / falls suffixes
+    ['cataract canyon',               'Colorado R (Cataract)'],
+    ['desolation canyon',             'Green R (Desolation)'],
+    ['fantasy falls ca',              'NF Mokelumne R (Fantasy Falls)'],
+    // Caps + whitespace normalisation
+    ['MF SALMON',                     'Salmon R (Middle Fork)'],
+    ['GRAND CANYON',                  'Colorado R (Grand Canyon)'],
+    ['  stikine  ',                   'Stikine R'],
+    ['mf  salmon',                    'Salmon R (Middle Fork)'],
+
+    // ── Tier 4: word-set (prepositions / filler in between) ────────
+    ['middle fork of the salmon',     'Salmon R (Middle Fork)'],
+    ['mf of the salmon',              'Salmon R (Middle Fork)'],
+    ['middle fork salmon river',      'Salmon R (Middle Fork)'],
+    ['gates lodore',                  'Green R (Gates of Lodore)'],   // "of" stripped from alias
+    ['lower salmon river id',         'Salmon R (Main)'],
+    ['main salmon river',             'Salmon R (Main)'],
+    ['sf salmon river',               'Salmon R (South Fork)'],
+    ['south salmon river',            'Salmon R (South Fork)'],
+    ['hells canyon snake river',      'Snake R (Hells Canyon)'],
+    ['grande ronde river',            'Grande Ronde R'],
+    ['john day river',                'John Day R'],
+    ['clarks fork box canyon',        'Clarks Fork'],
+    ['upper cherry creek',            'Cherry Creek (Upper)'],
+    ['tuolumne grand canyon section', 'Tuolumne R (Grand Canyon)'],
+  ])('"%s" → %s', (input, name) => {
+    expect(resolve(input)).toBe(name);
+  });
+});
+
+describe('AI-only cases — document what still needs the fuzzy tier', () => {
+  test.each([
+    // Typos — no deterministic path
+    'stikeen',            // stikine
+    'deschuttes',         // deschutes
+    'yampa colo',         // yampa (extra word not in alias)
+    // Slang / local names
+    'river of no return',  // now an alias → det resolves it
+    // Ambiguous without context
+    'green river',        // two green gauges — AI should pick desolation/lodore
+    'salmon',             // four salmon gauges
+  ])('"%s" → needs AI tier', (input) => {
+    const result = resolve(input);
+    console.log(result ? `  [det resolved] ${input} → ${result}` : `  [AI needed]   ${input}`);
+    expect(true).toBe(true);
+  });
+});

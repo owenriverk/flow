@@ -34,9 +34,12 @@ export async function aiResolve(
   const menu = keys.map((k) => `${k} — ${aliases[k]!.name}, ${aliases[k]!.location}`).join('\n');
 
   const system =
-    "You match a whitewater paddler's shorthand to one river run from a fixed list. " +
-    'Reply with ONLY the run key (the text before the dash), copied exactly, or the ' +
-    'single word NONE if nothing clearly matches. No explanation, no extra text.';
+    "You match a whitewater paddler's message to one river run from a fixed list. " +
+    'Common abbreviations: MF/mid fork = middle fork, NF = north fork, SF = south fork. ' +
+    'Typos are common — match the closest run even with misspelling. ' +
+    'Be aggressive: prefer a best-guess match over NONE. ' +
+    'Reply NONE only if the message is completely unrelated to any listed river. ' +
+    'Reply with ONLY the exact run key (text before the dash), or NONE. No explanation.';
   const user = `Runs:\n${menu}\n\nMessage: "${text}"\nRun key:`;
 
   let response: string | undefined;

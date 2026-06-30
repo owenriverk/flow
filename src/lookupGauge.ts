@@ -64,6 +64,14 @@ function containsPhrase(text: string, phrase: string): boolean {
   );
 }
 
+// Stop words stripped before word-set matching so prepositions and articles
+// in the message don't prevent a match ("middle fork of the salmon" → mf salmon).
+const STOP = new Set(['of', 'the', 'at', 'near', 'below', 'above', 'on', 'a', 'an', 'in', 'for']);
+
+function contentWords(phrase: string): string[] {
+  return phrase.split(' ').filter((w) => w.length > 0 && !STOP.has(w));
+}
+
 export function lookupGauge(
   text: string,
   aliases: Record<string, GaugeAlias>,
@@ -79,8 +87,8 @@ export function lookupGauge(
   if (USGS_ID.test(raw)) return { site: raw, source: 'usgs' };
   if (WSC_ID.test(raw)) return { site: raw, source: 'wsc' };
 
-  // 3. Phrase-contains: a known run name appearing as a whole phrase inside the
-  //    message (handles "middle kings at rodger's"). Longest match wins.
+  // 3. Phrase-contains: a known run name appearing verbatim inside the message.
+  //    Handles "middle kings at rodger's". Longest match wins.
   let best: string | null = null;
   for (const candidate of Object.keys(aliases)) {
     if (containsPhrase(key, candidate) && (best === null || candidate.length > best.length)) {
@@ -88,6 +96,25 @@ export function lookupGauge(
     }
   }
   if (best) return toRef(aliases[best]!);
+
+  // 4. Word-set: every content word of a known alias appears somewhere in the query.
+  //    Handles prepositions and filler words the paddler inserts:
+  //      "middle fork of the salmon" → "middle fork salmon"
+  //      "gates lodore" → "gates of lodore"
+  //    Stop words in the alias itself are ignored. Longest alias wins.
+  const keyWords = new Set(contentWords(key));
+  let bestWords: string | null = null;
+  for (const candidate of Object.keys(aliases)) {
+    const aliasWords = contentWords(candidate);
+    if (
+      aliasWords.length > 0 &&
+      aliasWords.every((w) => keyWords.has(w)) &&
+      (bestWords === null || candidate.length > bestWords.length)
+    ) {
+      bestWords = candidate;
+    }
+  }
+  if (bestWords) return toRef(aliases[bestWords]!);
 
   return null;
 }

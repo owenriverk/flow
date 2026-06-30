@@ -21,6 +21,8 @@ describe('aliases.json', () => {
         expect(typeof entry.sensor, `${key} cdec sensor`).toBe('number');
       } else if (entry.source === 'dreamflows') {
         expect(entry.site, `${key} dreamflows site`).toMatch(DREAMFLOWS_ID);
+      } else if (entry.source === 'noaa') {
+        expect(entry.site, `${key} noaa site`).toMatch(/^[a-z0-9]+$/i);
       } else {
         expect(entry.source ?? 'usgs', `${key} source`).toBe('usgs');
         expect(entry.site, `${key} usgs site`).toMatch(USGS_ID);

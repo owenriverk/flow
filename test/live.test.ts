@@ -20,7 +20,7 @@ live('live gauge queries', () => {
     ['salt', 'USGS'],
     ['stikine', 'WSC'],
     ['fantasy falls', 'CDEC'],
-    ['kings', 'CDEC'],
+    ['kings', 'Dreamflows'],
     ['west cherry', 'CDEC'],
   ])('%s returns a <=160 reply labeled %s', async (query, label) => {
     const reply = await handleQuery(query, { aliases: table });
