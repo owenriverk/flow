@@ -3,42 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gauges — Flow</title>
+  <title>Gauges — LateBoof</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='22' font-family='system-ui,sans-serif' fill='%23196b69'>lb</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1><a href="index.html">Flow</a></h1>
-    <p class="tagline">Live flows for all supported gauges</p>
+  <main class="site-shell directory-shell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Gauge directory</p>
+        <h1><a href="index.html">LateBoof</a></h1>
+        <p class="tagline">All gauges. Updated every 10 minutes.</p>
+      </div>
+      <a class="text-link" href="index.html">How it works</a>
+    </header>
 
     <div class="meta-row">
       <div class="legend">
-        <span><span class="dot dot-low"></span>Low</span>
-        <span><span class="dot dot-good"></span>Good</span>
-        <span><span class="dot dot-high"></span>High</span>
+        <span><span class="dot dot-low"></span>Below range</span>
+        <span><span class="dot dot-good"></span>In range</span>
+        <span><span class="dot dot-high"></span>Above range</span>
       </div>
       <span class="refresh-note" id="refresh-note">Loading…</span>
+    </div>
+
+    <div class="filter-bar">
+      <input type="search" id="filter-input" class="search-input" placeholder="Search rivers…" autocomplete="off">
+      <div class="status-btns">
+        <button class="status-btn active" data-status="all">All</button>
+        <button class="status-btn btn-low"  data-status="low">Low</button>
+        <button class="status-btn btn-good" data-status="good">Good</button>
+        <button class="status-btn btn-high" data-status="high">High</button>
+        <button class="status-btn"          data-status="grey">No data</button>
+      </div>
     </div>
 
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>River</th>
-            <th>Location</th>
-            <th>Flow</th>
-            <th>Text this</th>
-            <th>Updated</th>
+            <th class="sortable" data-col="name">River</th>
+            <th class="sortable" data-col="location">Location</th>
+            <th class="sortable" data-col="flow">Flow</th>
+            <th class="sortable" data-col="text_key">Text this</th>
+            <th class="sortable" data-col="updated">Updated</th>
           </tr>
         </thead>
         <tbody id="gauge-body"></tbody>
       </table>
     </div>
 
-    <p class="footer">
-      <a href="index.html">← How it works</a> · flow@lateboof.com
-    </p>
-  </div>
+    <p class="footer">flow@lateboof.com</p>
+  </main>
   <script src="gauges.js"></script>
 </body>
 </html>
