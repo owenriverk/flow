@@ -3,6 +3,17 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const REFRESH_MS = 10 * 60 * 1000;
 const COLSPAN = 5;
 
+const ACTIVE_KEYS = new Set([
+  'kings', 'fantasy', 'royal gorge', 'postpile', 'south merced',
+  'tuolumne grand canyon', 'tuolumne', 'upper cherry', 'bald rock feather',
+  'rogue', 'deschutes', 'john day', 'grande ronde', 'selway', 'hells canyon',
+  'main salmon', 'middle fork salmon', 'south salmon', 'owyhee',
+  'clarks fork', 'flathead mf', 'flathead nf',
+  'yampa', 'gates of lodore', 'deso grey', 'san juan', 'cataract', 'grand canyon', 'salt',
+  'susitna',
+  'tatshenshini', 'alsek', 'stikine', 'iskut', 'calor', 'clearwater',
+]);
+
 // Reading timestamps older than this are flagged visually.
 const STALE_WARN_HRS  = 2;   // muted warning style
 const OFFLINE_HRS     = 72;  // [OFFLINE] — clearly broken
@@ -133,7 +144,7 @@ async function load() {
       headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    allRows = await res.json();
+    allRows = (await res.json()).filter(g => ACTIVE_KEYS.has(g.key));
     applyFiltersAndSort();
 
     const fetchedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
