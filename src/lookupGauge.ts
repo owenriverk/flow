@@ -11,7 +11,7 @@
  * the fetcher hits -- explicit, not guessed downstream.
  */
 
-export type GaugeSource = 'usgs' | 'wsc' | 'cdec' | 'dreamflows';
+export type GaugeSource = 'usgs' | 'wsc' | 'cdec' | 'dreamflows' | 'noaa';
 
 export interface GaugeAlias {
   site: string;

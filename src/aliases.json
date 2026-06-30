@@ -49,8 +49,8 @@
 
   "susitna": { "site": "15292000", "name": "Susitna R", "location": "Gold Creek, AK" },
 
-  "tat": { "site": "08AB004", "name": "Tatshenshini R", "location": "Dalton Post, YT", "source": "wsc" },
-  "tatshenshini": { "site": "08AB004", "name": "Tatshenshini R", "location": "Dalton Post, YT", "source": "wsc" },
+  "tat": { "site": "tatq9", "name": "Tatshenshini R", "location": "Dalton Post, YT", "source": "noaa" },
+  "tatshenshini": { "site": "tatq9", "name": "Tatshenshini R", "location": "Dalton Post, YT", "source": "noaa" },
   "alsek": { "site": "08AB001", "name": "Alsek R", "location": "above Bates R, YT", "source": "wsc" },
   "stikine": { "site": "08CE001", "name": "Stikine R", "location": "Telegraph Creek, BC", "source": "wsc" },
   "iskut": { "site": "08CG001", "name": "Iskut R", "location": "Bob Quinn, BC", "source": "wsc" },

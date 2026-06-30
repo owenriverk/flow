@@ -20,6 +20,7 @@ import { fetchReading as fetchUsgsDefault } from './usgs.js';
 import { fetchReading as fetchWscDefault } from './wsc.js';
 import { fetchReading as fetchCdecDefault } from './cdec.js';
 import { fetchReading as fetchDreamflowsDefault } from './dreamflows.js';
+import { fetchReading as fetchNoaaDefault } from './noaa.js';
 
 export interface CdecConfig {
   sensor?: number;
@@ -37,6 +38,7 @@ export interface HandleQueryDeps {
   fetchWsc?: (siteId: string) => Promise<Reading>;
   fetchCdec?: (station: string, cfg: CdecConfig) => Promise<Reading>;
   fetchDreamflows?: (riverId: string) => Promise<Reading>;
+  fetchNoaa?: (stationId: string) => Promise<Reading>;
   /** Last-resort fuzzy matcher (Workers AI). Only called when lookup misses. */
   resolveFuzzy?: (text: string) => Promise<string | null>;
 }
@@ -58,6 +60,7 @@ export async function handleQuery(text: string, deps: HandleQueryDeps): Promise<
   const fetchCdec =
     deps.fetchCdec ?? ((id: string, cfg: CdecConfig) => fetchCdecDefault(id, cfg));
   const fetchDreamflows = deps.fetchDreamflows ?? ((id: string) => fetchDreamflowsDefault(id));
+  const fetchNoaa = deps.fetchNoaa ?? ((id: string) => fetchNoaaDefault(id));
 
   try {
     let reading: Reading;
@@ -65,6 +68,8 @@ export async function handleQuery(text: string, deps: HandleQueryDeps): Promise<
       reading = await fetchWsc(ref.site);
     } else if (ref.source === 'dreamflows') {
       reading = await fetchDreamflows(ref.site);
+    } else if (ref.source === 'noaa') {
+      reading = await fetchNoaa(ref.site);
     } else if (ref.source === 'cdec') {
       const cfg: CdecConfig = {};
       if ('sensor' in ref && ref.sensor !== undefined) cfg.sensor = ref.sensor;

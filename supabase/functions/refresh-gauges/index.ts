@@ -64,6 +64,25 @@ async function fetchWsc(station: string): Promise<Reading> {
   }
 }
 
+async function fetchNoaa(stationId: string): Promise<Reading> {
+  const url = `https://api.water.noaa.gov/nwps/v1/gauges/${encodeURIComponent(stationId)}/stageflow`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+    // deno-lint-ignore no-explicit-any
+    const body = (await res.json()) as any;
+    const data = (body?.observed?.data ?? []) as Array<{ validTime?: string; primary?: number }>;
+    if (data.length === 0) return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+    const last = data[data.length - 1]!;
+    const stage = typeof last.primary === 'number' && last.primary > -900 ? last.primary : null;
+    return { discharge: null, stage, reading_time: last.validTime ?? new Date().toISOString() };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // Null out discharge/stage if the API returns a timestamp older than 48 hours.
 // This catches decommissioned stations that return stale historical readings.
 const MAX_READING_AGE_MS = 48 * 60 * 60 * 1000;
@@ -187,6 +206,8 @@ Deno.serve(async () => {
         reading = withStalenessCheck(await fetchCdec(g.site, g.sensor!, g.dur!));
       } else if (g.source === 'dreamflows') {
         reading = withStalenessCheck(dreamflowsReading(dreamflowsMap, g.site));
+      } else if (g.source === 'noaa') {
+        reading = withStalenessCheck(await fetchNoaa(g.site));
       } else {
         reading = withStalenessCheck(await fetchUsgs(g.site));
       }
@@ -206,7 +227,7 @@ Deno.serve(async () => {
         discharge: reading.discharge,
         discharge_unit: g.source === 'wsc' ? 'cms' : 'cfs',
         stage: reading.stage,
-        stage_unit: g.source === 'wsc' ? 'm' : 'ft',
+        stage_unit: g.source === 'wsc' ? 'm' : 'ft',   // NOAA reports stage in ft
         reading_time: reading.reading_time,
         updated_at: new Date().toISOString(),
       });

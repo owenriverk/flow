@@ -1,4 +1,4 @@
-export type GaugeSource = 'usgs' | 'wsc' | 'cdec' | 'dreamflows';
+export type GaugeSource = 'usgs' | 'wsc' | 'cdec' | 'dreamflows' | 'noaa';
 
 export interface GaugeConfig {
   key: string;
@@ -58,7 +58,7 @@ export const GAUGES: GaugeConfig[] = [
   { key: 'susitna', name: 'Susitna R', location: 'Gold Creek, AK', source: 'usgs', site: '15292000', text_key: 'susitna', gauge_url: 'https://waterdata.usgs.gov/monitoring-location/15292000/', low: 3000, high: 10000 },
 
   // ── BC / Yukon WSC (cms) ─────────────────────────────────────────
-  { key: 'tatshenshini', name: 'Tatshenshini R', location: 'Dalton Post, YT',      source: 'wsc', site: '08AB004', text_key: 'tat',       gauge_url: 'https://water.noaa.gov/gauges/tatq9',                                low: 100, high: 400  },
+  { key: 'tatshenshini', name: 'Tatshenshini R', location: 'Dalton Post, YT',      source: 'noaa', site: 'tatq9', text_key: 'tat',       gauge_url: 'https://water.noaa.gov/gauges/tatq9',                                low: null, high: null },
   { key: 'alsek',        name: 'Alsek R',        location: 'above Bates R, YT',    source: 'wsc', site: '08AB001', text_key: 'alsek',     gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08AB001', low: null, high: null },
   { key: 'stikine',      name: 'Stikine R',      location: 'Telegraph Creek, BC',  source: 'wsc', site: '08CE001', text_key: 'stikine',   gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CE001', low: 400, high: 1500 },
   { key: 'iskut',        name: 'Iskut R',        location: 'Bob Quinn, BC',        source: 'wsc', site: '08CG001', text_key: 'iskut',     gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CG001', low: 100, high: 500  },
