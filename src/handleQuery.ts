@@ -27,7 +27,7 @@ export interface CdecConfig {
 }
 
 export const NOT_FOUND =
-  'Not found. Send a known run name (e.g. "gauley summersville") or an 8+ digit USGS site id.';
+  'Not found. Text a run name from lateboof.com, or an 8+ digit USGS site id.';
 export const UNAVAILABLE =
   "Couldn't reach gauge data right now. Try again in a few minutes.";
 

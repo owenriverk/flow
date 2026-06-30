@@ -31,7 +31,10 @@ export async function claimAiCall(
     return false; // can't confirm budget → don't spend the neuron
   }
   if (!Number.isFinite(count)) count = 0;
-  if (count >= maxPerDay) return false;
+  if (count >= maxPerDay) {
+    console.warn(`AI budget: daily cap reached (${count}/${maxPerDay}, ${key}) — fuzzy match skipped`);
+    return false;
+  }
 
   try {
     await kv.put(key, String(count + 1), { expirationTtl: TTL_SECONDS });
