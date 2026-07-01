@@ -139,6 +139,11 @@ export default {
       }
     };
 
+    // Unlike InReach (a curated, low-volume channel), flow@lateboof.com is a public
+    // catch-all, so most email-reply failures are spam or other automated senders
+    // that trip Cloudflare's DMARC check on reply() -- not real paddlers. Alerting
+    // on every single one would flood the owner's inbox and bury a genuine failure,
+    // so this only pages on the escalation threshold, not on each individual miss.
     const safeReplyByEmail = async (text: string): Promise<void> => {
       try {
         await replyByEmail(text);
@@ -146,23 +151,23 @@ export default {
       } catch (err) {
         console.error('replyByEmail failed:', err);
         const detail = err instanceof Error ? err.message : String(err);
-        await recordReplyFailure(statusKv, 'email', detail);
-        await notifyOwner(
-          env,
-          '[LateBoof] Email reply failed',
-          [
-            'Could not reply by email to the original sender.',
-            '',
-            `From: ${message.from}`,
-            '',
-            'Reply text that was not delivered:',
-            '---',
-            text,
-            '---',
-            '',
-            `Error: ${detail}`,
-          ].join('\n'),
-        ).catch((e) => console.error('notifyOwner failed:', e));
+        const failureCount = await recordReplyFailure(statusKv, 'email', detail);
+        if (shouldEscalate(failureCount)) {
+          await notifyOwner(
+            env,
+            `[LateBoof] ${failureCount} consecutive email reply failures`,
+            [
+              `The plain-email reply path has failed ${failureCount} times in a row.`,
+              "This is often expected: flow@lateboof.com is a public catch-all, and",
+              "spam/automated senders routinely fail Cloudflare's reply() DMARC check.",
+              'Worth a look if this keeps climbing; check query_log in Supabase for',
+              'what was actually being asked.',
+              '',
+              `Most recent sender: ${message.from}`,
+              `Most recent error:  ${detail}`,
+            ].join('\n'),
+          ).catch((e) => console.error('notifyOwner failed:', e));
+        }
       }
     };
 
