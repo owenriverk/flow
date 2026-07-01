@@ -125,7 +125,7 @@ a:hover { text-decoration-color: currentColor; }
   color: var(--text);
 }
 
-.copy-email-btn {
+.import-email-btn {
   padding: 0.15rem 0.45rem;
   border: 1px solid var(--border);
   border-radius: 0;
@@ -136,14 +136,12 @@ a:hover { text-decoration-color: currentColor; }
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
 }
-.copy-email-btn:hover { background: #ececec; }
-.copy-email-btn.copied { background: var(--text); color: var(--bg); border-color: var(--text); }
-
-.email-hint { text-align: left; align-self: flex-start; margin-top: -0.15rem; }
+.import-email-btn:hover { background: #ececec; }
 
 .contact-qr {
   display: block;

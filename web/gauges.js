@@ -3,6 +3,9 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const REFRESH_MS = 10 * 60 * 1000;
 const COLSPAN = 5;
 
+// Client-side allowlist: the table currently holds rows from earlier gauge-list
+// revisions that the backend hasn't cleaned up yet, so this filters down to the
+// 36 verified-active gauges until that server-side cleanup is deployed.
 const ACTIVE_KEYS = new Set([
   'kings', 'fantasy', 'royal gorge', 'postpile', 'south merced',
   'tuolumne grand canyon', 'tuolumne', 'upper cherry', 'bald rock feather',
@@ -39,10 +42,13 @@ function ageInfo(isoString) {
   return { label: '1 hr ago', cls: '' };
 }
 
+// 'grey' covers both "no reading" and "no low/high range configured" — either
+// way there's no status to color-code, so both belong in the same filter bucket
+// instead of vanishing from every status filter (including "No data").
 function rowClass(g) {
   const d = g.discharge;
   if (d == null && g.stage == null) return 'grey';
-  if (g.low == null || g.high == null || d == null) return '';
+  if (g.low == null || g.high == null || d == null) return 'grey';
   if (d < g.low) return 'low';
   if (d > g.high) return 'high';
   return 'good';
@@ -85,11 +91,17 @@ function escapeHtml(value) {
   })[char]);
 }
 
+const CMS_TO_CFS = 35.3147;
+
 function sortValue(g, col) {
   switch (col) {
     case 'name':     return g.name.toLowerCase();
     case 'location': return g.location.toLowerCase();
-    case 'flow':     return g.discharge != null ? Number(g.discharge) : -Infinity;
+    case 'flow': {
+      if (g.discharge == null) return -Infinity;
+      // Normalize to cfs so cms (WSC) rows sort by true volume, not raw number.
+      return g.discharge_unit === 'cms' ? Number(g.discharge) * CMS_TO_CFS : Number(g.discharge);
+    }
     case 'text_key': return g.text_key.toLowerCase();
     case 'updated':  return g.reading_time ? new Date(g.reading_time).getTime() : -Infinity;
     default: return '';
