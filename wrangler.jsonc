@@ -7,9 +7,16 @@
   "compatibility_date": "2026-06-28",
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
+  // Public read-only status JSON for status.html — src/statusTracking.ts, served by
+  // the fetch() handler in src/worker.ts. Coexists with the Email Routing catch-all
+  // above; only this one path is routed to the Worker, everything else on the zone
+  // continues to hit the static site.
+  "routes": [{ "pattern": "lateboof.com/api/status", "zone_name": "lateboof.com" }],
   // Workers AI: last-resort fuzzy run-name matching (src/aiResolve.ts).
   "ai": { "binding": "AI" },
-  // Daily call counter that caps AI usage to stay in the free neuron tier (src/budget.ts).
+  // Daily AI-call-budget counter (src/budget.ts) AND reply-delivery health tracking
+  // (src/statusTracking.ts) — two small counters, one KV namespace, distinguished by
+  // key prefix ("ai:" vs "status:") rather than provisioning a second namespace.
   "kv_namespaces": [{ "binding": "AI_BUDGET", "id": "28d0e260644e478784cc7bb7a7c4b277" }],
   // Outbound email for failure alerts. Locked to a single recipient at the config level.
   "send_email": [{ "name": "SEND_EMAIL", "destination_address": "okurthdev@gmail.com" }],

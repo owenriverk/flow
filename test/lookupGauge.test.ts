@@ -10,6 +10,7 @@ const aliases: Record<string, GaugeAlias> = {
   },
   salt: { site: '09498500', name: 'Salt R', location: 'Roosevelt, AZ' },
   'salt river': { site: '09497500', name: 'Salt R upper', location: 'Chrysotile, AZ' },
+  'grand canyon': { site: '09380000', name: 'Colorado R (Grand Canyon)', location: 'Lees Ferry, AZ' },
 };
 
 describe('lookupGauge', () => {
@@ -90,6 +91,24 @@ describe('lookupGauge', () => {
 
   test('returns null for an unknown name', () => {
     expect(lookupGauge('mystery creek', aliases)).toBeNull();
+  });
+
+  test('ambiguous: two non-nested matches pointing at different gauges do not guess', () => {
+    // "stikine" and "grand canyon" both match independently here (different rivers,
+    // neither substring is nested inside the other's match). Silently picking the
+    // textually longer one is the exact bug this guards against: a paddler asking
+    // about the Stikine got back Colorado River flow with no indication of an error.
+    expect(lookupGauge('stikine grand canyon', aliases)).toBeNull();
+  });
+
+  test('ambiguous case still returns null even with a typo alongside the real name', () => {
+    expect(lookupGauge('stikine rivr grand canyon', aliases)).toBeNull();
+  });
+
+  test('not ambiguous: a match nested inside a longer match is not competing evidence', () => {
+    // "salt" is a strict prefix-nested substring of "salt river"'s match here, so it
+    // doesn't count as an independent, disagreeing candidate.
+    expect(lookupGauge('salt river canyon trip', aliases)).toMatchObject({ site: '09497500' });
   });
 
   test('returns null for empty or whitespace-only input', () => {

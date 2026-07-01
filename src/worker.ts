@@ -8,8 +8,12 @@
  * Fuzzy run-name matching falls back to Workers AI, but only on a lookup miss and
  * only while under the daily call cap (keeps us inside the free neuron tier).
  *
- * Both reply paths are wrapped: on failure a notification goes to the owner's Gmail
- * (via the SEND_EMAIL binding) with enough info to manually respond to the paddler.
+ * Both reply paths are wrapped: on every failure a notification goes to the owner's
+ * Gmail (via the SEND_EMAIL binding) with enough info to manually respond to the
+ * paddler, and the outcome is recorded via src/statusTracking.ts. If InReach
+ * failures start stacking up with no success in between (Garmin changed the form,
+ * most likely) a second, escalated alert fires — see shouldEscalate. The same
+ * tracked state is served as JSON from fetch() for status.html to read.
  *
  * This is the only file that touches the Workers runtime; everything it calls is
  * unit-tested.
@@ -23,6 +27,15 @@ import { replyToInreach as defaultReplyToInreach } from './replyToInreach.js';
 import { aiResolve, type AiBinding } from './aiResolve.js';
 import { claimAiCall, type KvLike } from './budget.js';
 import { fetchCachedReading } from './supabaseCache.js';
+import { logQuery } from './queryLog.js';
+import { NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
+import { buildReplyHeaders } from './emailReply.js';
+import {
+  recordReplySuccess,
+  recordReplyFailure,
+  shouldEscalate,
+  getStatusSummary,
+} from './statusTracking.js';
 import aliasesJson from './aliases.json' with { type: 'json' };
 import type { GaugeAlias } from './lookupGauge.js';
 
@@ -32,6 +45,13 @@ const aliases = aliasesJson as Record<string, GaugeAlias>;
 const MAX_AI_CALLS_PER_DAY = 1000;
 
 const OWNER_EMAIL = 'okurthdev@gmail.com';
+// Fixed sender for owner alerts — deliberately not message.to, since the catch-all
+// means that could be any address @lateboof.com a paddler happens to type.
+const BOT_EMAIL = 'flow@lateboof.com';
+// Reuses the AI-call-budget KV namespace under a separate "status:" key prefix
+// (see src/statusTracking.ts) rather than provisioning a second namespace for what
+// is, from the Worker's side, just more small counters.
+const STATUS_ENDPOINT_PATH = '/api/status';
 
 interface Env {
   AI: Ai;
@@ -41,30 +61,32 @@ interface Env {
   SUPABASE_ANON_KEY: string;
 }
 
+// Plain-text alert to the owner, usable both from the email handler and from the
+// failure-escalation path (which has no inbound message to build a reply-to from).
+// Errors are swallowed by callers so a broken notification path can't mask the
+// original failure.
+async function notifyOwner(env: Env, subject: string, text: string): Promise<void> {
+  const msg = createMimeMessage();
+  msg.setSender({ name: 'LateBoof', addr: BOT_EMAIL });
+  msg.setRecipient(OWNER_EMAIL);
+  msg.setSubject(subject);
+  msg.addMessage({ contentType: 'text/plain', data: text });
+  await env.SEND_EMAIL.send(new EmailMessage(BOT_EMAIL, OWNER_EMAIL, msg.asRaw()));
+}
+
 export default {
   async email(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
     const parsed = await new PostalMime().parse(message.raw);
     const body = parsed.text ?? '';
-
-    // Send a plain-text alert to the owner. Errors here are swallowed so a broken
-    // notification path can't mask the original failure.
-    const notifyOwner = async (subject: string, text: string): Promise<void> => {
-      const msg = createMimeMessage();
-      msg.setSender({ name: 'LateBoof', addr: message.to });
-      msg.setRecipient(OWNER_EMAIL);
-      msg.setSubject(subject);
-      msg.addMessage({ contentType: 'text/plain', data: text });
-      await env.SEND_EMAIL.send(new EmailMessage(message.to, OWNER_EMAIL, msg.asRaw()));
-    };
+    const statusKv = env.AI_BUDGET as unknown as KvLike;
 
     const replyByEmail = async (text: string): Promise<void> => {
       const originalId = message.headers.get('Message-ID') ?? '';
       const originalSubject = message.headers.get('Subject') ?? 'river flow';
       const msg = createMimeMessage();
-      if (originalId) {
-        msg.setHeader('In-Reply-To', originalId);
-        msg.setHeader('References', originalId);
-      }
+      const { inReplyTo, references } = buildReplyHeaders(originalId, message.headers.get('References') ?? '');
+      if (inReplyTo) msg.setHeader('In-Reply-To', inReplyTo);
+      if (references) msg.setHeader('References', references);
       msg.setSender({ name: 'Flow', addr: message.to });
       msg.setRecipient(message.from);
       msg.setSubject(originalSubject.startsWith('Re:') ? originalSubject : `Re: ${originalSubject}`);
@@ -78,9 +100,13 @@ export default {
     const safeReplyToInreach = async (token: string, text: string): Promise<void> => {
       try {
         await defaultReplyToInreach(token, text);
+        await recordReplySuccess(statusKv, 'inreach');
       } catch (err) {
         console.error('replyToInreach failed:', err);
+        const detail = err instanceof Error ? err.message : String(err);
+        const failureCount = await recordReplyFailure(statusKv, 'inreach', detail);
         await notifyOwner(
+          env,
           '[LateBoof] InReach reply failed',
           [
             'Could not deliver reply to paddler via the Garmin web form.',
@@ -93,18 +119,36 @@ export default {
             text,
             '---',
             '',
-            `Error: ${err instanceof Error ? err.message : String(err)}`,
+            `Error: ${detail}`,
           ].join('\n'),
         ).catch((e) => console.error('notifyOwner failed:', e));
+        if (shouldEscalate(failureCount)) {
+          await notifyOwner(
+            env,
+            `[LateBoof] ALERT: ${failureCount} consecutive InReach reply failures`,
+            [
+              `The InReach reply path (Garmin's unofficial web form) has failed ${failureCount}`,
+              'times in a row with no successful reply in between. This usually means Garmin',
+              'changed the form and src/replyToInreach.ts needs an update — check',
+              `${STATUS_ENDPOINT_PATH} or status.html for the latest state.`,
+              '',
+              `Most recent error: ${detail}`,
+            ].join('\n'),
+          ).catch((e) => console.error('escalation notifyOwner failed:', e));
+        }
       }
     };
 
     const safeReplyByEmail = async (text: string): Promise<void> => {
       try {
         await replyByEmail(text);
+        await recordReplySuccess(statusKv, 'email');
       } catch (err) {
         console.error('replyByEmail failed:', err);
+        const detail = err instanceof Error ? err.message : String(err);
+        await recordReplyFailure(statusKv, 'email', detail);
         await notifyOwner(
+          env,
           '[LateBoof] Email reply failed',
           [
             'Could not reply by email to the original sender.',
@@ -116,7 +160,7 @@ export default {
             text,
             '---',
             '',
-            `Error: ${err instanceof Error ? err.message : String(err)}`,
+            `Error: ${detail}`,
           ].join('\n'),
         ).catch((e) => console.error('notifyOwner failed:', e));
       }
@@ -138,7 +182,33 @@ export default {
         fetchCached: (source, site) =>
           fetchCachedReading(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, source, site),
         onNoReplyPath: (query) => console.error('no reply path for query:', query),
+        onResolved: (query, reply, channel) => {
+          const resolved = reply !== NOT_FOUND && reply !== UNAVAILABLE;
+          ctx.waitUntil(
+            logQuery(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, query, resolved, channel).catch(
+              (err) => console.error('logQuery failed:', err),
+            ),
+          );
+        },
       }).catch((err) => console.error('inbound handling failed:', err)),
     );
+  },
+
+  // Public, read-only reply-health JSON for status.html — see src/statusTracking.ts.
+  // Bound to lateboof.com/api/status via the `routes` entry in wrangler.jsonc,
+  // separately from the Email Routing catch-all above.
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    if (url.pathname !== STATUS_ENDPOINT_PATH) {
+      return new Response('Not found', { status: 404 });
+    }
+    const summary = await getStatusSummary(env.AI_BUDGET as unknown as KvLike);
+    return new Response(JSON.stringify(summary), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-store',
+      },
+    });
   },
 };

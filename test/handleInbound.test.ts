@@ -39,4 +39,36 @@ describe('handleInbound', () => {
     expect(onNoReplyPath).toHaveBeenCalledWith('stikine');
     expect(replyToInreach).not.toHaveBeenCalled();
   });
+
+  test('onResolved fires with the query, reply, and channel before delivery', async () => {
+    const onResolved = vi.fn();
+    await handleInbound(INREACH_BODY, {
+      aliases,
+      handleQueryFn,
+      replyToInreach: vi.fn(async () => {}),
+      onResolved,
+    });
+    expect(onResolved).toHaveBeenCalledWith(
+      "Middle Kings at Rodger's",
+      "REPLY: Middle Kings at Rodger's",
+      'inreach',
+    );
+  });
+
+  test('onResolved reports channel "email" for a plain email reply', async () => {
+    const onResolved = vi.fn();
+    await handleInbound('main salmon', {
+      aliases,
+      handleQueryFn,
+      replyByEmail: vi.fn(async () => {}),
+      onResolved,
+    });
+    expect(onResolved).toHaveBeenCalledWith('main salmon', 'REPLY: main salmon', 'email');
+  });
+
+  test('onResolved reports channel "none" with no reply path available', async () => {
+    const onResolved = vi.fn();
+    await handleInbound('stikine', { aliases, handleQueryFn, onResolved });
+    expect(onResolved).toHaveBeenCalledWith('stikine', 'REPLY: stikine', 'none');
+  });
 });

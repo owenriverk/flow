@@ -96,3 +96,29 @@ describe('AI-only cases — document what still needs the fuzzy tier', () => {
     expect(true).toBe(true);
   });
 });
+
+// Real production incident (2026-06-30): "stikine rivr grand canyon" resolved
+// deterministically to Colorado R (Grand Canyon) instead of the Stikine, because
+// "grand canyon" (12 chars) is textually longer than "stikine" (7 chars) and the old
+// tier-3 matcher just picked whichever candidate string was longest. "grand canyon" is
+// also part of several other rivers' full names in this table (Tuolumne, Zymoetz) —
+// these assert the deterministic tiers refuse to guess rather than silently returning
+// an unrelated gauge; the caller falls through to the AI tier or NOT_FOUND instead.
+describe('ambiguous queries — must refuse to guess, never return the wrong gauge', () => {
+  test.each([
+    'stikine grand canyon',
+    'stikine rivr grand canyon',
+    'zymoetz grand canyon',
+    'copper river grand canyon',
+  ])('"%s" → null (not silently resolved to Colorado)', (input) => {
+    expect(resolve(input)).toBeNull();
+  });
+
+  test('sanity: "grand canyon" alone is unaffected and still resolves to Colorado', () => {
+    expect(resolve('grand canyon')).toBe('Colorado R (Grand Canyon)');
+  });
+
+  test('sanity: a nested match ("grand canyon" inside a longer known alias) still resolves', () => {
+    expect(resolve('tuolumne grand canyon flows')).toBe('Tuolumne R (Grand Canyon)');
+  });
+});

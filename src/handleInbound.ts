@@ -5,7 +5,7 @@
  *
  *   body ─▶ parseInbound ─▶ { query, token }
  *                              │
- *                  handleQuery(query) ─▶ reply text
+ *                  handleQuery(query) ─▶ reply text ─▶ onResolved(query, reply, channel)
  *                              │
  *          token? ─▶ replyToInreach(token, reply)    (InReach: Garmin web form)
  *          else   ─▶ replyByEmail(reply)             (normal email: message.reply)
@@ -22,6 +22,8 @@ import { replyToInreach as defaultReplyToInreach } from './replyToInreach.js';
 import type { GaugeAlias, GaugeSource } from './lookupGauge.js';
 import type { Reading } from './formatReply.js';
 
+export type ReplyChannel = 'inreach' | 'email' | 'none';
+
 export interface InboundDeps {
   aliases: Record<string, GaugeAlias>;
   handleQueryFn?: (text: string) => Promise<string>;
@@ -30,6 +32,8 @@ export interface InboundDeps {
   resolveFuzzy?: (text: string) => Promise<string | null>;
   fetchCached?: (source: GaugeSource, site: string) => Promise<Reading | null>;
   onNoReplyPath?: (query: string) => void;
+  /** Fired after the reply is computed, before delivery -- e.g. for query logging. */
+  onResolved?: (query: string, reply: string, channel: ReplyChannel) => void;
 }
 
 export async function handleInbound(body: string, deps: InboundDeps): Promise<void> {
@@ -44,6 +48,9 @@ export async function handleInbound(body: string, deps: InboundDeps): Promise<vo
         fetchCached: deps.fetchCached,
       }));
   const reply = await handleQueryFn(query);
+
+  const channel: ReplyChannel = token ? 'inreach' : deps.replyByEmail ? 'email' : 'none';
+  deps.onResolved?.(query, reply, channel);
 
   if (token) {
     const replyToInreach = deps.replyToInreach ?? defaultReplyToInreach;
