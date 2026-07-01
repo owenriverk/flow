@@ -197,6 +197,12 @@ Deno.serve(async () => {
   const hasDreamflows = GAUGES.some(g => g.source === 'dreamflows');
   const dreamflowsMap = hasDreamflows ? await fetchDreamflowsMap() : new Map<string, string[]>();
 
+  // Snapshot current discharge before overwriting it, so the UI can show a trend arrow.
+  const { data: existingRows } = await client
+    .from('gauges')
+    .select('key, discharge, reading_time, prev_discharge');
+  const existingByKey = new Map((existingRows ?? []).map(r => [r.key as string, r]));
+
   const results = await Promise.allSettled(
     GAUGES.map(async (g) => {
       let reading: Reading;
@@ -211,6 +217,12 @@ Deno.serve(async () => {
       } else {
         reading = withStalenessCheck(await fetchUsgs(g.site));
       }
+
+      // Carry the last known discharge forward through null readings, so a brief
+      // outage doesn't reset the trend baseline back to "unknown".
+      const existing = existingByKey.get(g.key);
+      const prevDischarge = existing?.discharge ?? existing?.prev_discharge ?? null;
+      const prevReadingTime = existing?.discharge != null ? existing.reading_time : null;
 
       const { error } = await client.from('gauges').upsert({
         key: g.key,
@@ -229,6 +241,8 @@ Deno.serve(async () => {
         stage: reading.stage,
         stage_unit: g.source === 'wsc' ? 'm' : 'ft',   // NOAA reports stage in ft
         reading_time: reading.reading_time,
+        prev_discharge: prevDischarge,
+        prev_reading_time: prevReadingTime,
         updated_at: new Date().toISOString(),
       });
       if (error) throw new Error(`${g.key}: ${error.message}`);

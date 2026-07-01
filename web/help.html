@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LateBoof — Help</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .help-page { max-width: 44rem; padding: 1.5rem 1rem; }
+    .help-page h2 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .help-page p  { color: var(--muted); font-size: 0.82rem; margin-bottom: 1.2rem; line-height: 1.7; }
+    .help-page ol { color: var(--muted); font-size: 0.82rem; margin: 0.3rem 0 1.2rem 1.2rem; line-height: 1.9; }
+    .help-page ol li { margin-bottom: 0.3rem; }
+    .help-page code {
+      font-family: inherit;
+      background: #ececec;
+      padding: 0.08rem 0.3rem;
+      font-size: 0.78rem;
+    }
+    .reply-card {
+      border: 1px solid var(--border);
+      background: #fafafa;
+      padding: 0.65rem 0.9rem;
+      margin: 0 0 1.2rem;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+    .reply-label {
+      display: block;
+      color: var(--faint);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
+    <span class="header-sub">Help &amp; about</span>
+  </header>
+
+  <div class="help-page">
+    <h2>Why this exists</h2>
+    <p>
+      Whitewater kayakers headed to remote put-ins often have no cell signal, but
+      many already carry a satellite messenger (Garmin InReach) for safety. LateBoof
+      turns that device into a river-flow lookup: text a river name, get the current
+      flow back over satellite, in seconds. No app, no login, no cell signal required.
+    </p>
+
+    <h2>Set it up once</h2>
+    <ol>
+      <li>
+        Save <strong>flow@lateboof.com</strong> as a contact — scan the QR or download
+        the vCard from the <a href="index.html#contact"><strong>+ CONTACT</strong></a>
+        button on the gauge directory.
+      </li>
+      <li>
+        Add that same address as a contact on your InReach (Garmin Explore app or
+        MapShare), so it's quick to message from the field instead of typing it out
+        on a satellite keyboard.
+      </li>
+      <li>
+        Send yourself a test message now — e.g. <code>mf salmon</code> — while
+        you're still in cell range, so you know it works before you're relying on
+        it in the field.
+      </li>
+    </ol>
+
+    <h2>Use it from the field</h2>
+    <p>
+      Text any river name to <strong>flow@lateboof.com</strong> — e.g.
+      <code>mf salmon</code>, <code>grand canyon</code>, <code>stikine</code>. Case
+      doesn't matter, but spelling does: it matches against a curated list of run
+      names, or a raw USGS/WSC station ID. Browse the exact names to text under
+      "Text this" on the <a href="index.html">gauge directory</a>.
+    </p>
+    <p>
+      A reply comes back over the same satellite link your message went out on —
+      no cell signal needed either way:
+    </p>
+    <div class="reply-card"><span class="reply-label">Example reply</span>Gauley R, Summersville, WV
+USGS 03189100
+2,800 cfs / 4.21 ft
+16:45 Jun 27</div>
+
+    <h2>If something goes wrong</h2>
+    <p>
+      Every text gets a reply — never silence, so you're never left wondering if
+      the message went through:
+    </p>
+    <ol>
+      <li>
+        <strong>Not found</strong> — the name didn't match anything. Check spelling,
+        or browse the exact names on the gauge directory.
+      </li>
+      <li>
+        <strong>Couldn't reach gauge data</strong> — the upstream source (USGS, WSC,
+        CDEC) is temporarily down. Try again in a few minutes.
+      </li>
+    </ol>
+
+    <h2>Coverage</h2>
+    <p>
+      US rivers via USGS, plus California's CDEC and Dreamflows for a few Class V
+      runs, and Canadian rivers via Water Survey of Canada. See the
+      <a href="status.html">status page</a> for source details. This works over
+      Garmin InReach-style satellite email today — not iPhone satellite SMS.
+    </p>
+  </div>
+
+  <footer class="site-footer">
+    <span><a href="/">← Back to gauge directory</a></span>
+    <a class="footer-status" href="status.html">Status</a>
+  </footer>
+</body>
+</html>

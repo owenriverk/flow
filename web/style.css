@@ -45,15 +45,18 @@ a:hover { text-decoration-color: currentColor; }
   font-size: 0.75rem;
 }
 
-/* ── Contact button ── */
+/* ── Contact button ──
+   Filled (inverted) rather than outlined, same "pressed" treatment as
+   .status-btn.active / .save-contact-btn — reads as the header's one
+   primary action instead of blending in with outline buttons. */
 .contact-btn {
-  padding: 0.28rem 0.65rem;
+  padding: 0.32rem 0.75rem;
   border: 1px solid var(--border);
   border-radius: 0;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--text);
+  color: var(--bg);
   font-family: inherit;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -61,7 +64,7 @@ a:hover { text-decoration-color: currentColor; }
   white-space: nowrap;
   flex-shrink: 0;
 }
-.contact-btn:hover { background: #ececec; }
+.contact-btn:hover { background: #333; }
 
 /* ── Contact dialog ── */
 .contact-dialog {
@@ -107,12 +110,40 @@ a:hover { text-decoration-color: currentColor; }
   align-self: flex-start;
 }
 
+.dialog-email-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  width: 100%;
+  align-self: flex-start;
+}
+
 .dialog-email {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text);
-  align-self: flex-start;
 }
+
+.copy-email-btn {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.copy-email-btn:hover { background: #ececec; }
+.copy-email-btn.copied { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+.email-hint { text-align: left; align-self: flex-start; margin-top: -0.15rem; }
 
 .contact-qr {
   display: block;
@@ -145,6 +176,32 @@ a:hover { text-decoration-color: currentColor; }
   color: var(--faint);
   text-align: center;
   line-height: 1.4;
+}
+
+.dialog-divider {
+  width: 100%;
+  border-top: 1px solid var(--border-light);
+  margin: 0.3rem 0;
+}
+
+.dialog-usage {
+  width: 100%;
+  align-self: flex-start;
+}
+
+.dialog-usage-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 0.3rem;
+}
+
+.dialog-usage-text {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 /* On touch devices, QR is secondary — hide it and promote the download button */
@@ -190,6 +247,12 @@ a:hover { text-decoration-color: currentColor; }
   color: var(--faint);
   font-size: 0.72rem;
   white-space: nowrap;
+}
+/* Cache fallback / load failure — longer message, so let it wrap. */
+.refresh-note.stale {
+  color: var(--low);
+  font-weight: 600;
+  white-space: normal;
 }
 
 /* ── Filter bar ── */
@@ -320,6 +383,16 @@ tr.good .flow { color: var(--good);  background: #edfaed; padding: 0.1em 0.35em;
 tr.high .flow { color: var(--high);  background: #eef2ff; padding: 0.1em 0.35em; }
 tr.grey .flow { color: var(--faint); }
 
+/* Trend arrow — direction only, deliberately not tied to the low/good/high
+   range colors above since rising/falling isn't "good" or "bad" on its own. */
+.trend {
+  font-weight: 400;
+  font-size: 0.85em;
+  cursor: default;
+}
+.trend-up   { color: var(--muted); }
+.trend-down { color: var(--muted); }
+
 /* Text command */
 .cmd {
   font-size: 0.78rem;
@@ -364,6 +437,12 @@ th.sortable[data-dir="desc"]::after { content: ' ↓'; }
   border-top: 1px solid var(--border-light);
   color: var(--faint);
   font-size: 0.72rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 0.9rem;
+  flex-shrink: 0;
 }
 
 .footer-status {

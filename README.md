@@ -48,7 +48,7 @@ Then bind it: Cloudflare dashboard → `lateboof.com` → Email → Email Routin
 Routing rules → **Catch-all → action "Send to a Worker" → flow**. (Until then the
 catch-all forwards to a personal inbox for testing.)
 
-Live test: send a gauge name to `flows@lateboof.com` **from an InReach**, confirm the
+Live test: send a gauge name to `flow@lateboof.com` **from an InReach**, confirm the
 flow comes back to the device.
 
 ## Not in scope (v1)

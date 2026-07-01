@@ -65,6 +65,15 @@ describe('deterministic — must resolve without AI', () => {
     ['clarks fork box canyon',        'Clarks Fork'],
     ['upper cherry creek',            'Cherry Creek (Upper)'],
     ['tuolumne grand canyon section', 'Tuolumne R (Grand Canyon)'],
+    ['san joaquin river',             'San Joaquin R (Postpile)'],
+    ['copper river bc',               'Zymoetz R (Copper)'],          // zymoetz word-set
+
+    // ── Tier 5: fork contraction ("north fork X" → "nf X") ────────
+    ['north fork flathead',           'Flathead R (North Fork)'],
+    ['north fork american river',     'N Fork American R (Royal Gorge)'],
+    ['south fork salmon river',       'Salmon R (South Fork)'],
+    ['middle fork feather',           'Feather R (Bald Rock)'],
+    ['middle fork of the flathead',   'Flathead R (Middle Fork)'],
   ])('"%s" → %s', (input, name) => {
     expect(resolve(input)).toBe(name);
   });

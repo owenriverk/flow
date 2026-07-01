@@ -43,7 +43,7 @@ signal, no login. It turns a $400 satellite messenger into a river-flow oracle.
 
 ## How the email path works (CONFIRMED with a real InReach 2026-06-28)
 - Domain `lateboof.com` on **Cloudflare Email Routing**, catch-all → Worker. Free.
-- Paddler adds `flows@lateboof.com` as an InReach contact and sends e.g. `middle kings`.
+- Paddler adds `flow@lateboof.com` as an InReach contact and sends e.g. `middle kings`.
 - Garmin emails the inbox from `no.reply.inreach@garmin.com`. The body is the query
   followed by a footer containing a reply link `https://inreachlink.com/<token>`.
 - **You CANNOT reply by email.** Garmin's auto-reply: "Replies to this email are not

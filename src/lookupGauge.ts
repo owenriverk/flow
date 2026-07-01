@@ -72,23 +72,32 @@ function contentWords(phrase: string): string[] {
   return phrase.split(' ').filter((w) => w.length > 0 && !STOP.has(w));
 }
 
-export function lookupGauge(
-  text: string,
+// Contract spelled-out fork names before alias lookup so "north fork flathead"
+// hits the "nf flathead" alias directly (tier 1 exact) rather than the shorter
+// "flathead" alias (MF) via tier 3 phrase-contains. Contraction runs first to
+// avoid word-set false positives when both "middle" and "fork" appear in a query
+// that targets a different river (e.g. "middle fork feather" → mf feather ✓).
+const FORK_CONTRACTIONS: Array<[RegExp, string]> = [
+  [/\bmiddle fork\b/g, 'mf'],
+  [/\bnorth fork\b/g,  'nf'],
+  [/\bsouth fork\b/g,  'sf'],
+];
+
+function contractForks(text: string): string {
+  let result = text;
+  for (const [pat, rep] of FORK_CONTRACTIONS) result = result.replace(pat, rep);
+  return result;
+}
+
+/** Run tiers 1 (exact), 3 (phrase-contains), and 4 (word-set) against a given key. */
+function lookupText(
+  key: string,
   aliases: Record<string, GaugeAlias>,
 ): GaugeRef | null {
-  const key = normalize(text);
-  if (key === '') return null;
-
-  // 1. Exact alias.
+  // Tier 1: exact alias.
   if (aliases[key]) return toRef(aliases[key]!);
 
-  // 2. Raw id (uppercased original so WSC letters survive).
-  const raw = text.trim().toUpperCase();
-  if (USGS_ID.test(raw)) return { site: raw, source: 'usgs' };
-  if (WSC_ID.test(raw)) return { site: raw, source: 'wsc' };
-
-  // 3. Phrase-contains: a known run name appearing verbatim inside the message.
-  //    Handles "middle kings at rodger's". Longest match wins.
+  // Tier 3: a known run name appearing verbatim inside the message; longest match wins.
   let best: string | null = null;
   for (const candidate of Object.keys(aliases)) {
     if (containsPhrase(key, candidate) && (best === null || candidate.length > best.length)) {
@@ -97,11 +106,10 @@ export function lookupGauge(
   }
   if (best) return toRef(aliases[best]!);
 
-  // 4. Word-set: every content word of a known alias appears somewhere in the query.
-  //    Handles prepositions and filler words the paddler inserts:
-  //      "middle fork of the salmon" → "middle fork salmon"
-  //      "gates lodore" → "gates of lodore"
-  //    Stop words in the alias itself are ignored. Longest alias wins.
+  // Tier 4: word-set — every content word of a known alias appears in the query.
+  //    Handles prepositions and filler: "middle fork of the salmon" → mf salmon,
+  //    "gates lodore" → gates of lodore. Stop words in aliases are ignored.
+  //    Longest alias wins.
   const keyWords = new Set(contentWords(key));
   let bestWords: string | null = null;
   for (const candidate of Object.keys(aliases)) {
@@ -114,7 +122,30 @@ export function lookupGauge(
       bestWords = candidate;
     }
   }
-  if (bestWords) return toRef(aliases[bestWords]!);
+  return bestWords ? toRef(aliases[bestWords]!) : null;
+}
 
-  return null;
+export function lookupGauge(
+  text: string,
+  aliases: Record<string, GaugeAlias>,
+): GaugeRef | null {
+  const key = normalize(text);
+  if (key === '') return null;
+
+  // Tier 2: raw id (uppercased original so WSC letters survive).
+  const raw = text.trim().toUpperCase();
+  if (USGS_ID.test(raw)) return { site: raw, source: 'usgs' };
+  if (WSC_ID.test(raw)) return { site: raw, source: 'wsc' };
+
+  // Tiers 1 + 3 + 4 on the fork-contracted form FIRST so "north fork flathead"
+  // → "nf flathead" (tier 1 exact) before the original text ever reaches word-set
+  // where a shorter alias like "the middle fork" could steal the match.
+  const contracted = contractForks(key);
+  if (contracted !== key) {
+    const result = lookupText(contracted, aliases);
+    if (result) return result;
+  }
+
+  // Fall through to original text (covers aliases that don't involve fork contractions).
+  return lookupText(key, aliases);
 }

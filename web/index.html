@@ -18,11 +18,21 @@
     <div class="contact-dialog-inner">
       <button class="dialog-close" id="dialog-close" aria-label="Close">✕</button>
       <div class="dialog-title">Add to contacts</div>
-      <div class="dialog-email">flow@lateboof.com</div>
+      <div class="dialog-email-row">
+        <div class="dialog-email">flow@lateboof.com</div>
+        <button class="copy-email-btn" id="copy-email-btn" type="button">Copy</button>
+      </div>
+      <div class="dialog-hint email-hint">Setting up on desktop (Garmin Explore/MapShare)? Copy the address above.</div>
       <img class="contact-qr" src="contact-qr.svg" alt="QR code — scan to add contact" width="180" height="180">
       <div class="dialog-hint qr-hint">Scan with your phone camera to add the contact</div>
       <a class="save-contact-btn" href="flow.vcf" download="LateBoof.vcf">Save contact (.vcf)</a>
       <div class="dialog-hint">Downloads a contact card — open it to import into your phone</div>
+
+      <div class="dialog-divider"></div>
+      <div class="dialog-usage">
+        <div class="dialog-usage-title">Once it's saved</div>
+        <p class="dialog-usage-text">Text a gauge name — e.g. <em>mf salmon</em> or <em>grand canyon</em> — to this contact from your InReach or satellite messenger. Flow data texts back automatically, no cell signal required.</p>
+      </div>
     </div>
   </dialog>
 
@@ -62,8 +72,11 @@
   </div>
 
   <footer class="site-footer">
-    <span>Add flow@lateboof.com as an InReach contact. Text a gauge name (e.g. <em>mf salmon</em>, <em>grand canyon</em>, <em>chilko</em>). No cell signal needed.</span>
-    <a class="footer-status" href="status.html">Status</a>
+    <span>Add flow@lateboof.com as an InReach contact. Text a gauge name (e.g. <em>mf salmon</em>, <em>grand canyon</em>, <em>stikine</em>). No cell signal needed.</span>
+    <span class="footer-links">
+      <a class="footer-status" href="help.html">Help</a>
+      <a class="footer-status" href="status.html">Status</a>
+    </span>
   </footer>
 
   <script src="gauges.js"></script>
@@ -72,6 +85,20 @@
     document.getElementById('contact-btn').addEventListener('click', () => dialog.showModal());
     document.getElementById('dialog-close').addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+    if (location.hash === '#contact') dialog.showModal();
+
+    const copyBtn = document.getElementById('copy-email-btn');
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('flow@lateboof.com');
+        copyBtn.textContent = 'Copied';
+        copyBtn.classList.add('copied');
+        setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1500);
+      } catch {
+        copyBtn.textContent = 'Copy failed';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+      }
+    });
   </script>
 </body>
 </html>

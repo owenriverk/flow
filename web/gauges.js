@@ -62,6 +62,23 @@ function flowText(g) {
   return '—';
 }
 
+// Ignore swings under this so measurement jitter doesn't flip the arrow.
+const TREND_THRESHOLD = 0.02;
+
+/** Returns { glyph, cls, title } for the discharge trend, or null if unknown/flat. */
+function trendInfo(g) {
+  if (g.discharge == null || g.prev_discharge == null || g.prev_discharge === 0) return null;
+  const pct = (g.discharge - g.prev_discharge) / g.prev_discharge;
+  if (Math.abs(pct) < TREND_THRESHOLD) return null;
+  const pctLabel = `${pct > 0 ? '+' : ''}${Math.round(pct * 100)}%`;
+  const sinceLabel = g.prev_reading_time
+    ? ` since ${new Date(g.prev_reading_time).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`
+    : '';
+  return pct > 0
+    ? { glyph: '↑', cls: 'trend-up',   title: `${pctLabel}${sinceLabel}` }
+    : { glyph: '↓', cls: 'trend-down', title: `${pctLabel}${sinceLabel}` };
+}
+
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -122,10 +139,14 @@ function renderRows(rows) {
     const textKey  = escapeHtml(g.text_key);
     const { label, cls: ageCls } = ageInfo(g.reading_time);
     const age = escapeHtml(label);
+    const trend = trendInfo(g);
+    const trendHtml = trend
+      ? ` <span class="trend ${trend.cls}" title="${escapeHtml(trend.title)}">${trend.glyph}</span>`
+      : '';
     return `<tr class="${status}">
       <td data-label="River"><a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a><span class="river-sub">${location}</span></td>
       <td class="location col-location" data-label="Location">${location}</td>
-      <td class="flow" data-label="Flow">${flow}</td>
+      <td class="flow" data-label="Flow">${flow}${trendHtml}</td>
       <td class="cmd" data-label="Text this">${textKey}</td>
       <td class="age${ageCls ? ' ' + ageCls : ''}" data-label="Updated">${age}</td>
     </tr>`;
@@ -138,23 +159,58 @@ function updateHeaders() {
   });
 }
 
+// Last-known-good fallback for when the browser can't reach Supabase (e.g. spotty
+// signal at a trailhead) — mirrors the cache fallback already used on the InReach side.
+const CACHE_KEY = 'lateboof:gauges-cache:v1';
+
+function readCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(rows) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ rows, fetchedAt: new Date().toISOString() }));
+  } catch {
+    // localStorage unavailable (private mode, quota, etc.) — cache is best-effort.
+  }
+}
+
 async function load() {
+  const refreshNote = document.getElementById('refresh-note');
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/gauges?select=*`, {
       headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     allRows = (await res.json()).filter(g => ACTIVE_KEYS.has(g.key));
+    writeCache(allRows);
     applyFiltersAndSort();
 
     const fetchedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('refresh-note').textContent = `fetched at ${fetchedAt}`;
+    refreshNote.className = 'refresh-note';
+    refreshNote.textContent = `fetched at ${fetchedAt}`;
   } catch (e) {
-    document.getElementById('refresh-note').textContent =
-      'Could not load gauge data — try refreshing.';
+    console.error(e);
+    const cached = readCache();
+    if (cached?.rows?.length) {
+      allRows = cached.rows.filter(g => ACTIVE_KEYS.has(g.key));
+      applyFiltersAndSort();
+      const cachedAt = new Date(cached.fetchedAt).toLocaleString([], {
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+      });
+      refreshNote.className = 'refresh-note stale';
+      refreshNote.textContent = `Showing cached data from ${cachedAt} — could not reach live data.`;
+      return;
+    }
+    refreshNote.className = 'refresh-note stale';
+    refreshNote.textContent = 'Could not load gauge data — try refreshing.';
     document.getElementById('gauge-body').innerHTML =
       `<tr class="message-row"><td colspan="${COLSPAN}">Could not load gauge data. Try refreshing.</td></tr>`;
-    console.error(e);
   }
 }
 
