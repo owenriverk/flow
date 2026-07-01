@@ -106,6 +106,13 @@ function parseCsvRow(line: string): string[] {
   return fields;
 }
 
+// Dreamflows zero-pads the id column (e.g. "069"), but our config isn't
+// consistently padded (e.g. site: '69') — normalize both sides by stripping
+// leading zeros so the lookup matches regardless of padding.
+function normalizeDreamflowsId(id: string): string {
+  return String(Number(id));
+}
+
 async function fetchDreamflowsMap(): Promise<Map<string, string[]>> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 10000);
@@ -117,7 +124,7 @@ async function fetchDreamflowsMap(): Promise<Map<string, string[]>> {
     for (const line of text.split('\n').slice(7)) {
       if (!line.trim()) continue;
       const cols = parseCsvRow(line);
-      if (cols[0]) map.set(cols[0], cols);
+      if (cols[0]) map.set(normalizeDreamflowsId(cols[0]), cols);
     }
     return map;
   } catch {
@@ -128,7 +135,7 @@ async function fetchDreamflowsMap(): Promise<Map<string, string[]>> {
 }
 
 function dreamflowsReading(rows: Map<string, string[]>, riverId: string): Reading {
-  const cols = rows.get(riverId);
+  const cols = rows.get(normalizeDreamflowsId(riverId));
   if (!cols) return { discharge: null, stage: null, reading_time: new Date().toISOString() };
   const rawFlow = cols[7] ?? '';
   const discharge = Number(rawFlow);
@@ -253,8 +260,18 @@ Deno.serve(async () => {
     .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
     .map(r => r.reason instanceof Error ? r.reason.message : String(r.reason));
 
+  // Delete any row whose key is no longer in the canonical GAUGES list, so the table
+  // stays exactly in sync with the curated gauge set instead of accumulating rows
+  // from earlier revisions forever (existingByKey was snapshotted before this run's
+  // upserts, so it only ever contains keys this cycle didn't just (re)write).
+  const currentKeys = new Set(GAUGES.map(g => g.key));
+  const orphanKeys = [...existingByKey.keys()].filter(k => !currentKeys.has(k));
+  if (orphanKeys.length > 0) {
+    await client.from('gauges').delete().in('key', orphanKeys);
+  }
+
   return new Response(
-    JSON.stringify({ updated: results.length - errors.length, errors }),
+    JSON.stringify({ updated: results.length - errors.length, removed: orphanKeys.length, errors }),
     { headers: { 'Content-Type': 'application/json' } },
   );
 });

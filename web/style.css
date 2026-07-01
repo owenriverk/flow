@@ -58,6 +58,7 @@ a:hover { text-decoration-color: currentColor; }
 .contact-btn,
 .help-btn {
   padding: 0.32rem 0.75rem;
+  min-width: 10.5rem;
   border: 1px solid var(--border);
   border-radius: 0;
   background: var(--text);
@@ -68,6 +69,7 @@ a:hover { text-decoration-color: currentColor; }
   letter-spacing: 0.07em;
   text-transform: uppercase;
   text-decoration: none;
+  text-align: center;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;

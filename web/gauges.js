@@ -28,10 +28,16 @@ let filterText = '';
 let filterStatus = 'all';
 
 /**
- * Returns { label, cls } for a reading timestamp.
- * cls is '' (fresh), 'age-stale' (> 2 hr), or 'age-offline' (> 72 hr or missing).
+ * Returns { label, cls } for a gauge's freshness.
+ * cls is '' (fresh), 'age-stale' (> 2 hr), or 'age-offline' (> 72 hr, missing, or no reading).
+ *
+ * Backend fetchers stamp reading_time as "now" whenever a source returns no
+ * value (see refresh-gauges), so a null discharge/stage can carry a fresh-looking
+ * timestamp — check for that first instead of trusting reading_time alone.
  */
-function ageInfo(isoString) {
+function ageInfo(g) {
+  if (g.discharge == null && g.stage == null) return { label: '[OFFLINE]', cls: 'age-offline' };
+  const isoString = g.reading_time;
   if (!isoString) return { label: '—', cls: 'age-offline' };
   const mins = (Date.now() - new Date(isoString).getTime()) / 60000;
   if (mins < 1)  return { label: 'just now', cls: '' };
@@ -149,7 +155,7 @@ function renderRows(rows) {
     const location = escapeHtml(g.location);
     const flow     = escapeHtml(flowText(g));
     const textKey  = escapeHtml(g.text_key);
-    const { label, cls: ageCls } = ageInfo(g.reading_time);
+    const { label, cls: ageCls } = ageInfo(g);
     const age = escapeHtml(label);
     const trend = trendInfo(g);
     const trendHtml = trend
