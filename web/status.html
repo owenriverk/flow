@@ -22,12 +22,14 @@
   </header>
 
   <div class="status-page">
-    <h2>Current status</h2>
+    <h2>Reply path status</h2>
+    <div id="live-status">
+      <p>Loading…</p>
+    </div>
     <p>
-      <span class="ok">● All systems operational</span><br>
-      No known issues as of the last manual update. If the gauge table shows
-      <strong>[OFFLINE]</strong> for many rivers simultaneously, an upstream data
-      feed may be delayed — check the sources below directly.
+      If the gauge table shows <strong>[OFFLINE]</strong> for many rivers
+      simultaneously, an upstream data feed may be delayed — check the sources below
+      directly.
     </p>
 
     <h2>Data sources</h2>
@@ -41,14 +43,19 @@
     <h2>Reporting issues</h2>
     <p>
       If a gauge appears incorrect or a river is missing, email
-      <a href="mailto:developers@saambaa.com">developers@saambaa.com</a>.
+      <a href="mailto:owen@lateboof.com">owen@lateboof.com</a>.
       Include the river name and what you expected to see.
     </p>
   </div>
 
   <footer class="site-footer">
     <span><a href="/">← Back to gauge directory</a></span>
-    <a class="footer-status" href="help.html">Help</a>
+    <span class="footer-links">
+      <a class="footer-status" href="help.html">Help</a>
+      <a class="footer-status" href="https://buymeacoffee.com/okurthdev" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+    </span>
   </footer>
+
+  <script src="status.js"></script>
 </body>
 </html>
