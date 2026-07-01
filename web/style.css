@@ -52,11 +52,11 @@ a:hover { text-decoration-color: currentColor; }
   flex-shrink: 0;
 }
 
-/* ── Contact button ──
-   Filled (inverted) rather than outlined, same "pressed" treatment as
-   .status-btn.active / .save-contact-btn — reads as the header's one
-   primary action instead of blending in with outline buttons. */
-.contact-btn {
+/* ── Header buttons ──
+   Filled (inverted), same "pressed" treatment as .status-btn.active /
+   .save-contact-btn — both read as primary actions in the header. */
+.contact-btn,
+.help-btn {
   padding: 0.32rem 0.75rem;
   border: 1px solid var(--border);
   border-radius: 0;
@@ -67,30 +67,13 @@ a:hover { text-decoration-color: currentColor; }
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.contact-btn:hover { background: #333; }
-
-/* Outline, not filled — keeps "Add contact" as the one primary action. */
-.help-btn {
-  padding: 0.32rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
 }
-.help-btn:hover { background: #ececec; }
+.contact-btn:hover,
+.help-btn:hover { background: #333; }
 
 /* ── Contact dialog ── */
 .contact-dialog {
