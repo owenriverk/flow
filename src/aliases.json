@@ -90,8 +90,8 @@
   "susitna":               { "site": "15292000", "name": "Susitna R",                       "location": "At Gold Creek, AK" },
   "the su":                { "site": "15292000", "name": "Susitna R",                       "location": "At Gold Creek, AK" },
 
-  "tat":                   { "site": "tatq9",    "name": "Tatshenshini R",                  "location": "Near Dalton Post, YT",             "source": "noaa" },
-  "tatshenshini":          { "site": "tatq9",    "name": "Tatshenshini R",                  "location": "Near Dalton Post, YT",             "source": "noaa" },
+  "tat":                   { "site": "08AC002",  "name": "Tatshenshini R",                  "location": "Near Dalton Post, YT",             "source": "wsc"  },
+  "tatshenshini":          { "site": "08AC002",  "name": "Tatshenshini R",                  "location": "Near Dalton Post, YT",             "source": "wsc"  },
   "alsek":                 { "site": "08AB001",  "name": "Alsek R",                         "location": "Above Bates River, YT",            "source": "wsc" },
   "stikine":               { "site": "08CE001",  "name": "Stikine R",                       "location": "At Telegraph Creek, BC",           "source": "wsc" },
   "gc stikine":            { "site": "08CE001",  "name": "Stikine R",                       "location": "At Telegraph Creek, BC",           "source": "wsc" },
