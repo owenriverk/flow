@@ -1,0 +1,15 @@
+{
+  "_readme": [
+    "Gauge provenance: the human audit trail behind aliases.json.",
+    "Each entry under `gauges` is keyed `source:site` (lookupGauge's gaugeKey) and",
+    "records that the owner personally verified this station is the correct,",
+    "commonly used gauge for the run(s) that reference it. The machine can prove a",
+    "gauge is alive and fresh (src/canarySweep.ts); only a paddler can prove it is",
+    "the RIGHT gauge. test/provenance.test.ts enforces coverage via an inverted",
+    "ratchet: lower MAX_UNAUDITED there as entries are added; 0 = fully enforcing.",
+    "`rituals` records the seasonal real-device tests: a real InReach round trip",
+    "pre-season and mid-season, the only check that exercises the Garmin POST."
+  ],
+  "gauges": {},
+  "rituals": []
+}
