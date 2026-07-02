@@ -30,6 +30,7 @@ import { fetchCachedReading } from './supabaseCache.js';
 import { logQuery } from './queryLog.js';
 import { looksLikeSpam } from './spamFilter.js';
 import { runNightlyChecks, type NightlyCheck } from './canaryRunner.js';
+import { buildSweepCheck, buildWatchdogCheck } from './canarySweep.js';
 import { NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
 import { buildReplyHeaders } from './emailReply.js';
 import {
@@ -214,7 +215,11 @@ export default {
   // gauge sweep + watchdog, then the Garmin form check. Findings/new errors send
   // at most one owner email per night; standing state lands in KV for /api/status.
   async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-    const checks: NightlyCheck[] = [];
+    const kv = env.AI_BUDGET as unknown as KvLike;
+    const checks: NightlyCheck[] = [
+      buildSweepCheck({ supabaseUrl: env.SUPABASE_URL, anonKey: env.SUPABASE_ANON_KEY, kv }),
+      buildWatchdogCheck({ supabaseUrl: env.SUPABASE_URL, anonKey: env.SUPABASE_ANON_KEY, kv }),
+    ];
     ctx.waitUntil(
       runNightlyChecks(checks, {
         kv: env.AI_BUDGET as unknown as KvLike,
