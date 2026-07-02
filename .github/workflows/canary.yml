@@ -23,7 +23,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  canary:
+  email-canary:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -46,3 +46,25 @@ jobs:
           CANARY_IMAP_USER: ${{ secrets.CANARY_IMAP_USER }}
           CANARY_IMAP_PASS: ${{ secrets.CANARY_IMAP_PASS }}
           CANARY_SECRET: ${{ secrets.CANARY_SECRET }}
+
+  # Separate job so a delivery failure never blocks the lookup regression
+  # check, and vice versa.
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Query replay + Sunday digest
+        run: npx tsx scripts/replay.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CANARY_SMTP_HOST: ${{ secrets.CANARY_SMTP_HOST }}
+          CANARY_SMTP_PORT: ${{ secrets.CANARY_SMTP_PORT }}
+          CANARY_SMTP_USER: ${{ secrets.CANARY_SMTP_USER }}
+          CANARY_SMTP_PASS: ${{ secrets.CANARY_SMTP_PASS }}
