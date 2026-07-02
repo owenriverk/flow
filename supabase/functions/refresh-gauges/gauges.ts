@@ -44,6 +44,7 @@ export const GAUGES: GaugeConfig[] = [
   { key: 'clarks fork',  name: 'Clarks Fork',               location: 'Near Belfry, MT',          source: 'usgs',  site: '06207500',  text_key: 'clarks fork',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/06207500/',  low: 400,   high: 1200 },
   { key: 'flathead mf',  name: 'Flathead R (Middle Fork)',  location: 'Near West Glacier, MT',    source: 'usgs',  site: '12358500',  text_key: 'flathead',     gauge_url: 'https://waterdata.usgs.gov/monitoring-location/12358500/',  low: 2000,  high: 10000 },
   { key: 'flathead nf',  name: 'Flathead R (North Fork)',   location: 'Near Columbia Falls, MT',  source: 'usgs',  site: '12355500',  text_key: 'nf flathead',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/12355500/',  low: 2000,  high: 8000 },
+  { key: 'flathead sf',  name: 'Flathead R (South Fork)',   location: 'Above Twin Cr, MT',        source: 'usgs',  site: '12359800',  text_key: 'sf flathead',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/12359800/',  low: null,  high: null },
 
   // ── Rocky Mountain / Southwest USGS (cfs) ───────────────────────
   { key: 'yampa',            name: 'Yampa R',                    location: 'At Deerlodge Park, CO',  source: 'usgs',  site: '09260050',  text_key: 'yampa',         gauge_url: 'https://waterdata.usgs.gov/monitoring-location/09260050/',  low: 1000,  high: 8000 },

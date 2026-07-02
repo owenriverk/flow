@@ -10,6 +10,13 @@
     "`rituals` records the seasonal real-device tests: a real InReach round trip",
     "pre-season and mid-season, the only check that exercises the Garmin POST."
   ],
-  "gauges": {},
+  "gauges": {
+    "usgs:12359800": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-01",
+      "source": "usgs",
+      "notes": "SF Flathead ab Twin Creek — the free-flowing wilderness reach (Youngs Creek/Bob Marshall multiday + Meadow Creek Gorge). AW quotes this gauge for both sections. NOT 12362500 (Columbia Falls), which is Hungry Horse dam outflow on a different reach. Live-verified 5,340 cfs / 8.63 ft at add time."
+    }
+  },
   "rituals": []
 }

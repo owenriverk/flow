@@ -68,6 +68,9 @@
   "middle flathead":       { "site": "12358500", "name": "Flathead R (Middle Fork)",        "location": "Near West Glacier, MT" },
   "nf flathead":           { "site": "12355500", "name": "Flathead R (North Fork)",         "location": "Near Columbia Falls, MT" },
   "north flathead":        { "site": "12355500", "name": "Flathead R (North Fork)",         "location": "Near Columbia Falls, MT" },
+  "sf flathead":           { "site": "12359800", "name": "Flathead R (South Fork)",         "location": "Above Twin Cr, MT" },
+  "south fork flathead":   { "site": "12359800", "name": "Flathead R (South Fork)",         "location": "Above Twin Cr, MT" },
+  "south flathead":        { "site": "12359800", "name": "Flathead R (South Fork)",         "location": "Above Twin Cr, MT" },
 
   "yampa":                 { "site": "09260050", "name": "Yampa R",                         "location": "At Deerlodge Park, CO" },
   "lodore":                { "site": "09234500", "name": "Green R (Gates of Lodore)",       "location": "Near Greendale, UT" },
