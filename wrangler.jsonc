@@ -12,6 +12,11 @@
   // above; only this one path is routed to the Worker, everything else on the zone
   // continues to hit the static site.
   "routes": [{ "pattern": "lateboof.com/api/status", "zone_name": "lateboof.com" }],
+  // Nightly self-check (src/canaryRunner.ts): ONE cron dispatches every check
+  // sequentially — gauge sweep, canary watchdog, Garmin form check. 14:00 UTC,
+  // a few hours AFTER the GitHub Actions email canary (~10:00 UTC) so the
+  // watchdog's "canary ran within 48h" assertion is never racing the Action.
+  "triggers": { "crons": ["0 14 * * *"] },
   // Workers AI: last-resort fuzzy run-name matching (src/aiResolve.ts).
   "ai": { "binding": "AI" },
   // Daily AI-call-budget counter (src/budget.ts) AND reply-delivery health tracking

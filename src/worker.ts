@@ -29,6 +29,7 @@ import { claimAiCall, type KvLike } from './budget.js';
 import { fetchCachedReading } from './supabaseCache.js';
 import { logQuery } from './queryLog.js';
 import { looksLikeSpam } from './spamFilter.js';
+import { runNightlyChecks, type NightlyCheck } from './canaryRunner.js';
 import { NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
 import { buildReplyHeaders } from './emailReply.js';
 import {
@@ -205,6 +206,20 @@ export default {
           );
         },
       }).catch((err) => console.error('inbound handling failed:', err)),
+    );
+  },
+
+  // Nightly self-check — ONE cron (wrangler.jsonc `triggers`) runs every check in
+  // isolation via src/canaryRunner.ts. Checks are registered here as they ship:
+  // gauge sweep + watchdog, then the Garmin form check. Findings/new errors send
+  // at most one owner email per night; standing state lands in KV for /api/status.
+  async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    const checks: NightlyCheck[] = [];
+    ctx.waitUntil(
+      runNightlyChecks(checks, {
+        kv: env.AI_BUDGET as unknown as KvLike,
+        notify: (subject, text) => notifyOwner(env, subject, text),
+      }).catch((err) => console.error('nightly self-check failed:', err)),
     );
   },
 
