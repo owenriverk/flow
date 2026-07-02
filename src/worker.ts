@@ -28,6 +28,7 @@ import { aiResolve, type AiBinding } from './aiResolve.js';
 import { claimAiCall, type KvLike } from './budget.js';
 import { fetchCachedReading } from './supabaseCache.js';
 import { logQuery } from './queryLog.js';
+import { looksLikeSpam } from './spamFilter.js';
 import { NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
 import { buildReplyHeaders } from './emailReply.js';
 import {
@@ -79,6 +80,9 @@ export default {
     const parsed = await new PostalMime().parse(message.raw);
     const body = parsed.text ?? '';
     const statusKv = env.AI_BUDGET as unknown as KvLike;
+    // Set by onResolved before any reply attempt, so safeReplyByEmail can tell a
+    // spam-shaped query from a real one when a reply fails -- see looksLikeSpam.
+    let lastQuery = '';
 
     const replyByEmail = async (text: string): Promise<void> => {
       const originalId = message.headers.get('Message-ID') ?? '';
@@ -141,9 +145,12 @@ export default {
 
     // Unlike InReach (a curated, low-volume channel), flow@lateboof.com is a public
     // catch-all, so most email-reply failures are spam or other automated senders
-    // that trip Cloudflare's DMARC check on reply() -- not real paddlers. Alerting
-    // on every single one would flood the owner's inbox and bury a genuine failure,
-    // so this only pages on the escalation threshold, not on each individual miss.
+    // that trip Cloudflare's DMARC check on reply() -- not real paddlers. The reply
+    // is still attempted exactly the same either way (looksLikeSpam never skips
+    // lookup or delivery); it's only used here to decide whether a failure is worth
+    // paging the owner about. Spam-shaped failures are still recorded (so /api/status
+    // and query_log stay complete) but never notify. A real-looking query that fails
+    // still pages, gated by the same escalation threshold InReach uses.
     const safeReplyByEmail = async (text: string): Promise<void> => {
       try {
         await replyByEmail(text);
@@ -152,6 +159,7 @@ export default {
         console.error('replyByEmail failed:', err);
         const detail = err instanceof Error ? err.message : String(err);
         const failureCount = await recordReplyFailure(statusKv, 'email', detail);
+        if (looksLikeSpam(lastQuery)) return;
         if (shouldEscalate(failureCount)) {
           await notifyOwner(
             env,
@@ -188,6 +196,7 @@ export default {
           fetchCachedReading(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, source, site),
         onNoReplyPath: (query) => console.error('no reply path for query:', query),
         onResolved: (query, reply, channel) => {
+          lastQuery = query;
           const resolved = reply !== NOT_FOUND && reply !== UNAVAILABLE;
           ctx.waitUntil(
             logQuery(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, query, resolved, channel).catch(
