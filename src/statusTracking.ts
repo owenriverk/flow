@@ -14,8 +14,10 @@
  */
 
 import type { KvLike } from './budget.js';
+import type { DeliveryChannel } from './channels.js';
+import { RUNNER_KEY, type CheckStatus, type RunnerSnapshot } from './canaryRunner.js';
 
-export type ReplyChannel = 'inreach' | 'email';
+export type ReplyChannel = DeliveryChannel;
 
 interface ChannelStatus {
   lastSuccessAt: string | null;
@@ -24,9 +26,17 @@ interface ChannelStatus {
   consecutiveFailures: number;
 }
 
+/** Standing state of the nightly self-check (src/canaryRunner.ts KV blob). */
+export interface SelfCheckStatus {
+  lastRunAt: string | null;
+  checks: Record<string, { status: CheckStatus; summary: string; at: string }>;
+}
+
 export interface StatusSummary {
   inreach: ChannelStatus;
   email: ChannelStatus;
+  canary: ChannelStatus;
+  selfCheck: SelfCheckStatus;
 }
 
 function keysFor(channel: ReplyChannel) {
@@ -101,10 +111,26 @@ async function readChannelStatus(kv: KvLike, channel: ReplyChannel): Promise<Cha
   };
 }
 
+async function readSelfCheck(kv: KvLike): Promise<SelfCheckStatus> {
+  try {
+    const raw = await kv.get(RUNNER_KEY);
+    if (!raw) return { lastRunAt: null, checks: {} };
+    const parsed = JSON.parse(raw) as RunnerSnapshot;
+    if (typeof parsed !== 'object' || parsed === null || typeof parsed.checks !== 'object') {
+      return { lastRunAt: null, checks: {} };
+    }
+    return { lastRunAt: parsed.lastRunAt ?? null, checks: parsed.checks };
+  } catch {
+    return { lastRunAt: null, checks: {} };
+  }
+}
+
 export async function getStatusSummary(kv: KvLike): Promise<StatusSummary> {
-  const [inreach, email] = await Promise.all([
+  const [inreach, email, canary, selfCheck] = await Promise.all([
     readChannelStatus(kv, 'inreach'),
     readChannelStatus(kv, 'email'),
+    readChannelStatus(kv, 'canary'),
+    readSelfCheck(kv),
   ]);
-  return { inreach, email };
+  return { inreach, email, canary, selfCheck };
 }

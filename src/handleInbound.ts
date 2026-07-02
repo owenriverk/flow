@@ -21,8 +21,10 @@ import { handleQuery as defaultHandleQuery } from './handleQuery.js';
 import { replyToInreach as defaultReplyToInreach } from './replyToInreach.js';
 import type { GaugeAlias, GaugeSource } from './lookupGauge.js';
 import type { Reading } from './formatReply.js';
+import type { CoreReplyChannel } from './channels.js';
 
-export type ReplyChannel = 'inreach' | 'email' | 'none';
+// The core never knows about canaries — that's an adapter concern (worker.ts).
+export type ReplyChannel = CoreReplyChannel;
 
 export interface InboundDeps {
   aliases: Record<string, GaugeAlias>;

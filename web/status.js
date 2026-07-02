@@ -19,6 +19,29 @@ function escapeHtml(value) {
   })[char]);
 }
 
+// Renders one nightly self-check line ("last self-check 2 hr ago — gauge
+// sweep: ok · email-canary watchdog: ok"). Returns null when the Worker
+// hasn't shipped self-check data yet — the page must render fine either way,
+// since the Worker and this static page deploy on independent pipelines.
+function selfCheckLine(selfCheck) {
+  if (!selfCheck || typeof selfCheck !== 'object' || !selfCheck.lastRunAt) return null;
+  const names = Object.keys(selfCheck.checks ?? {});
+  const parts = names.map((name) => {
+    const check = selfCheck.checks[name] ?? {};
+    const bad = check.status === 'error' || check.status === 'findings';
+    const cls = bad ? 'warn' : 'ok';
+    return `<span class="${cls}">${escapeHtml(name)}: ${escapeHtml(check.status ?? '?')}</span>`;
+  });
+  const anyBad = names.some((name) => {
+    const s = (selfCheck.checks[name] ?? {}).status;
+    return s === 'error' || s === 'findings';
+  });
+  const head = anyBad
+    ? '<span class="warn">⚠ Self-check</span>'
+    : '<span class="ok">● Self-check</span>';
+  return `${head}: last ran ${timeAgo(selfCheck.lastRunAt)}${parts.length ? '<br>' + parts.join(' · ') : ''}`;
+}
+
 function channelLine(label, channel) {
   const failing = channel.consecutiveFailures > 0;
   if (failing) {
@@ -46,9 +69,26 @@ async function loadStatus() {
     const res = await fetch('/api/status', { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const summary = await res.json();
-    el.innerHTML =
-      `<p>${channelLine('InReach replies', summary.inreach)}</p>` +
-      `<p>${channelLine('Email replies', summary.email)}</p>`;
+    // Defensive by design: the Worker (/api/status) and this static page deploy
+    // on independent pipelines, so render whatever channels exist and skip the
+    // rest — a shape mismatch must never blank the status page.
+    const sections = [];
+    const channels = [
+      ['InReach replies', summary.inreach],
+      ['Email replies', summary.email],
+      ['Nightly canary delivery', summary.canary],
+    ];
+    for (const [label, channel] of channels) {
+      if (channel && typeof channel === 'object') {
+        // The canary channel is monitor plumbing — only show it once it has data.
+        if (label.startsWith('Nightly') && !channel.lastSuccessAt && !channel.lastFailureAt) continue;
+        sections.push(`<p>${channelLine(label, channel)}</p>`);
+      }
+    }
+    const self = selfCheckLine(summary.selfCheck);
+    if (self) sections.push(`<p>${self}</p>`);
+    if (sections.length === 0) throw new Error('status payload had no renderable sections');
+    el.innerHTML = sections.join('');
   } catch (e) {
     console.error(e);
     el.innerHTML =

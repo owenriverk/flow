@@ -83,13 +83,14 @@ describe('shouldEscalate', () => {
 });
 
 describe('getStatusSummary', () => {
-  test('reflects both channels independently', async () => {
+  test('reflects all three channels independently', async () => {
     const store = kv({
       'status:inreach:last_success_at': t1.toISOString(),
       'status:inreach:consecutive_failures': '0',
       'status:email:last_failure_at': t2.toISOString(),
       'status:email:last_failure_detail': 'SEND_EMAIL rejected',
       'status:email:consecutive_failures': '2',
+      'status:canary:last_success_at': t2.toISOString(),
     });
     const summary = await getStatusSummary(store);
     expect(summary.inreach.lastSuccessAt).toBe(t1.toISOString());
@@ -97,14 +98,43 @@ describe('getStatusSummary', () => {
     expect(summary.email.lastFailureAt).toBe(t2.toISOString());
     expect(summary.email.lastFailureDetail).toBe('SEND_EMAIL rejected');
     expect(summary.email.consecutiveFailures).toBe(2);
+    expect(summary.canary.lastSuccessAt).toBe(t2.toISOString());
+  });
+
+  test("the 'canary' channel records like any other", async () => {
+    const store = kv();
+    await recordReplySuccess(store, 'canary', t1);
+    expect(store.store['status:canary:last_success_at']).toBe(t1.toISOString());
+    expect(await recordReplyFailure(store, 'canary', 'imap down', t2)).toBe(1);
+  });
+
+  test('surfaces the nightly self-check blob when present', async () => {
+    const store = kv({
+      'canary:results': JSON.stringify({
+        lastRunAt: t1.toISOString(),
+        checks: { 'gauge sweep': { status: 'ok', summary: '35 gauges: 35 ok', at: t1.toISOString() } },
+      }),
+    });
+    const summary = await getStatusSummary(store);
+    expect(summary.selfCheck.lastRunAt).toBe(t1.toISOString());
+    expect(summary.selfCheck.checks['gauge sweep']!.status).toBe('ok');
+  });
+
+  test('a garbled self-check blob degrades to empty, never throws', async () => {
+    const store = kv({ 'canary:results': 'not json{' });
+    const summary = await getStatusSummary(store);
+    expect(summary.selfCheck).toEqual({ lastRunAt: null, checks: {} });
   });
 
   test('an unreachable KV still returns a well-formed summary (all nulls/zeros)', async () => {
     const broken = { get: vi.fn(async () => { throw new Error('down'); }), put: vi.fn() };
     const summary = await getStatusSummary(broken);
+    const empty = { lastSuccessAt: null, lastFailureAt: null, lastFailureDetail: null, consecutiveFailures: 0 };
     expect(summary).toEqual({
-      inreach: { lastSuccessAt: null, lastFailureAt: null, lastFailureDetail: null, consecutiveFailures: 0 },
-      email: { lastSuccessAt: null, lastFailureAt: null, lastFailureDetail: null, consecutiveFailures: 0 },
+      inreach: empty,
+      email: empty,
+      canary: empty,
+      selfCheck: { lastRunAt: null, checks: {} },
     });
   });
 });

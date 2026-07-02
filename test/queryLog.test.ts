@@ -20,6 +20,15 @@ describe('logQuery', () => {
     });
   });
 
+  test("accepts the 'canary' channel (nightly synthetic — requires migration 008's CHECK)", async () => {
+    const fetchFn = vi.fn(async (_url: string | URL | Request, _init?: RequestInit) =>
+      new Response(null, { status: 201 }),
+    );
+    await logQuery('https://x.supabase.co', 'anon-key', 'selway', true, 'canary', { fetchFn });
+    const [, init] = fetchFn.mock.calls[0]!;
+    expect(JSON.parse(init?.body as string).channel).toBe('canary');
+  });
+
   test('never throws when the request fails', async () => {
     const fetchFn = vi.fn(async () => {
       throw new Error('network down');

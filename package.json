@@ -11,6 +11,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260627.1",
+    "imapflow": "^1.4.3",
+    "nodemailer": "^9.0.3",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8",
     "wrangler": "^4.105.0"

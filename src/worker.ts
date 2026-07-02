@@ -31,6 +31,8 @@ import { logQuery } from './queryLog.js';
 import { looksLikeSpam } from './spamFilter.js';
 import { runNightlyChecks, type NightlyCheck } from './canaryRunner.js';
 import { buildSweepCheck, buildWatchdogCheck } from './canarySweep.js';
+import { cacheInboundToken, isCanaryMessage } from './canaryHelpers.js';
+import { parseInbound } from './parseInbound.js';
 import { NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
 import { buildReplyHeaders } from './emailReply.js';
 import {
@@ -62,6 +64,11 @@ interface Env {
   SEND_EMAIL: SendEmail;
   SUPABASE_URL: string;
   SUPABASE_ANON_KEY: string;
+  // Canary identity — both set via `wrangler secret put` (never committed; the
+  // repo is public). Unset => canary detection is dormant and every email is
+  // treated as real traffic. See src/canaryHelpers.ts.
+  CANARY_FROM?: string;
+  CANARY_SECRET?: string;
 }
 
 // Plain-text alert to the owner, usable both from the email handler and from the
@@ -85,6 +92,20 @@ export default {
     // Set by onResolved before any reply attempt, so safeReplyByEmail can tell a
     // spam-shaped query from a real one when a reply fails -- see looksLikeSpam.
     let lastQuery = '';
+
+    // Cache the InReach reply token for the nightly Garmin form check
+    // (fire-and-forget — see src/canaryHelpers.ts).
+    ctx.waitUntil(cacheInboundToken(statusKv, parseInbound(body).token));
+
+    // The GitHub Action's nightly synthetic email replies normally but reports
+    // to the 'canary' channel, keeping real paddler telemetry clean.
+    const isCanary = isCanaryMessage(
+      message.from,
+      message.headers.get('Subject') ?? '',
+      env.CANARY_FROM,
+      env.CANARY_SECRET,
+    );
+    const emailChannel = isCanary ? ('canary' as const) : ('email' as const);
 
     const replyByEmail = async (text: string): Promise<void> => {
       const originalId = message.headers.get('Message-ID') ?? '';
@@ -156,11 +177,11 @@ export default {
     const safeReplyByEmail = async (text: string): Promise<void> => {
       try {
         await replyByEmail(text);
-        await recordReplySuccess(statusKv, 'email');
+        await recordReplySuccess(statusKv, emailChannel);
       } catch (err) {
         console.error('replyByEmail failed:', err);
         const detail = err instanceof Error ? err.message : String(err);
-        const failureCount = await recordReplyFailure(statusKv, 'email', detail);
+        const failureCount = await recordReplyFailure(statusKv, emailChannel, detail);
         if (looksLikeSpam(lastQuery)) return;
         if (shouldEscalate(failureCount)) {
           await notifyOwner(
@@ -200,8 +221,9 @@ export default {
         onResolved: (query, reply, channel) => {
           lastQuery = query;
           const resolved = reply !== NOT_FOUND && reply !== UNAVAILABLE;
+          const logChannel = isCanary && channel === 'email' ? 'canary' : channel;
           ctx.waitUntil(
-            logQuery(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, query, resolved, channel).catch(
+            logQuery(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, query, resolved, logChannel).catch(
               (err) => console.error('logQuery failed:', err),
             ),
           );

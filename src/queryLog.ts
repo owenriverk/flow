@@ -7,7 +7,9 @@
  * their reply, so every failure mode (network, non-2xx, timeout) is swallowed.
  */
 
-export type QueryChannel = 'inreach' | 'email' | 'none';
+import type { Channel } from './channels.js';
+
+export type QueryChannel = Channel;
 
 export interface QueryLogDeps {
   fetchFn?: typeof fetch;

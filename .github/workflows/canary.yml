@@ -1,0 +1,48 @@
+# Nightly self-check half that lives OUTSIDE the Worker:
+#   1. email-loop canary — sends a real query email to the bot and asserts a
+#      reply arrives (exercises Email Routing → MIME decode → parse → lookup →
+#      live gauge fetch → formatReply → email reply; everything but the Garmin
+#      POST, which no automation can safely exercise).
+#   2. query replay + Sunday digest (scripts/replay.ts, added in step 6) — runs
+#      here rather than in the Worker for CPU headroom and because the
+#      service-role key can live in Actions secrets (the repo is public).
+#
+# Scheduled ~10:00 UTC, a few hours BEFORE the Worker's 14:00 UTC cron, whose
+# watchdog asserts a canary query_log row exists within 48h — so the Worker
+# notices if GitHub auto-disables this schedule (quiet public repos, ~60 days).
+#
+# Secrets required (repo Settings → Secrets and variables → Actions):
+#   CANARY_SMTP_HOST / CANARY_SMTP_PORT / CANARY_SMTP_USER / CANARY_SMTP_PASS
+#   CANARY_IMAP_HOST / CANARY_IMAP_USER / CANARY_IMAP_PASS
+#   CANARY_SECRET           (mirrored to the Worker via `wrangler secret put`)
+#   SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY   (step 6 replay only)
+name: canary
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Email-loop canary
+        run: node scripts/email-canary.mjs
+        env:
+          CANARY_TO: flow@lateboof.com
+          CANARY_QUERY: selway
+          CANARY_SMTP_HOST: ${{ secrets.CANARY_SMTP_HOST }}
+          CANARY_SMTP_PORT: ${{ secrets.CANARY_SMTP_PORT }}
+          CANARY_SMTP_USER: ${{ secrets.CANARY_SMTP_USER }}
+          CANARY_SMTP_PASS: ${{ secrets.CANARY_SMTP_PASS }}
+          CANARY_IMAP_HOST: ${{ secrets.CANARY_IMAP_HOST }}
+          CANARY_IMAP_USER: ${{ secrets.CANARY_IMAP_USER }}
+          CANARY_IMAP_PASS: ${{ secrets.CANARY_IMAP_PASS }}
+          CANARY_SECRET: ${{ secrets.CANARY_SECRET }}
