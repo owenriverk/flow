@@ -172,18 +172,21 @@ export default {
     // that trip Cloudflare's DMARC check on reply() -- not real paddlers. The reply
     // is still attempted exactly the same either way (looksLikeSpam never skips
     // lookup or delivery); it's only used here to decide whether a failure is worth
-    // paging the owner about. Spam-shaped failures are still recorded (so /api/status
-    // and query_log stay complete) but never notify. A real-looking query that fails
-    // still pages, gated by the same escalation threshold InReach uses.
+    // recording at all. Spam-shaped failures are dropped before recordReplyFailure so
+    // they never inflate consecutiveFailures/lastFailureAt on /api/status -- otherwise
+    // the public catch-all's constant DMARC-rejected spam would make the email channel
+    // look permanently broken even when every real paddler reply is landing fine. A
+    // real-looking query that fails still records and pages, gated by the same
+    // escalation threshold InReach uses.
     const safeReplyByEmail = async (text: string): Promise<void> => {
       try {
         await replyByEmail(text);
         await recordReplySuccess(statusKv, emailChannel);
       } catch (err) {
         console.error('replyByEmail failed:', err);
+        if (looksLikeSpam(lastQuery)) return;
         const detail = err instanceof Error ? err.message : String(err);
         const failureCount = await recordReplyFailure(statusKv, emailChannel, detail);
-        if (looksLikeSpam(lastQuery)) return;
         if (shouldEscalate(failureCount)) {
           await notifyOwner(
             env,
