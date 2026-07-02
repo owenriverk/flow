@@ -31,6 +31,7 @@ import { logQuery } from './queryLog.js';
 import { looksLikeSpam } from './spamFilter.js';
 import { runNightlyChecks, type NightlyCheck } from './canaryRunner.js';
 import { buildSweepCheck, buildWatchdogCheck } from './canarySweep.js';
+import { buildGarminCheck } from './canaryGarmin.js';
 import { cacheInboundToken, isCanaryMessage } from './canaryHelpers.js';
 import { parseInbound } from './parseInbound.js';
 import { NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
@@ -241,6 +242,7 @@ export default {
     const checks: NightlyCheck[] = [
       buildSweepCheck({ supabaseUrl: env.SUPABASE_URL, anonKey: env.SUPABASE_ANON_KEY, kv }),
       buildWatchdogCheck({ supabaseUrl: env.SUPABASE_URL, anonKey: env.SUPABASE_ANON_KEY, kv }),
+      buildGarminCheck({ kv }),
     ];
     ctx.waitUntil(
       runNightlyChecks(checks, {

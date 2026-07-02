@@ -31,8 +31,11 @@ export interface ReplyDeps {
   timeoutMs?: number;
 }
 
-/** Pull an <input>'s value by id or name, tolerant of attribute order. */
-function scrapeField(html: string, field: string): string | null {
+/** Pull an <input>'s value by id or name, tolerant of attribute order.
+ *  Exported for the nightly Garmin form check (src/canaryGarmin.ts), which
+ *  must parse the page with EXACTLY the logic the reply path uses — the whole
+ *  point is detecting when this scrape would break. */
+export function scrapeField(html: string, field: string): string | null {
   const tag = html.match(new RegExp(`<input\\b[^>]*\\b(?:id|name)=["']${field}["'][^>]*>`, 'i'));
   if (!tag) return null;
   const value = tag[0].match(/\bvalue=["']([^"']*)["']/i);
