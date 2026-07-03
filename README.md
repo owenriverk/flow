@@ -25,7 +25,7 @@ src/
   time.ts            upstream timestamp -> { instant, utc offset }
   formatReply.ts     reading -> <=160 char reply, flow value never truncated
   handleQuery.ts     channel-agnostic core: text in, reply out, routes by source, never throws
-  aliases.json       ~40 curated runs -> gauge (US/Canada/CA class V)
+  aliases.json       ~40 curated runs -> gauge (US/Canada/NZ/CA class V)
 ```
 
 ## Develop

@@ -22,6 +22,8 @@ import { fetchReading as fetchWscDefault } from './wsc.js';
 import { fetchReading as fetchCdecDefault } from './cdec.js';
 import { fetchReading as fetchDreamflowsDefault } from './dreamflows.js';
 import { fetchReading as fetchNoaaDefault } from './noaa.js';
+import { fetchReading as fetchEnvdataDefault } from './envdata.js';
+import { fetchReading as fetchFlowrateDefault } from './flowrate.js';
 
 export interface CdecConfig {
   sensor?: number;
@@ -40,6 +42,8 @@ export interface HandleQueryDeps {
   fetchCdec?: (station: string, cfg: CdecConfig) => Promise<Reading>;
   fetchDreamflows?: (riverId: string) => Promise<Reading>;
   fetchNoaa?: (stationId: string) => Promise<Reading>;
+  fetchEnvdata?: (siteName: string) => Promise<Reading>;
+  fetchFlowrate?: (stationId: string) => Promise<Reading>;
   fetchCached?: (source: GaugeSource, site: string) => Promise<Reading | null>;
   /** Last-resort fuzzy matcher (Workers AI). Only called when lookup misses. */
   resolveFuzzy?: (text: string) => Promise<string | null>;
@@ -63,6 +67,8 @@ export async function handleQuery(text: string, deps: HandleQueryDeps): Promise<
     deps.fetchCdec ?? ((id: string, cfg: CdecConfig) => fetchCdecDefault(id, cfg));
   const fetchDreamflows = deps.fetchDreamflows ?? ((id: string) => fetchDreamflowsDefault(id));
   const fetchNoaa = deps.fetchNoaa ?? ((id: string) => fetchNoaaDefault(id));
+  const fetchEnvdata = deps.fetchEnvdata ?? ((id: string) => fetchEnvdataDefault(id));
+  const fetchFlowrate = deps.fetchFlowrate ?? ((id: string) => fetchFlowrateDefault(id));
 
   try {
     let reading: Reading;
@@ -72,6 +78,10 @@ export async function handleQuery(text: string, deps: HandleQueryDeps): Promise<
       reading = await fetchDreamflows(ref.site);
     } else if (ref.source === 'noaa') {
       reading = await fetchNoaa(ref.site);
+    } else if (ref.source === 'envdata') {
+      reading = await fetchEnvdata(ref.site);
+    } else if (ref.source === 'flowrate') {
+      reading = await fetchFlowrate(ref.site);
     } else if (ref.source === 'cdec') {
       const cfg: CdecConfig = {};
       if ('sensor' in ref && ref.sensor !== undefined) cfg.sensor = ref.sensor;

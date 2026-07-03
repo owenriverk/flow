@@ -11,6 +11,18 @@ const aliases: Record<string, GaugeAlias> = {
     site: 'NSS', name: 'NF Mokelumne', location: 'Salt Springs, CA', source: 'cdec', sensor: 76, dur: 'D',
   },
   'middle kings': { site: '100', name: 'Kings R', location: 'Rodgers Crossing, CA', source: 'dreamflows' },
+  wairaurahiri: {
+    site: 'Wairaurahiri at Lake Hauroko',
+    name: 'Wairaurahiri R',
+    location: 'At Lake Hauroko outlet, Southland, NZ',
+    source: 'envdata',
+  },
+  'roaring billy': {
+    site: '61',
+    name: 'Landsborough R',
+    location: 'Via Haast R gauge at Roaring Billy, West Coast, NZ',
+    source: 'flowrate',
+  },
 };
 
 const reading: Reading = {
@@ -28,6 +40,8 @@ function deps(over: Partial<Parameters<typeof handleQuery>[1]> = {}) {
     fetchWsc: vi.fn(async () => reading),
     fetchCdec: vi.fn(async () => reading),
     fetchDreamflows: vi.fn(async () => reading),
+    fetchEnvdata: vi.fn(async () => reading),
+    fetchFlowrate: vi.fn(async () => reading),
     ...over,
   };
 }
@@ -64,6 +78,22 @@ describe('handleQuery', () => {
     expect(d.fetchUsgs).not.toHaveBeenCalled();
     expect(d.fetchWsc).not.toHaveBeenCalled();
     expect(out).toContain('Dreamflows 100');
+  });
+
+  test('routes an envdata run to the envdata fetcher by site name', async () => {
+    const d = deps();
+    const out = await handleQuery('wairaurahiri', d);
+    expect(d.fetchEnvdata).toHaveBeenCalledWith('Wairaurahiri at Lake Hauroko');
+    expect(d.fetchUsgs).not.toHaveBeenCalled();
+    expect(out).toContain('ES Wairaurahiri at Lake Hauroko');
+  });
+
+  test('routes a flowrate run to the flowrate fetcher by station id', async () => {
+    const d = deps();
+    const out = await handleQuery('roaring billy', d);
+    expect(d.fetchFlowrate).toHaveBeenCalledWith('61');
+    expect(d.fetchUsgs).not.toHaveBeenCalled();
+    expect(out).toContain('FlowRate 61');
   });
 
   test('routes a cdec run to the CDEC fetcher with its sensor + dur config', async () => {

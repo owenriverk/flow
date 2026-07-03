@@ -1,4 +1,4 @@
-export type GaugeSource = 'usgs' | 'wsc' | 'cdec' | 'dreamflows' | 'noaa';
+export type GaugeSource = 'usgs' | 'wsc' | 'cdec' | 'dreamflows' | 'noaa' | 'envdata' | 'flowrate';
 
 export interface GaugeConfig {
   key: string;
@@ -65,4 +65,8 @@ export const GAUGES: GaugeConfig[] = [
   { key: 'iskut',         name: 'Iskut R',             location: 'Below Johnson River, BC',      source: 'wsc',   site: '08CG001',  text_key: 'iskut',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CG001',  low: 100,   high: 500 },
   { key: 'calor',         name: 'Zymoetz R (Copper)',  location: 'Above O.K. Creek, BC',         source: 'wsc',   site: '08EF005',  text_key: 'calor',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08EF005',  low: 50,    high: 200 },
   { key: 'clearwater',    name: 'Clearwater R',        location: 'Near Clearwater Station, BC',  source: 'wsc',   site: '08LA001',  text_key: 'clearwater',  gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08LA001',  low: 50,    high: 200 },
+
+  // ── New Zealand (cms) ──────────────────────────────────────────────
+  { key: 'wairaurahiri', name: 'Wairaurahiri R',       location: 'At Lake Hauroko outlet, Southland, NZ', source: 'envdata',  site: 'Wairaurahiri at Lake Hauroko', text_key: 'wairaurahiri', gauge_url: 'https://envdata.es.govt.nz/?tab=graph&view=eyJkIjoiZmxvdy54bWwiLCJzIjoiV2FpcmF1cmFoaXJpIGF0IExha2UgSGF1cm9rbyIsIm0iOiJGbG93IiwiaSI6N30%3D', low: null, high: null },
+  { key: 'landsborough',  name: 'Landsborough R',        location: 'Via Haast R gauge at Roaring Billy, West Coast, NZ', source: 'flowrate', site: '61',              text_key: 'landsborough', gauge_url: 'https://flowrate.co.nz/river/haast-river/roaring-billy',                                                                                    low: 85,   high: 150 },
 ];

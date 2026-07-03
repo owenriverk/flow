@@ -69,7 +69,15 @@ function displayName(ref: GaugeRef, r: Reading): string {
 
 export function formatReply(ref: GaugeRef, reading: Reading, opts?: { offline?: boolean }): string {
   const offline = opts?.offline ?? false;
-  const idLabel = { usgs: 'USGS', wsc: 'WSC', cdec: 'CDEC', dreamflows: 'Dreamflows', noaa: 'NOAA' }[ref.source];
+  const idLabel = {
+    usgs: 'USGS',
+    wsc: 'WSC',
+    cdec: 'CDEC',
+    dreamflows: 'Dreamflows',
+    noaa: 'NOAA',
+    envdata: 'ES',
+    flowrate: 'FlowRate',
+  }[ref.source];
   const fixed = [`${idLabel} ${ref.site}`, flowLine(reading), timeLine(reading, offline)].join('\n');
   const name = displayName(ref, reading);
   if (name === '') return fixed;

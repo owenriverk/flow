@@ -1,7 +1,10 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { GAUGES } from './gauges.ts';
+import { GAUGES, type GaugeSource } from './gauges.ts';
 
 const NO_DATA = -999999;
+
+// Sources that report metric (cms / m) natively rather than cfs / ft.
+const CMS_SOURCES: Set<GaugeSource> = new Set(['wsc', 'envdata', 'flowrate']);
 
 interface Reading {
   discharge: number | null;
@@ -78,6 +81,51 @@ async function fetchNoaa(stationId: string): Promise<Reading> {
     const last = data[data.length - 1]!;
     const stage = typeof last.primary === 'number' && last.primary > -900 ? last.primary : null;
     return { discharge: null, stage, reading_time: last.validTime ?? new Date().toISOString() };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// Environment Southland (NZ) — site is identified by its exact human-readable name,
+// no numeric code. Data points are [epochMs, value] pairs, an absolute instant.
+// See src/envdata.ts for the full endpoint writeup.
+async function fetchEnvdata(siteName: string): Promise<Reading> {
+  const url = `https://envdata.es.govt.nz/services/data.ashx?s=${encodeURIComponent(siteName)}&m=Flow&i=7`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+    // deno-lint-ignore no-explicit-any
+    const body = (await res.json()) as any;
+    const flow = body?.data?.find((m: { measurement?: string }) => m.measurement === 'Flow') ?? body?.data?.[0];
+    const series = (flow?.data ?? null) as Array<[number, number]> | null;
+    if (!series || series.length === 0) {
+      return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+    }
+    const [epochMs, value] = series[series.length - 1]!;
+    const discharge = typeof value === 'number' && Number.isFinite(value) ? value : null;
+    return { discharge, stage: null, reading_time: new Date(epochMs).toISOString() };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// flowrate.co.nz (NZ) — unknown station id returns JSON literal `false`, HTTP 200.
+// Timestamp is bare NZ local wall-clock; pinned to NZST (+12:00) year-round, same
+// tradeoff as the Dreamflows/CDEC Pacific-time pin above. See src/flowrate.ts.
+async function fetchFlowrate(stationId: string): Promise<Reading> {
+  const url = `https://flowrate.co.nz/station/${encodeURIComponent(stationId)}/json/flow/current`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+    const body = (await res.json()) as { timestamp?: string; value?: number } | false;
+    if (body === false || typeof body.value !== 'number' || !Number.isFinite(body.value) || !body.timestamp) {
+      return { discharge: null, stage: null, reading_time: new Date().toISOString() };
+    }
+    return { discharge: body.value, stage: null, reading_time: `${body.timestamp.replace(' ', 'T')}+12:00` };
   } finally {
     clearTimeout(timer);
   }
@@ -221,6 +269,10 @@ Deno.serve(async () => {
         reading = withStalenessCheck(dreamflowsReading(dreamflowsMap, g.site));
       } else if (g.source === 'noaa') {
         reading = withStalenessCheck(await fetchNoaa(g.site));
+      } else if (g.source === 'envdata') {
+        reading = withStalenessCheck(await fetchEnvdata(g.site));
+      } else if (g.source === 'flowrate') {
+        reading = withStalenessCheck(await fetchFlowrate(g.site));
       } else {
         reading = withStalenessCheck(await fetchUsgs(g.site));
       }
@@ -244,9 +296,9 @@ Deno.serve(async () => {
         low: g.low,
         high: g.high,
         discharge: reading.discharge,
-        discharge_unit: g.source === 'wsc' ? 'cms' : 'cfs',
+        discharge_unit: CMS_SOURCES.has(g.source) ? 'cms' : 'cfs',
         stage: reading.stage,
-        stage_unit: g.source === 'wsc' ? 'm' : 'ft',   // NOAA reports stage in ft
+        stage_unit: CMS_SOURCES.has(g.source) ? 'm' : 'ft',   // NOAA reports stage in ft
         reading_time: reading.reading_time,
         prev_discharge: prevDischarge,
         prev_reading_time: prevReadingTime,

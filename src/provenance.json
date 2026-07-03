@@ -16,6 +16,18 @@
       "verifiedOn": "2026-07-01",
       "source": "usgs",
       "notes": "SF Flathead ab Twin Creek — the free-flowing wilderness reach (Youngs Creek/Bob Marshall multiday + Meadow Creek Gorge). AW quotes this gauge for both sections. NOT 12362500 (Columbia Falls), which is Hungry Horse dam outflow on a different reach. Live-verified 5,340 cfs / 8.63 ft at add time."
+    },
+    "envdata:Wairaurahiri at Lake Hauroko": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-03",
+      "source": "envdata",
+      "notes": "Owen supplied the exact envdata.es.govt.nz share link for this run. Live-verified 45.0 m3/sec at add time via the site's own services/data.ashx JSON endpoint (reverse-engineered from base.js — no public API docs). Site is identified by exact name string, no numeric code."
+    },
+    "flowrate:61": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-03",
+      "source": "flowrate",
+      "notes": "Owen corrected this: the physical gauge sits on the Haast mainstem (flowrate.co.nz labels it 'Haast River — Roaring Billy'), a few km below the Haast/Landsborough confluence, but the run paddlers actually use it for is the Landsborough R — per packraftingtrips.nz/landsborough, published bands at Roaring Billy are 50-85 cumecs very low, 85-100 low/good, 100-150 moderate (our low/high), 150-250 high/experts only. Live-verified 93.5 m3/sec at add time via flowrate.co.nz/station/61/json/flow/current; page confirms units as Cumecs (m3/s)."
     }
   },
   "rituals": []

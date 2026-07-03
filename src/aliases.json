@@ -107,5 +107,10 @@
   "copper":                { "site": "08EF005",  "name": "Zymoetz R (Copper)",              "location": "Above O.K. Creek, BC",             "source": "wsc" },
   "copper river":          { "site": "08EF005",  "name": "Zymoetz R (Copper)",              "location": "Above O.K. Creek, BC",             "source": "wsc" },
   "clearwater":            { "site": "08LA001",  "name": "Clearwater R",                    "location": "Near Clearwater Station, BC",      "source": "wsc" },
-  "bc clearwater":         { "site": "08LA001",  "name": "Clearwater R",                    "location": "Near Clearwater Station, BC",      "source": "wsc" }
+  "bc clearwater":         { "site": "08LA001",  "name": "Clearwater R",                    "location": "Near Clearwater Station, BC",      "source": "wsc" },
+
+  "wairaurahiri":          { "site": "Wairaurahiri at Lake Hauroko", "name": "Wairaurahiri R", "location": "At Lake Hauroko outlet, Southland, NZ", "source": "envdata" },
+  "landsborough":          { "site": "61", "name": "Landsborough R", "location": "Via Haast R gauge at Roaring Billy, West Coast, NZ", "source": "flowrate" },
+  "roaring billy":         { "site": "61", "name": "Landsborough R", "location": "Via Haast R gauge at Roaring Billy, West Coast, NZ", "source": "flowrate" },
+  "haast":                 { "site": "61", "name": "Landsborough R", "location": "Via Haast R gauge at Roaring Billy, West Coast, NZ", "source": "flowrate" }
 }

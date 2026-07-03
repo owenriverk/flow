@@ -8,6 +8,7 @@ const USGS_ID = /^\d{8,15}$/;
 const WSC_ID = /^\d{2}[A-Z]{2}\d{3}$/;
 const CDEC_ID = /^[A-Z0-9]{3}$/;
 const DREAMFLOWS_ID = /^\d{1,3}$/;
+const FLOWRATE_ID = /^\d+$/;
 
 describe('aliases.json', () => {
   test('every entry has a name, a location, and a valid id for its source', () => {
@@ -23,6 +24,11 @@ describe('aliases.json', () => {
         expect(entry.site, `${key} dreamflows site`).toMatch(DREAMFLOWS_ID);
       } else if (entry.source === 'noaa') {
         expect(entry.site, `${key} noaa site`).toMatch(/^[a-z0-9]+$/i);
+      } else if (entry.source === 'envdata') {
+        // envdata's own "id" is the exact human-readable station name -- no fixed format.
+        expect(entry.site?.length, `${key} envdata site`).toBeGreaterThan(0);
+      } else if (entry.source === 'flowrate') {
+        expect(entry.site, `${key} flowrate site`).toMatch(FLOWRATE_ID);
       } else {
         expect(entry.source ?? 'usgs', `${key} source`).toBe('usgs');
         expect(entry.site, `${key} usgs site`).toMatch(USGS_ID);
