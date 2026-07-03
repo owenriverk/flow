@@ -53,6 +53,7 @@ export const GAUGES: GaugeConfig[] = [
   { key: 'san juan',         name: 'San Juan R',                 location: 'Near Bluff, UT',         source: 'usgs',  site: '09379500',  text_key: 'san juan',      gauge_url: 'https://waterdata.usgs.gov/monitoring-location/09379500/',  low: 500,   high: 5000 },
   { key: 'cataract',         name: 'Colorado R (Cataract)',      location: 'Near Hite, UT',          source: 'usgs',  site: '09328960',  text_key: 'cataract',      gauge_url: 'https://waterdata.usgs.gov/monitoring-location/09328960/',  low: 5000,  high: 40000 },
   { key: 'grand canyon',     name: 'Colorado R (Grand Canyon)',  location: 'At Lees Ferry, AZ',      source: 'usgs',  site: '09380000',  text_key: 'grand canyon',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/09380000/',  low: 5000,  high: 25000 },
+  { key: 'phantom',          name: 'Colorado R (Grand Canyon — Phantom)', location: 'Near Phantom Ranch, AZ', source: 'usgs', site: '09402500', text_key: 'phantom',      gauge_url: 'https://waterdata.usgs.gov/monitoring-location/09402500/',  low: 5000,  high: 25000 },
   { key: 'salt',             name: 'Salt R',                     location: 'Near Chrysotile, AZ',    source: 'usgs',  site: '09497500',  text_key: 'salt',          gauge_url: 'https://waterdata.usgs.gov/monitoring-location/09497500/',  low: 800,   high: 3000 },
 
   // ── Alaska USGS (cfs) ────────────────────────────────────────────

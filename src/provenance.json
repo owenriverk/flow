@@ -28,6 +28,12 @@
       "verifiedOn": "2026-07-03",
       "source": "flowrate",
       "notes": "Owen corrected this: the physical gauge sits on the Haast mainstem (flowrate.co.nz labels it 'Haast River — Roaring Billy'), a few km below the Haast/Landsborough confluence, but the run paddlers actually use it for is the Landsborough R — per packraftingtrips.nz/landsborough, published bands at Roaring Billy are 50-85 cumecs very low, 85-100 low/good, 100-150 moderate (our low/high), 150-250 high/experts only. Live-verified 93.5 m3/sec at add time via flowrate.co.nz/station/61/json/flow/current; page confirms units as Cumecs (m3/s)."
+    },
+    "usgs:09402500": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-03",
+      "source": "usgs",
+      "notes": "Owen asked for a second, mid-canyon Colorado R gauge (Lees Ferry alone is up to a day+ ahead of what's actually flowing past a party already in the canyon, since Glen Canyon Dam releases take time to propagate downstream). USGS 09402500 'COLORADO RIVER NEAR GRAND CANYON, AZ' sits at Phantom Ranch (RM ~87.5, coords 36.101,-112.086 match the Phantom Ranch/Bright Angel Creek confluence area). Same run as 'grand canyon'/'lees ferry' (AW #114, Lee's Ferry to Lake Mead) — this is a second real-time reference point on it, not a distinct trip. Live-verified 8,470 cfs / 6.67 ft at add time."
     }
   },
   "rituals": []

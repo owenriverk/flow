@@ -87,6 +87,9 @@
   "lees ferry":            { "site": "09380000", "name": "Colorado R (Grand Canyon)",       "location": "At Lees Ferry, AZ" },
   "gc":                    { "site": "09380000", "name": "Colorado R (Grand Canyon)",       "location": "At Lees Ferry, AZ" },
   "the ditch":             { "site": "09380000", "name": "Colorado R (Grand Canyon)",       "location": "At Lees Ferry, AZ" },
+  "phantom":               { "site": "09402500", "name": "Colorado R (Grand Canyon — Phantom)", "location": "Near Phantom Ranch, AZ" },
+  "phantom ranch":         { "site": "09402500", "name": "Colorado R (Grand Canyon — Phantom)", "location": "Near Phantom Ranch, AZ" },
+  "grand canyon phantom":  { "site": "09402500", "name": "Colorado R (Grand Canyon — Phantom)", "location": "Near Phantom Ranch, AZ" },
   "salt":                  { "site": "09497500", "name": "Salt R",                          "location": "Near Chrysotile, AZ" },
   "salt river":            { "site": "09497500", "name": "Salt R",                          "location": "Near Chrysotile, AZ" },
 
