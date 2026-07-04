@@ -170,4 +170,47 @@ describe('handleQuery', () => {
     expect(NOT_FOUND.length).toBeLessThanOrEqual(160);
     expect(UNAVAILABLE.length).toBeLessThanOrEqual(160);
   });
+
+  // Regression: Dreamflows drops dormant gauges from its CSV, which surfaces as a
+  // fetch-stage not_found. For an alias-resolved gauge that is a data outage, not
+  // a typo — the reply must be last-good cached data (with a warning), never
+  // "check your spelling".
+  test('curated run + fetch not_found → cached last-good reading with stale warning', async () => {
+    const cached: Reading = {
+      discharge: 480,
+      observedAt: new Date(Date.now() - 3 * 3_600_000),
+      offsetMinutes: 0,
+    };
+    const d = deps({
+      fetchDreamflows: vi.fn(async () => {
+        throw new GaugeError('not_found', 'gauge 100 not found in CSV');
+      }),
+      fetchCached: vi.fn(async () => cached),
+    });
+    const out = await handleQuery('middle kings', d);
+    expect(d.fetchCached).toHaveBeenCalledWith('dreamflows', '100');
+    expect(out).toContain('Kings R');
+    expect(out).toContain('480 cfs');
+    expect(out).toContain('no fresh data; cached 3 hr ago');
+    expect(out.length).toBeLessThanOrEqual(160);
+  });
+
+  test('curated run + fetch not_found + empty cache → UNAVAILABLE, not NOT_FOUND', async () => {
+    const d = deps({
+      fetchDreamflows: vi.fn(async () => {
+        throw new GaugeError('not_found', 'gauge 100 not found in CSV');
+      }),
+      fetchCached: vi.fn(async () => null),
+    });
+    expect(await handleQuery('middle kings', d)).toBe(UNAVAILABLE);
+  });
+
+  test('curated run + fetch not_found with no cache wired → UNAVAILABLE', async () => {
+    const d = deps({
+      fetchDreamflows: vi.fn(async () => {
+        throw new GaugeError('not_found', 'gauge 100 not found in CSV');
+      }),
+    });
+    expect(await handleQuery('middle kings', d)).toBe(UNAVAILABLE);
+  });
 });

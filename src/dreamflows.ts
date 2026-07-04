@@ -65,6 +65,16 @@ function parseRow(line: string): string[] {
   return fields;
 }
 
+// The CSV zero-pads RiverId to 3 digits ('054', '069') while our configs store
+// unpadded ids ('54', '69') — normalize both sides so the comparison matches
+// regardless of padding. Same rule as normalizeDreamflowsId in the site's
+// refresh-gauges function; the two parsers must agree or the bot goes blind on
+// 2-digit gauges the website shows fine.
+function normalizeId(id: string): string {
+  const n = Number(id);
+  return Number.isFinite(n) ? String(n) : id;
+}
+
 export async function fetchReading(riverId: string, opts: FetchOptions = {}): Promise<Reading> {
   const fetchFn = opts.fetchFn ?? fetch;
   const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
@@ -93,11 +103,12 @@ export async function fetchReading(riverId: string, opts: FetchOptions = {}): Pr
   }
 
   const lines = text.split('\n').slice(HEADER_LINES);
+  const wantId = normalizeId(riverId);
 
   for (const line of lines) {
     if (!line.trim()) continue;
     const cols = parseRow(line);
-    if (cols[0] !== riverId) continue;
+    if (normalizeId(cols[0] ?? '') !== wantId) continue;
 
     const rawFlow = cols[7] ?? '';
     const discharge = Number(rawFlow);

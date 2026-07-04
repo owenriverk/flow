@@ -51,10 +51,13 @@ function flowLine(r: Reading): string {
 
 function timeLine(r: Reading, offline: boolean): string {
   if (offline) {
+    // Stale-data warning: the paddler must know this is NOT a current reading.
+    // Days past 48h — "3 days ago" reads instantly; "78 hr ago" doesn't.
     const ageMs = Date.now() - r.observedAt.getTime();
     const ageHr = Math.round(ageMs / 3_600_000);
-    const age = ageHr < 1 ? '< 1 hr ago' : `${ageHr} hr ago`;
-    return `[offline] cached ${age}`;
+    const age =
+      ageHr < 1 ? '< 1 hr ago' : ageHr <= 48 ? `${ageHr} hr ago` : `${Math.round(ageHr / 24)} days ago`;
+    return `no fresh data; cached ${age}`;
   }
   const local = new Date(r.observedAt.getTime() + r.offsetMinutes * 60_000);
   const hh = String(local.getUTCHours()).padStart(2, '0');

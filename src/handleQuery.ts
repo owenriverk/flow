@@ -5,8 +5,14 @@
  *
  *   text ─▶ lookupGauge ─┬─ null ──────────────────────▶ NOT_FOUND
  *                        └─ {site, source} ─▶ fetch[source] ─┬─ Reading ─▶ formatReply
- *                                                            ├─ not_found ─▶ NOT_FOUND
- *                                                            └─ otherwise ─▶ UNAVAILABLE
+ *                                                            ├─ not_found, raw-id query ─▶ NOT_FOUND
+ *                                                            └─ otherwise ─▶ cached ─▶ stale reply
+ *                                                                          └─ no cache ▶ UNAVAILABLE
+ *
+ * Fetch-stage not_found only means "user typo'd an id" for raw-ID (tier 2)
+ * queries. For an alias-resolved gauge the site came from our own config, so a
+ * missing upstream row (e.g. Dreamflows drops dormant gauges from the CSV) is a
+ * data outage: fall through to the last-known-good cache like any other outage.
  *
  * Source routing: 'usgs' -> fetchUsgs, 'wsc' -> fetchWsc.
  * Iron rule: this function never throws and never returns ''. A paddler on a
@@ -92,7 +98,8 @@ export async function handleQuery(text: string, deps: HandleQueryDeps): Promise<
     }
     return formatReply(ref, reading);
   } catch (e) {
-    if (e instanceof GaugeError && e.kind === 'not_found') return NOT_FOUND;
+    const curated = 'name' in ref;
+    if (e instanceof GaugeError && e.kind === 'not_found' && !curated) return NOT_FOUND;
     if (deps.fetchCached) {
       const cached = await deps.fetchCached(ref.source, ref.site).catch(() => null);
       if (cached) return formatReply(ref, cached, { offline: true });

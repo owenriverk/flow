@@ -80,6 +80,33 @@ describe('formatReply', () => {
     expect(formatReply(ref, reading)).toContain('no current reading');
   });
 
+  test('offline replies warn about stale data with an hour-scale age', () => {
+    const ref: GaugeRef = {
+      site: '54', source: 'dreamflows', name: 'Bald Rock (MF Feather)', location: 'At Milsap Bar, CA',
+    };
+    const reading: Reading = {
+      discharge: 480,
+      observedAt: new Date(Date.now() - 3 * 3_600_000),
+      offsetMinutes: 0,
+    };
+    const out = formatReply(ref, reading, { offline: true });
+    expect(out).toContain('no fresh data; cached 3 hr ago');
+    expect(out.length).toBeLessThanOrEqual(160);
+  });
+
+  test('offline ages past 48 hours read in days, not hours', () => {
+    const ref: GaugeRef = {
+      site: '111', source: 'dreamflows', name: 'Fantasy Falls (NF Mokelumne)', location: 'Above Salt Springs, CA',
+    };
+    const reading: Reading = {
+      discharge: 480,
+      observedAt: new Date(Date.now() - 14 * 24 * 3_600_000),
+      offsetMinutes: 0,
+    };
+    const out = formatReply(ref, reading, { offline: true });
+    expect(out).toContain('no fresh data; cached 14 days ago');
+  });
+
   test('guarantees <=160 chars, truncating the name but never the flow value', () => {
     const ref: GaugeRef = {
       site: '03189100', source: 'usgs',
