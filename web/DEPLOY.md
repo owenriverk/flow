@@ -2,11 +2,20 @@
 
 This document outlines the steps to deploy the lateboof landing page to Cloudflare Pages with a custom domain.
 
+**Scope:** this covers the static `web/` site only (landing page + live gauge
+table, no build step). Flow has two other pieces that deploy separately and
+aren't covered here:
+
+- The email bot (Cloudflare Email Worker) — see the root [README.md](../README.md) "Deploy" section.
+- The Supabase project behind the live gauge data — schema in `../supabase/migrations/`, refresh logic in `../supabase/functions/refresh-gauges/`.
+
+Deploying `web/` does not deploy either of those; all three pieces must be live for the full system to work.
+
 ## Prerequisites
 
 - Repository pushed to GitHub
 - Cloudflare account with domain management access
-- Supabase project URL and anon key (from Task 6)
+- Supabase project URL and anon key — already committed in `web/gauges.js`; only needed again if rotating (see Configuration below)
 
 ## Deployment Steps
 
@@ -17,18 +26,23 @@ git remote add origin https://github.com/YOUR_USERNAME/flow.git
 git push -u origin main
 ```
 
-### Step 2: Connect to Cloudflare Pages
+### Step 2: Auto-deploy via GitHub Actions
 
-1. Go to [dash.cloudflare.com](https://dash.cloudflare.com)
-2. Navigate to **Workers & Pages → Create application → Pages → Connect to Git**
-3. Select the `flow` repository
-4. Configure the build settings:
-   - **Framework preset:** None
-   - **Build command:** (leave empty)
-   - **Build output directory:** `web`
-5. Click **Save and Deploy**
+The `flow` Pages project was created as a **direct upload** project (deploys
+pushed with `wrangler pages deploy`), and Cloudflare does not allow converting
+a direct-upload project to a git-connected one. Instead, auto-deploy is wired
+up through GitHub Actions: `.github/workflows/deploy-pages.yml` runs
+`wrangler pages deploy web --project-name=flow` on every push to `main` that
+touches `web/**`.
 
-The first deployment takes approximately 1 minute. Cloudflare will assign a temporary `*.pages.dev` URL for testing.
+One-time setup — the workflow needs a Cloudflare API token in GitHub secrets:
+
+1. Go to [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) → **Create Token**
+2. Use the **Edit Cloudflare Workers** template, or a custom token with
+   **Account → Cloudflare Pages → Edit** permission
+3. Add it to the repo: `gh secret set CLOUDFLARE_API_TOKEN -R owenriverk/flow`
+
+Manual deploys still work anytime: `npx wrangler pages deploy web --project-name=flow`.
 
 ### Step 3: Add Custom Domain
 
@@ -38,37 +52,37 @@ The first deployment takes approximately 1 minute. Cloudflare will assign a temp
 4. Add a CNAME record in Cloudflare DNS pointing to your Pages deployment
 5. (Optional) Add `www.lateboof.com` and configure a redirect to `lateboof.com` via a Page Rule or Redirect Rule
 
-## Configuration: Add Supabase Credentials
+## Configuration: Supabase Credentials
 
-The app requires Supabase credentials to fetch live river flow data.
+`web/gauges.js` already has live Supabase credentials committed at the top
+(`SUPABASE_URL` and `ANON_KEY`) — there's nothing to fill in for a normal
+deploy. The anon key is the public/read-only key; the `gauges` table has row
+level security enabled with a public `select`-only policy, so it's safe to
+ship client-side (see `../supabase/migrations/001_gauges.sql`).
 
-1. Open `web/gauges.js`
-2. Replace the placeholder values with your actual credentials:
-   - `YOUR_PROJECT_ID` → Your Supabase project ID (from Supabase dashboard)
-   - `YOUR_ANON_KEY` → Your Supabase anon key (from Supabase dashboard → Settings → API)
+### Rotating credentials (if ever needed)
 
-Example:
-```javascript
-const SUPABASE_URL = 'https://your-project-id.supabase.co';
-const ANON_KEY = 'your-anon-key-here';
-```
+1. Supabase dashboard → your project → **Settings → API**
+2. Copy the **Project URL** and **anon/public key**
+3. Update the `SUPABASE_URL` and `ANON_KEY` consts at the top of `web/gauges.js`
+4. Commit and push — there's no build step, so the next deploy picks it up
 
 ## Verification
 
-Once deployed, verify both pages are live:
+Once deployed, verify the site is live:
 
 1. **Index page:** Open [https://lateboof.com](https://lateboof.com)
-   - Should display the landing page with river overview
-2. **Gauge directory:** Open [https://lateboof.com/gauges.html](https://lateboof.com/gauges.html)
-   - Should display a table of rivers with live flow data
-   - Rivers with configured `low`/`high` thresholds will show color-coded values (red/green/blue)
+   - Should display the landing page with the live gauge table (river, location, flow, text-command, updated)
+   - Rivers with configured `low`/`high` thresholds show color-coded rows (red/green/blue)
+2. **Gauge directory redirect:** Open [https://lateboof.com/gauges.html](https://lateboof.com/gauges.html)
+   - `gauges.html` is now just a meta-refresh stub (kept for old links/bookmarks) — it should bounce straight to `/`, not show its own table
 
 ## Live Data Refresh
 
-The gauges page automatically refreshes live data every 10 minutes. No manual intervention required.
+The live gauge table on the index page automatically refreshes every 10 minutes (`REFRESH_MS` in `web/gauges.js`). No manual intervention required.
 
 ## Troubleshooting
 
-- **Blank page or no data:** Verify Supabase credentials in `web/gauges.js` are correct
-- **Build failed:** Ensure the `web` directory is the build output (contains `index.html` and `gauges.html`)
+- **Blank page or no data:** Verify the Supabase credentials in `web/gauges.js` are still valid (e.g. project wasn't recreated or the key wasn't rotated) — see "Rotating credentials" above
+- **Build failed:** Ensure the `web` directory is the build output; it should contain `index.html`, `gauges.html`, `help.html`, `status.html`, `gauges.js`, and `style.css`
 - **Domain not resolving:** Check that the CNAME record is properly configured in Cloudflare DNS

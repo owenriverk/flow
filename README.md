@@ -51,7 +51,17 @@ catch-all forwards to a personal inbox for testing.)
 Live test: send a gauge name to `flow@lateboof.com` **from an InReach**, confirm the
 flow comes back to the device.
 
-## Not in scope (v1)
+## Implemented beyond v1
+
+Fuzzy/LLM name matching (`src/aiResolve.ts` — Workers AI, gated by a daily call budget,
+only fires on a lookup miss, and can only ever resolve to a real alias key or nothing)
+and a last-known-good cache fallback via Supabase (`src/supabaseCache.ts`, used when
+the live upstream API is down) both shipped after v1. There's also a companion
+gauge-directory website (`web/`) backed by a Supabase cron refresher — see `supabase/`.
+
+## Not in scope
 
 SMS / iPhone-satellite (v2 — the reply path there is clean SMS, no web form), Magpie
-(Quebec CEHQ), runnable-judgment, fuzzy/LLM name matching, saved gauges, caching.
+(Quebec CEHQ), saved gauges. Runnable-judgment is not part of the satellite reply
+itself (it's always raw numbers) — the website's color-coded ranges are a separate,
+browsable feature, not something the bot ever texts back.
