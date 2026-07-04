@@ -1,5 +1,5 @@
 /**
- * Live end-to-end smoke test against the real USGS / WSC / CDEC APIs.
+ * Live end-to-end smoke test against the real USGS / WSC / Dreamflows APIs.
  * Off by default (network-dependent). Run with: LIVE=1 npx vitest run test/live.test.ts
  */
 import { describe, expect, test } from 'vitest';
@@ -19,9 +19,8 @@ live('live gauge queries', () => {
     ['deschutes', 'USGS'],
     ['salt', 'USGS'],
     ['stikine', 'WSC'],
-    ['fantasy falls', 'CDEC'],
     ['kings', 'Dreamflows'],
-    ['west cherry', 'CDEC'],
+    ['west cherry', 'Dreamflows'],
   ])('%s returns a <=160 reply labeled %s', async (query, label) => {
     const reply = await handleQuery(query, { aliases: table });
     console.log(`\n[${query}]\n${reply}`);
