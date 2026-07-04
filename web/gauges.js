@@ -148,7 +148,7 @@ function renderRows(rows) {
       ? ` <span class="trend ${trend.cls}" title="${escapeHtml(trend.title)}">${trend.glyph}</span>`
       : '';
     return `<tr class="${status}">
-      <td data-label="River"><a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a><span class="river-sub">${location}</span></td>
+      <td data-label="Run"><a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a><span class="river-sub">${location}</span></td>
       <td class="location col-location" data-label="Location">${location}</td>
       <td class="flow" data-label="Flow">${flow}${trendHtml}</td>
       <td class="cmd" data-label="Text this">${textKey}</td>
