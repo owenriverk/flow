@@ -3,20 +3,6 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const REFRESH_MS = 10 * 60 * 1000;
 const COLSPAN = 5;
 
-// Client-side allowlist: the table currently holds rows from earlier gauge-list
-// revisions that the backend hasn't cleaned up yet, so this filters down to the
-// 36 verified-active gauges until that server-side cleanup is deployed.
-const ACTIVE_KEYS = new Set([
-  'kings', 'fantasy', 'royal gorge', 'postpile', 'south merced',
-  'tuolumne grand canyon', 'tuolumne', 'upper cherry', 'bald rock feather',
-  'rogue', 'deschutes', 'john day', 'grande ronde', 'selway', 'hells canyon',
-  'main salmon', 'middle fork salmon', 'south salmon', 'owyhee',
-  'clarks fork', 'flathead mf', 'flathead nf',
-  'yampa', 'gates of lodore', 'deso grey', 'san juan', 'cataract', 'grand canyon', 'salt',
-  'susitna',
-  'tatshenshini', 'alsek', 'stikine', 'iskut', 'calor', 'clearwater',
-]);
-
 // Reading timestamps older than this are flagged visually.
 const STALE_WARN_HRS  = 2;   // muted warning style
 const OFFLINE_HRS     = 72;  // [OFFLINE] — clearly broken
@@ -205,7 +191,12 @@ async function load() {
       headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    allRows = (await res.json()).filter(g => ACTIVE_KEYS.has(g.key));
+    // No client-side allowlist: refresh-gauges/index.ts already prunes any row
+    // whose key isn't in the canonical GAUGES list, so the table itself is the
+    // source of truth for "active." A duplicate list here only risks silently
+    // hiding gauges the backend has already vetted (as happened with the SF
+    // Flathead / Phantom Ranch / NZ additions).
+    allRows = await res.json();
     writeCache(allRows);
     applyFiltersAndSort();
 
@@ -216,7 +207,7 @@ async function load() {
     console.error(e);
     const cached = readCache();
     if (cached?.rows?.length) {
-      allRows = cached.rows.filter(g => ACTIVE_KEYS.has(g.key));
+      allRows = cached.rows;
       applyFiltersAndSort();
       const cachedAt = new Date(cached.fetchedAt).toLocaleString([], {
         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
