@@ -1,4 +1,16 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LateBoof — The Oracle Report</title><link rel="stylesheet" href="style.css"><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>The Oracle Report — When Classic Runs Come In | LateBoof</title>
+<meta name="description" content="Come-in forecasts for Upper Cherry, Middle Kings, Fantasy Falls, Devils Postpile, and the Stikine — when each run opens, the odds, and how past calls scored.">
+<link rel="canonical" href="https://lateboof.com/forecast">
+<meta property="og:title" content="The Oracle Report — When Classic Runs Come In">
+<meta property="og:description" content="Come-in forecasts for Upper Cherry, Middle Kings, Fantasy Falls, Devils Postpile, and the Stikine — when each run opens, the odds, and how past calls scored.">
+<meta property="og:url" content="https://lateboof.com/forecast">
+<meta property="og:site_name" content="LateBoof">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lateboof.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><style>
 .wrap { max-width: 900px; margin: 0 auto; padding: 1rem; }
 .signup { border: 2px solid var(--border); padding: .9rem 1rem; margin: 1rem 0 1.4rem; }
 .signup-row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
@@ -66,8 +78,8 @@ table.rc th { position: static; background: none; z-index: auto; }
   <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
   <span class="header-sub"><strong>The Oracle</strong> — know when it comes in, before you book the flights</span>
   <span class="header-actions">
-    <a class="help-btn" href="gauges.html">GaugeDirectory</a>
-    <a class="help-btn" href="help.html">HowTo</a>
+    <a class="help-btn" href="/">GaugeDirectory</a>
+    <a class="help-btn" href="/help">HowTo</a>
     <a class="contact-btn" href="/#contact">+ Contact</a>
   </span>
 </header><div class="wrap">
@@ -76,11 +88,11 @@ table.rc th { position: static; background: none; z-index: auto; }
   <div class="note">We watch the snowpack, the weather models, and the gauges — then tell you
   when each run comes in, weeks ahead. Four emails a year: <strong>April outlook · June lock-in ·
   Stikine watch · season report card</strong>. Receipts included.</div>
-  <div class="signup-row" style="margin-top:.5rem">
-    <input type="email" placeholder="you@rivers.com"><button>Get the report</button>
-  </div>
+  <form class="signup-row" style="margin-top:.5rem" action="/api/subscribe" method="post" data-cta="Get the report">
+    <input type="email" name="email" required placeholder="you@rivers.com"><button>Get the report</button>
+  </form>
 </div>
-<div class="cards"><a class="card" href="forecast-stikine.html"><div class="card-top"><h2>STIKINE — GRAND CANYON</h2><span class="acc">we give odds, not dates</span></div><div class="call"><span class="pill soon">COMING IN</span>window opens <b>~Aug 20</b> · odds curve inside</div><div class="meta"><span>good under 550 cms at Telegraph Ck · now 942</span><span>heads-up: fall rain re-closes it in 4 of 10 years</span></div></a><a class="card" href="forecast-kings.html"><div class="card-top"><h2>MIDDLE KINGS</h2><span class="acc">usually within ~5 days</span></div><div class="call"><span class="pill done">WRAPPED</span>was in <b>Jun 21 → Jul 01</b> · 10-day window</div><div class="meta"><span>good 1,800 → 900 cfs (Rogers Crossing) · now ≈789</span><span>snow 64% of normal → 10 days instead of the usual 21</span></div></a><a class="card" href="forecast-postpile.html"><div class="card-top"><h2>DEVILS POSTPILE</h2><span class="acc">usually within ~5 days</span></div><div class="call"><span class="pill done">WRAPPED</span>was in <b>Jun 21 → Jul 02</b> · 11-day window</div><div class="meta"><span>good 250 → 100 cfs at the Postpile gauge · now 80</span><span>snow 48% of normal · late-May tease, real window opened Jun 21</span></div></a><a class="card" href="forecast-cherry.html"><div class="card-top"><h2>UPPER CHERRY</h2><span class="acc">usually within ~3 days</span></div><div class="call"><span class="pill done">WRAPPED</span>was in <b>Jun 11 → Jun 16</b> · 5-day window on the creek</div><div class="meta"><span>good 200 → 145 cfs on the creek itself (CDEC UCC)</span><span>snow 34% of normal · called Jun 11, creek did Jun 11 — dead on</span></div></a><a class="card" href="forecast-fantasy.html"><div class="card-top"><h2>FANTASY FALLS</h2><span class="acc">usually within ~2 days</span></div><div class="call"><span class="pill done">WRAPPED</span>prime opened <b>~May 15</b> · windows here run <b>3–9 days</b> — the blinker</div><div class="meta"><span>good 800 → 600 cfs inflow to Salt Springs</span><span>snow 16% of normal — thinnest in the Sierra this year</span></div></a></div>
+<div class="cards"><a class="card" href="/forecast-stikine"><div class="card-top"><h2>STIKINE — GRAND CANYON</h2><span class="acc">we give odds, not dates</span></div><div class="call"><span class="pill soon">COMING IN</span>window opens <b>~Aug 20</b> · odds curve inside</div><div class="meta"><span>good under 550 cms at Telegraph Ck · now 942</span><span>heads-up: fall rain re-closes it in 4 of 10 years</span></div></a><a class="card" href="/forecast-kings"><div class="card-top"><h2>MIDDLE KINGS</h2><span class="acc">usually within ~5 days</span></div><div class="call"><span class="pill done">WRAPPED</span>was in <b>Jun 21 → Jul 01</b> · 10-day window</div><div class="meta"><span>good 1,800 → 900 cfs (Rogers Crossing) · now ≈789</span><span>snow 64% of normal → 10 days instead of the usual 21</span></div></a><a class="card" href="/forecast-postpile"><div class="card-top"><h2>DEVILS POSTPILE</h2><span class="acc">usually within ~5 days</span></div><div class="call"><span class="pill done">WRAPPED</span>was in <b>Jun 21 → Jul 02</b> · 11-day window</div><div class="meta"><span>good 250 → 100 cfs at the Postpile gauge · now 80</span><span>snow 48% of normal · late-May tease, real window opened Jun 21</span></div></a><a class="card" href="/forecast-cherry"><div class="card-top"><h2>UPPER CHERRY</h2><span class="acc">usually within ~3 days</span></div><div class="call"><span class="pill done">WRAPPED</span>was in <b>Jun 11 → Jun 16</b> · 5-day window on the creek</div><div class="meta"><span>good 200 → 145 cfs on the creek itself (CDEC UCC)</span><span>snow 34% of normal · called Jun 11, creek did Jun 11 — dead on</span></div></a><a class="card" href="/forecast-fantasy"><div class="card-top"><h2>FANTASY FALLS</h2><span class="acc">usually within ~2 days</span></div><div class="call"><span class="pill done">WRAPPED</span>prime opened <b>~May 15</b> · windows here run <b>3–9 days</b> — the blinker</div><div class="meta"><span>good 800 → 600 cfs inflow to Salt Springs</span><span>snow 16% of normal — thinnest in the Sierra this year</span></div></a></div>
 <div class="disclaim">These are forecasts, not gauge readings — the river gets the last word.
 Check the live gauge before you burn vacation days. Seen a run come in? Tell us —
-every confirmation makes next year's call better.</div></div></body></html>
+every confirmation makes next year's call better.</div></div><script src="forecast.js"></script></body></html>
