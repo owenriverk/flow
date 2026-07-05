@@ -62,11 +62,31 @@ table.rc th { position: static; background: none; z-index: auto; }
 .wl-d { display:inline-block; min-width:64px; color:var(--muted); }
 .mockstamp { background:#fff3e8; border:1px dashed #ff5a00; color:#8a3c00;
   font-size:.75rem; padding:.35rem .6rem; margin:.8rem 0 0; }
-.pctwrap { position:relative; }
+.pctrow { display:flex; gap:.9rem; align-items:flex-start; }
+.pctwrap { position:relative; flex:1; min-width:0; }
 .pctwrap svg { touch-action:none; }   /* touch drag reads the chart, not the page */
+.pctkey { flex:0 0 132px; font-size:.7rem; line-height:1.55; color:#555;
+  padding-top:.4rem; }
+.pctkey .sw { display:inline-block; width:14px; height:9px; margin-right:.35rem;
+  vertical-align:-1px; }
+.pctkey .ln { display:inline-block; width:14px; margin-right:.35rem;
+  vertical-align:3px; }
+@media (max-width: 640px) {
+  .pctrow { flex-direction:column; gap:.3rem; }
+  .pctkey { flex-basis:auto; display:flex; flex-wrap:wrap; gap:.05rem .7rem;
+    padding-top:0; }
+}
 .pcttip { position:absolute; top:6px; pointer-events:none; background:#fff;
   border:1px solid var(--border); padding:.3rem .5rem; font-size:.74rem;
   line-height:1.45; box-shadow:0 1px 4px rgba(0,0,0,.12); white-space:nowrap; }
+.ylegend { display:flex; flex-wrap:wrap; gap:.25rem .45rem; align-items:center;
+  margin:.45rem 0 0; }
+.ylab { color:var(--muted); font-size:.72rem; }
+.ychip { font:inherit; font-size:.7rem; padding:.02rem .4rem; cursor:pointer;
+  border:1px solid var(--border); background:#fff; color:#555; }
+.ychip::before { content:""; display:inline-block; width:10px; height:3px;
+  background:var(--c); margin-right:.3rem; vertical-align:2.5px; }
+.ychip.on { border-color:var(--c); color:#111; font-weight:700; }
 </style></head><body><header class="site-header">
   <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
   <span class="header-sub"><strong>The Oracle</strong> — know when it comes in, before you book the flights</span>
