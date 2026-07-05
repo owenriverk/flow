@@ -312,7 +312,9 @@
 
     // The satellite reply must fit an InReach message. Prove it.
     var msg = document.getElementById('sat-msg').textContent.replace(/\s+/g, ' ').trim();
-    document.getElementById('char-count').textContent = msg.length + '/160 chars — fits an InReach reply';
+    document.getElementById('char-count').textContent = msg.length <= 160
+      ? msg.length + '/160 chars — fits an InReach reply'
+      : msg.length + '/160 chars — too long for an InReach reply';
 
     // "Request another reading" replays the hydrograph. Same result, obviously.
     document.getElementById('retry').addEventListener('click', function () {
