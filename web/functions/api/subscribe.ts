@@ -2,8 +2,10 @@
  * Oracle signup → beehiiv, via a Pages Function so the API key stays server-side.
  * POST /api/subscribe with form-encoded or JSON { email }.
  *
- * Isolated from the bot Worker on purpose: this deploys with the static site
- * (wrangler pages deploy web), never touches the reply path.
+ * Isolated from the bot Worker on purpose: this deploys with the static site,
+ * never touches the reply path. Deploy with `npm run deploy:preview` — wrangler
+ * only bundles functions/ when it sits in the working directory, so deploying
+ * `web` from the repo root silently ships the site with no API at all.
  *
  * Env (Pages project settings):
  *   BEEHIIV_API_KEY        required — signups return 503 without it
