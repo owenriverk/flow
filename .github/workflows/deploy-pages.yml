@@ -20,4 +20,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: c368641bb3e52824fdafbccb7437b5bc
-          command: pages deploy web --project-name=flow --branch=main
+          # Run from web/ so Pages Functions (web/functions/) get bundled —
+          # wrangler resolves functions/ relative to the working directory,
+          # and the root wrangler config belongs to the email Worker.
+          workingDirectory: web
+          command: pages deploy . --project-name=flow --branch=main

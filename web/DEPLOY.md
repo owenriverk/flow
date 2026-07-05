@@ -32,8 +32,10 @@ The `flow` Pages project was created as a **direct upload** project (deploys
 pushed with `wrangler pages deploy`), and Cloudflare does not allow converting
 a direct-upload project to a git-connected one. Instead, auto-deploy is wired
 up through GitHub Actions: `.github/workflows/deploy-pages.yml` runs
-`wrangler pages deploy web --project-name=flow` on every push to `main` that
-touches `web/**`.
+`wrangler pages deploy . --project-name=flow` from the `web/` directory on
+every push to `main` that touches `web/**`. Running from `web/` matters:
+Pages Functions live in `web/functions/` and wrangler only bundles a
+`functions/` directory relative to its working directory.
 
 One-time setup — the workflow needs a Cloudflare API token in GitHub secrets:
 
@@ -42,7 +44,21 @@ One-time setup — the workflow needs a Cloudflare API token in GitHub secrets:
    **Account → Cloudflare Pages → Edit** permission
 3. Add it to the repo: `gh secret set CLOUDFLARE_API_TOKEN -R owenriverk/flow`
 
-Manual deploys still work anytime: `npx wrangler pages deploy web --project-name=flow`.
+Manual deploys still work anytime: `cd web && npx wrangler pages deploy . --project-name=flow`.
+
+### Oracle signups (beehiiv)
+
+`web/functions/api/subscribe.ts` proxies the Oracle signup forms to beehiiv so
+the API key stays server-side. One-time setup:
+
+```
+cd web && npx wrangler pages secret put BEEHIIV_API_KEY --project-name=flow
+```
+
+(Or Pages project → Settings → Environment variables.) Without the key the
+endpoint degrades to a friendly "email us and we'll add you by hand" message —
+it never breaks the page. `BEEHIIV_PUBLICATION_ID` is baked in as a default
+and only needs setting if the publication ever changes.
 
 ### Step 3: Add Custom Domain
 
