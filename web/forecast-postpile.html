@@ -1,7 +1,71 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LateBoof — Devils Postpile</title><link rel="stylesheet" href="style.css"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="forecast.css"></head><body><header class="site-header">
-  <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
-  <span class="header-sub"><strong>The Oracle</strong> — know when it comes in, before you book the flights</span>
-  <span class="header-actions"><a class="help-btn" href="forecast.html">ALL RIVERS</a><a class="help-btn" href="/">LIVE GAUGES</a></span>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LateBoof — Devils Postpile</title><link rel="stylesheet" href="style.css"><style>
+.wrap { max-width: 900px; margin: 0 auto; padding: 1rem; }
+.signup { border: 2px solid var(--border); padding: .9rem 1rem; margin: 1rem 0 1.4rem; }
+.signup-row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
+.signup h1 { font-size: 1.05rem; }
+.signup input { font: inherit; padding: .4rem .55rem; border: 1px solid var(--border); min-width: 230px; }
+.signup button { font: inherit; font-weight: 700; padding: .4rem .9rem; background: #ff5a00;
+  color: #fff; border: 1px solid #ff5a00; cursor: pointer; }
+.signup .note { color: var(--muted); font-size: .78rem; margin-top:.35rem; }
+.cards { display: grid; gap: .8rem; }
+.card { border: 1px solid var(--border); padding: .75rem .95rem; display: block; text-decoration: none; }
+.card:hover { outline: 2px solid #ff5a00; }
+.card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.card h2 { font-size: .95rem; }
+.acc { color: var(--faint); font-size: .78rem; }
+.call { font-size: 1.02rem; margin: .3rem 0; }
+.call b { font-size: 1.12rem; }
+.pill { display: inline-block; font-size: .7rem; font-weight: 700; padding: .05rem .5rem;
+  border: 1.5px solid currentColor; margin-right: .5rem; vertical-align: 1.5px; }
+.pill.go { color: var(--good); } .pill.soon { color: #ff5a00; }
+.pill.done { color: var(--muted); } .pill.watch { color: var(--high); }
+.meta { color: var(--muted); font-size: .8rem; display: flex; gap: 1.1rem; flex-wrap: wrap; }
+.ok { color: var(--good); } .miss { color: var(--low); }
+.section { margin: 1.7rem 0; }
+.section h3 { font-size: .85rem; text-transform: uppercase; letter-spacing: .06em;
+  border-bottom: 2px solid var(--border); padding-bottom: .3rem; margin-bottom: .7rem; }
+.section .cap { color: var(--muted); font-size: .8rem; margin-top: .35rem; }
+table.rc { border-collapse: collapse; width: 100%; font-size: .84rem; }
+table.rc th, table.rc td { text-align: left; padding: .22rem .7rem .22rem 0;
+  border-bottom: 1px solid var(--border-light); }
+table.rc th { color: var(--muted); font-weight: 400; }
+.hero { border: 2px solid var(--border); padding: 1rem 1.1rem; margin: 1rem 0; }
+.hero .big { font-size: 1.45rem; font-weight: 700; }
+.hero .sub { color: var(--muted); margin-top: .15rem; }
+.why li { margin: .35rem 0 .35rem 1.1rem; }
+.ing { display:grid; grid-template-columns: 130px 1fr; gap:.25rem .8rem; font-size:.84rem; }
+.ing dt { color: var(--muted); } .ing dd { margin:0; }
+.disclaim { color: var(--faint); font-size: .74rem; margin-top: 2rem;
+  border-top: 1px solid var(--border-light); padding-top: .6rem; }
+svg text { font-family: inherit; }
+/* style.css makes all th sticky-gray (for the rivers index) - receipts tables stay plain */
+table.rc th { position: static; background: none; z-index: auto; }
+@media (max-width: 640px) {
+  /* style.css card-collapses every table at 640px (built for the index table, which has
+     data-label attrs). The receipts table has none - keep it an actual table. */
+  table.rc { display: table; }
+  table.rc thead { display: table-header-group; }
+  table.rc tbody { display: table-row-group; }
+  table.rc tr { display: table-row; }
+  table.rc th, table.rc td { display: table-cell; }
+  /* SVG text scales with the viewBox: 10px @ 680-wide viewBox = ~5px on a phone.
+     Bump the SVG-unit size so it lands ~8px rendered at 375px. */
+  svg text { font-size: 16px !important; }
+  svg text.ulabel { display: none; }      /* unit is trivia at phone size */
+  svg { overflow: visible; }              /* let edge labels (1,800) spill, not clip */
+}
+.gstrip { display:flex; gap: .9rem; align-items:center; flex-wrap:wrap;
+  border:1px solid var(--border); padding:.5rem .8rem; margin:.8rem 0; font-size:.86rem; }
+.gstrip svg { width:160px; height:48px; }
+.wlog { list-style:none; margin:0; padding:0; font-size:.86rem; }
+.wlog li { padding:.3rem 0; border-bottom:1px solid var(--border-light); }
+.wl-d { display:inline-block; min-width:64px; color:var(--muted); }
+.mockstamp { background:#fff3e8; border:1px dashed #ff5a00; color:#8a3c00;
+  font-size:.75rem; padding:.35rem .6rem; margin:.8rem 0 0; }
+</style></head><body><header class="site-header">
+  <span class="brand">LateBoof</span>
+  <span class="header-sub"><strong>Forecast</strong> — know when it comes in, before you book the flights</span>
+  <span class="header-actions"><a class="help-btn" href="forecast.html">ALL RIVERS</a></span>
 </header><div class="wrap">
 <div class="hero">
   <div class="sub">DEVILS POSTPILE · good between 250 and 100 cfs on the gauge at the run</div>
@@ -54,10 +118,10 @@ the season normally starts. Out of the averages, out of the training.</div></div
 <div class="signup">
   <h1>Wrapped for 2026 — the first 2027 call lands ~April 1</h1>
   <div class="note">Snow survey drops, we run the model, you get the date. Four emails a year.</div>
-  <form class="signup-row" style="margin-top:.5rem" action="/api/subscribe" method="post" data-cta="Get the April call">
-    <input type="email" name="email" required placeholder="you@rivers.com"><button>Get the April call</button>
-  </form>
+  <div class="signup-row" style="margin-top:.5rem">
+    <input type="email" placeholder="you@rivers.com"><button>Get the April call</button>
+  </div>
 </div>
 <div class="disclaim">These are forecasts, not gauge readings — the river gets the last word.
 Check the live gauge before you burn vacation days. Seen a run come in? Tell us —
-every confirmation makes next year's call better.</div></div><script src="forecast.js"></script></body></html>
+every confirmation makes next year's call better.</div></div></body></html>
