@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LateBoof — Devils Postpile</title><link rel="stylesheet" href="style.css"><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Devils Postpile Come-In Forecast | LateBoof Oracle</title><meta name="description" content="When does Devils Postpile come in? Come-in calls for the Middle Fork San Joaquin's 250–100 cfs window, from the April snow survey to the day it dropped in."><link rel="canonical" href="https://lateboof.com/forecast-postpile"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"LateBoof","item":"https://lateboof.com/"},{"@type":"ListItem","position":2,"name":"The Oracle Report","item":"https://lateboof.com/forecast"},{"@type":"ListItem","position":3,"name":"Devils Postpile","item":"https://lateboof.com/forecast-postpile"}]}</script><meta property="og:title" content="Devils Postpile Come-In Forecast (Middle Fork San Joaquin)"><meta property="og:description" content="When does Devils Postpile come in? Come-in calls for the 250–100 cfs window, from the April snow survey to the day it dropped in."><meta property="og:url" content="https://lateboof.com/forecast-postpile"><meta property="og:site_name" content="LateBoof"><meta property="og:type" content="website"><meta property="og:image" content="https://lateboof.com/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><style>
 .wrap { max-width: 900px; margin: 0 auto; padding: 1rem; }
 .signup { border: 2px solid var(--border); padding: .9rem 1rem; margin: 1rem 0 1.4rem; }
 .signup-row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
-.signup h1 { font-size: 1.05rem; }
+.signup h1, .signup h2 { font-size: 1.05rem; }
 .signup input { font: inherit; padding: .4rem .55rem; border: 1px solid var(--border); min-width: 230px; }
 .signup button { font: inherit; font-weight: 700; padding: .4rem .9rem; background: #ff5a00;
   color: #fff; border: 1px solid #ff5a00; cursor: pointer; }
@@ -31,7 +31,7 @@ table.rc th, table.rc td { text-align: left; padding: .22rem .7rem .22rem 0;
 table.rc th { color: var(--muted); font-weight: 400; }
 .hero { border: 2px solid var(--border); padding: 1rem 1.1rem; margin: 1rem 0; }
 .hero .big { font-size: 1.45rem; font-weight: 700; }
-.hero .sub { color: var(--muted); margin-top: .15rem; }
+.hero .sub { color: var(--muted); margin-top: .15rem; font-size: 1em; font-weight: 400; }
 .why li { margin: .35rem 0 .35rem 1.1rem; }
 .ing { display:grid; grid-template-columns: 130px 1fr; gap:.25rem .8rem; font-size:.84rem; }
 .ing dt { color: var(--muted); } .ing dd { margin:0; }
@@ -93,13 +93,13 @@ table.rc th { position: static; background: none; z-index: auto; }
   <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
   <span class="header-sub"><strong>The Oracle</strong> — know when it comes in, before you book the flights</span>
   <span class="header-actions">
-    <a class="help-btn" href="forecast.html">Oracle</a>
-    <a class="help-btn" href="help.html">HowTo</a>
+    <a class="help-btn" href="/forecast">Oracle</a>
+    <a class="help-btn" href="/help">HowTo</a>
     <a class="contact-btn" href="/#contact">+ Contact</a>
   </span>
 </header><div class="wrap">
 <div class="hero">
-  <div class="sub">DEVILS POSTPILE · good between 250 and 100 cfs on the gauge at the run</div>
+  <h1 class="sub">DEVILS POSTPILE · good between 250 and 100 cfs on the gauge at the run</h1>
   <div class="big">Wrapped: Jun 21 → Jul 02 — 11 days in the band</div>
   <div class="sub">The window ran 11 days on 48% snow. Late May teased under 250
   first — a mid-June warm-up took it back out; the real come-in was Jun 21.</div>
@@ -147,12 +147,12 @@ the band and corrects the offset; we tried retraining straight onto 250 and it g
 250 by May 19 — four weeks early, the ugliest number on the site, and it stays up. Gone before
 the season normally starts. Out of the averages, out of the training.</div></div>
 <div class="signup">
-  <h1>Wrapped for 2026 — the first 2027 call lands ~April 1</h1>
+  <h2>Wrapped for 2026 — the first 2027 call lands ~April 1</h2>
   <div class="note">Snow survey drops, we run the model, you get the date. Four emails a year.</div>
-  <div class="signup-row" style="margin-top:.5rem">
-    <input type="email" placeholder="you@rivers.com"><button>Get the April call</button>
-  </div>
+  <form class="signup-row" style="margin-top:.5rem" action="/api/subscribe" method="post" data-cta="Get the April call">
+    <input type="email" name="email" required placeholder="you@rivers.com"><button>Get the April call</button>
+  </form>
 </div>
 <div class="disclaim">These are forecasts, not gauge readings — the river gets the last word.
 Check the live gauge before you burn vacation days. Seen a run come in? Tell us —
-every confirmation makes next year's call better.</div></div></body></html>
+every confirmation makes next year's call better.</div></div><script src="/forecast.js"></script></body></html>

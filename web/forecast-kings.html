@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LateBoof — Middle Kings</title><link rel="stylesheet" href="style.css"><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Middle Kings Come-In Forecast | LateBoof Oracle</title><meta name="description" content="When does the Middle Kings come in? Forecast calls for the 1,800–900 cfs window at Rogers Crossing, from snow survey to river, with the scorecard."><link rel="canonical" href="https://lateboof.com/forecast-kings"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"LateBoof","item":"https://lateboof.com/"},{"@type":"ListItem","position":2,"name":"The Oracle Report","item":"https://lateboof.com/forecast"},{"@type":"ListItem","position":3,"name":"Middle Kings","item":"https://lateboof.com/forecast-kings"}]}</script><meta property="og:title" content="Middle Kings Come-In Forecast"><meta property="og:description" content="When does the Middle Kings come in? Calls for the 1,800–900 cfs window at Rogers Crossing, from snow survey to river, with the season scorecard."><meta property="og:url" content="https://lateboof.com/forecast-kings"><meta property="og:site_name" content="LateBoof"><meta property="og:type" content="website"><meta property="og:image" content="https://lateboof.com/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><style>
 .wrap { max-width: 900px; margin: 0 auto; padding: 1rem; }
 .signup { border: 2px solid var(--border); padding: .9rem 1rem; margin: 1rem 0 1.4rem; }
 .signup-row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
-.signup h1 { font-size: 1.05rem; }
+.signup h1, .signup h2 { font-size: 1.05rem; }
 .signup input { font: inherit; padding: .4rem .55rem; border: 1px solid var(--border); min-width: 230px; }
 .signup button { font: inherit; font-weight: 700; padding: .4rem .9rem; background: #ff5a00;
   color: #fff; border: 1px solid #ff5a00; cursor: pointer; }
@@ -31,7 +31,7 @@ table.rc th, table.rc td { text-align: left; padding: .22rem .7rem .22rem 0;
 table.rc th { color: var(--muted); font-weight: 400; }
 .hero { border: 2px solid var(--border); padding: 1rem 1.1rem; margin: 1rem 0; }
 .hero .big { font-size: 1.45rem; font-weight: 700; }
-.hero .sub { color: var(--muted); margin-top: .15rem; }
+.hero .sub { color: var(--muted); margin-top: .15rem; font-size: 1em; font-weight: 400; }
 .why li { margin: .35rem 0 .35rem 1.1rem; }
 .ing { display:grid; grid-template-columns: 130px 1fr; gap:.25rem .8rem; font-size:.84rem; }
 .ing dt { color: var(--muted); } .ing dd { margin:0; }
@@ -93,13 +93,13 @@ table.rc th { position: static; background: none; z-index: auto; }
   <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
   <span class="header-sub"><strong>The Oracle</strong> — know when it comes in, before you book the flights</span>
   <span class="header-actions">
-    <a class="help-btn" href="forecast.html">Oracle</a>
-    <a class="help-btn" href="help.html">HowTo</a>
+    <a class="help-btn" href="/forecast">Oracle</a>
+    <a class="help-btn" href="/help">HowTo</a>
     <a class="contact-btn" href="/#contact">+ Contact</a>
   </span>
 </header><div class="wrap">
 <div class="hero">
-  <div class="sub">MIDDLE KINGS · good between 1,800 and 900 cfs at Rogers Crossing</div>
+  <h1 class="sub">MIDDLE KINGS · good between 1,800 and 900 cfs at Rogers Crossing</h1>
   <div class="big">Wrapped: Jun 21 → Jul 01 — a 10-day window</div>
   <div class="sub">Gauge read 901 on Jul 04 — it hovered in the 850–890s
   for a few days, then let go. 64% snow bought 10 days; the median year gets 21.</div>
@@ -155,12 +155,12 @@ pack went at once — in May 16, under 900 by May 28, gone before the season nor
 Every forecast in California died that spring, including the state's. It stays on the board and
 out of the math.</div></div>
 <div class="signup">
-  <h1>Wrapped for 2026 — the first 2027 call lands ~April 1</h1>
+  <h2>Wrapped for 2026 — the first 2027 call lands ~April 1</h2>
   <div class="note">Snow survey drops, we run the model, you get the date. Four emails a year.</div>
-  <div class="signup-row" style="margin-top:.5rem">
-    <input type="email" placeholder="you@rivers.com"><button>Get the April call</button>
-  </div>
+  <form class="signup-row" style="margin-top:.5rem" action="/api/subscribe" method="post" data-cta="Get the April call">
+    <input type="email" name="email" required placeholder="you@rivers.com"><button>Get the April call</button>
+  </form>
 </div>
 <div class="disclaim">These are forecasts, not gauge readings — the river gets the last word.
 Check the live gauge before you burn vacation days. Seen a run come in? Tell us —
-every confirmation makes next year's call better.</div></div></body></html>
+every confirmation makes next year's call better.</div></div><script src="/forecast.js"></script></body></html>

@@ -15,6 +15,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The six forecast pages are nightly build outputs of the private weth
+      # repo (its refresh workflow deploys them at 14:17 UTC) — the copies
+      # committed here go stale immediately. Refresh them from the live site
+      # so a web/ push never regresses the forecast pages to an old snapshot.
+      - name: Preserve live forecast pages
+        run: |
+          for p in forecast forecast-stikine forecast-kings forecast-cherry forecast-fantasy forecast-postpile; do
+            curl -sf "https://lateboof.com/$p" -o "web/$p.html" \
+              || echo "keeping committed $p.html (live fetch failed)"
+          done
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
