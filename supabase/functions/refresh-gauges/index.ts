@@ -366,6 +366,10 @@ Deno.serve(async () => {
   // between 15-min ticks, so on-conflict do-nothing dedupes to one row per
   // actual reading) and enforce retention. Both best-effort: a hiccup stales
   // tomorrow's baseline at worst, and the nightly trend-health check watches.
+  // The outcome is surfaced in the response (not just console.error) — this
+  // codepath sits after the main upsert loop, outside its `errors` array, so
+  // silently swallowing a failure here would be invisible from every caller.
+  let historyError: string | null = null;
   try {
     if (newHistoryRows.length > 0) {
       const { error } = await client
@@ -375,7 +379,8 @@ Deno.serve(async () => {
     }
     await client.from('flow_history').delete().lt('reading_time', retentionCutoff(now));
   } catch (err) {
-    console.error(`flow_history append/retention failed: ${err}`);
+    historyError = err instanceof Error ? err.message : String(err);
+    console.error(`flow_history append/retention failed: ${historyError}`);
   }
 
   // Delete any row whose key is no longer in the canonical GAUGES list, so the table
@@ -389,7 +394,13 @@ Deno.serve(async () => {
   }
 
   return new Response(
-    JSON.stringify({ updated: results.length - errors.length, removed: orphanKeys.length, errors }),
+    JSON.stringify({
+      updated: results.length - errors.length,
+      removed: orphanKeys.length,
+      errors,
+      historyRowsAppended: newHistoryRows.length,
+      historyError,
+    }),
     { headers: { 'Content-Type': 'application/json' } },
   );
 });
