@@ -30,6 +30,7 @@ import type { CheckResult, NightlyCheck } from './canaryRunner.js';
 
 export const SWEEP_KEY = 'canary:sweep:snapshot';
 export const WATCHDOG_STATE_KEY = 'canary:watchdog:state';
+export const TREND_STATE_KEY = 'canary:trend:state';
 
 export type GaugeState = 'ok' | 'offline' | 'stale' | 'flatline';
 
@@ -240,6 +241,128 @@ export function buildWatchdogCheck(deps: WatchdogDeps): NightlyCheck {
         status: 'ok',
         summary: `email canary last ran ${Math.max(0, Math.round(ageHours))}h ago`,
         findings: recovered ? ['email canary is running again'] : [],
+      };
+    },
+  };
+}
+
+export interface TrendHealthDeps {
+  supabaseUrl: string;
+  anonKey: string;
+  kv: KvLike;
+  fetchFn?: typeof fetch;
+  timeoutMs?: number;
+  now?: () => Date;
+}
+
+/**
+ * TREND HEALTH: asserts the gauge directory's trend baselines are alive.
+ * refresh-gauges writes baseline_* from flow_history at a target age of
+ * 24h ± 6h, so on any healthy tick a fresh gauge's baseline is 18–30h old
+ * (plus one tick of drift). A baseline older than 31h means the pipeline
+ * stopped promoting — the wiring-regression failure mode that shipped the
+ * original invisible-arrow bug. Null baselines are NOT failures: sparse
+ * sources legitimately have no reading near the 24h target, and the first
+ * day after deploy has no history at all (reported as 'skipped', never
+ * alerted). Transition-only alerting, same contract as the other checks.
+ */
+export function buildTrendHealthCheck(deps: TrendHealthDeps): NightlyCheck {
+  const STUCK_AGE_HOURS = 31;
+  return {
+    name: 'trend baselines',
+    run: async (): Promise<CheckResult> => {
+      const fetchFn = deps.fetchFn ?? fetch;
+      const now = (deps.now ?? (() => new Date()))();
+
+      interface TrendRow {
+        key: string;
+        discharge: number | null;
+        reading_time: string | null;
+        baseline_reading_time: string | null;
+      }
+      let rows: TrendRow[];
+      try {
+        const res = await fetchFn(
+          `${deps.supabaseUrl}/rest/v1/gauges?select=key,discharge,reading_time,baseline_reading_time`,
+          {
+            headers: { apikey: deps.anonKey, Authorization: `Bearer ${deps.anonKey}` },
+            signal: AbortSignal.timeout(deps.timeoutMs ?? 10_000),
+          },
+        );
+        if (!res.ok) {
+          const body = await res.text().catch(() => '');
+          // Worker deployed ahead of migration 011: the column doesn't exist
+          // yet. That's a sequencing state, not an incident — never alert.
+          if (res.status === 400 && body.includes('baseline_reading_time')) {
+            return { status: 'skipped', summary: 'baseline columns not migrated yet (011)' };
+          }
+          return { status: 'error', summary: `gauges read failed: HTTP ${res.status}` };
+        }
+        rows = (await res.json()) as TrendRow[];
+      } catch (err) {
+        return {
+          status: 'error',
+          summary: `gauges read failed: ${err instanceof Error ? err.message : String(err)}`,
+        };
+      }
+
+      // Only gauges whose SOURCE is alive can be judged — a dark gauge's
+      // baseline aging out is the sweep's finding (offline/stale), not ours.
+      const fresh = rows.filter(r =>
+        r.discharge != null &&
+        r.reading_time !== null &&
+        (now.getTime() - Date.parse(r.reading_time)) / 3_600_000 <= 48,
+      );
+      if (fresh.length === 0) {
+        return { status: 'skipped', summary: 'no fresh discharge gauges to judge' };
+      }
+
+      const withBaseline = fresh.filter(r => r.baseline_reading_time !== null);
+      if (withBaseline.length === 0) {
+        return {
+          status: 'skipped',
+          summary: `no baselines yet across ${fresh.length} fresh gauges (warming up after deploy?)`,
+        };
+      }
+
+      const stuck = withBaseline.filter(r => {
+        const ageHours = (now.getTime() - Date.parse(r.baseline_reading_time!)) / 3_600_000;
+        return !Number.isFinite(ageHours) || ageHours > STUCK_AGE_HOURS;
+      });
+
+      const stale = stuck.length > 0;
+      let prevState: string | null = null;
+      try {
+        prevState = await deps.kv.get(TREND_STATE_KEY);
+      } catch {
+        // fail open — worst case a repeat alert
+      }
+      try {
+        await deps.kv.put(TREND_STATE_KEY, stale ? 'stale' : 'ok');
+      } catch {
+        // fail open
+      }
+
+      const summary =
+        `${withBaseline.length - stuck.length}/${fresh.length} fresh gauges have live baselines` +
+        (stuck.length > 0 ? `, ${stuck.length} stuck (>${STUCK_AGE_HOURS}h)` : '');
+
+      if (stale) {
+        const findings =
+          prevState === 'stale'
+            ? []
+            : [
+                `${stuck.length} gauge baseline(s) older than ${STUCK_AGE_HOURS}h — refresh-gauges ` +
+                  `stopped promoting trend baselines (${stuck.map(r => r.key).join(', ')}). ` +
+                  'Arrows are stale on the site; check the edge function logs.',
+              ];
+        return { status: 'findings', summary, findings };
+      }
+      const recovered = prevState === 'stale';
+      return {
+        status: 'ok',
+        summary,
+        findings: recovered ? ['trend baselines are promoting again'] : [],
       };
     },
   };
