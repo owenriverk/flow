@@ -61,20 +61,64 @@ function flowText(g) {
 }
 
 // Ignore swings under this so measurement jitter doesn't flip the arrow.
+// Tuned against the ~24h baseline window — see the v3 design doc assignment.
 const TREND_THRESHOLD = 0.02;
 
-/** Returns { glyph, cls, title } for the discharge trend, or null if unknown/flat. */
+/**
+ * Returns { glyph, cls, title } for the discharge trend, or null if unknown/flat.
+ *
+ * Compares against baseline_* — a reading from ~24h ago picked by
+ * refresh-gauges from flow_history. Same-time-of-day comparison cancels the
+ * diurnal melt cycle, so the arrow reads day-over-day ("is it coming in"),
+ * not this morning vs last night's peak. (prev_* is the bot's outage
+ * fallback, a different contract — do not read it here.)
+ */
 function trendInfo(g) {
-  if (g.discharge == null || g.prev_discharge == null || g.prev_discharge === 0) return null;
-  const pct = (g.discharge - g.prev_discharge) / g.prev_discharge;
+  if (g.discharge == null || g.baseline_discharge == null || g.baseline_discharge === 0) return null;
+  const pct = (g.discharge - g.baseline_discharge) / g.baseline_discharge;
   if (Math.abs(pct) < TREND_THRESHOLD) return null;
   const pctLabel = `${pct > 0 ? '+' : ''}${Math.round(pct * 100)}%`;
-  const sinceLabel = g.prev_reading_time
-    ? ` since ${new Date(g.prev_reading_time).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`
+  const sinceLabel = g.baseline_reading_time
+    ? ` vs yesterday (${new Date(g.baseline_reading_time).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })})`
     : '';
   return pct > 0
     ? { glyph: '↑', cls: 'trend-up',   title: `${pctLabel}${sinceLabel}` }
     : { glyph: '↓', cls: 'trend-down', title: `${pctLabel}${sinceLabel}` };
+}
+
+// --- Favorites: star a run to pin it to the top. localStorage only — no
+// accounts, ever. Keys are gauge `key` values (a stable contract; any future
+// run rename ships an old→new remap here). Orphaned keys are KEPT, not
+// pruned: a run temporarily off the roster gets its star back on return.
+// Every storage touch is defensive — private-mode Safari throws on writes,
+// and a broken favorites store must degrade to "unstarred, working page".
+const FAVORITES_KEY = 'lateboof:favorites:v1';
+
+function readFavorites() {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr.filter(k => typeof k === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeFavorites(keys) {
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(keys));
+  } catch {
+    // best-effort: the in-memory set still pins for this session
+  }
+}
+
+const favorites = new Set(readFavorites());
+
+function toggleFavorite(key) {
+  if (favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  writeFavorites([...favorites]);
+  applyFiltersAndSort();
 }
 
 function escapeHtml(value) {
@@ -124,17 +168,22 @@ function applyFiltersAndSort() {
     return 0;
   });
 
-  renderRows(rows);
+  // Starred rows pin to the top; sort order is preserved within each group.
+  // Pinning is ordering-only — the filters above already applied to everything.
+  const pinned = rows.filter(g => favorites.has(g.key));
+  const rest = rows.filter(g => !favorites.has(g.key));
+
+  renderRows([...pinned, ...rest], pinned.length);
   updateHeaders();
 }
 
-function renderRows(rows) {
+function renderRows(rows, pinnedCount = 0) {
   const tbody = document.getElementById('gauge-body');
   if (!rows.length) {
     tbody.innerHTML = `<tr class="message-row"><td colspan="${COLSPAN}">No rivers match.</td></tr>`;
     return;
   }
-  tbody.innerHTML = rows.map(g => {
+  tbody.innerHTML = rows.map((g, i) => {
     const status   = rowClass(g);
     const gaugeUrl = escapeHtml(g.gauge_url);
     const name     = escapeHtml(g.name);
@@ -147,8 +196,17 @@ function renderRows(rows) {
     const trendHtml = trend
       ? ` <span class="trend ${trend.cls}" title="${escapeHtml(trend.title)}">${trend.glyph}</span>`
       : '';
-    return `<tr class="${status}">
-      <td data-label="Run"><a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a><span class="river-sub">${location}</span></td>
+    const isFav = favorites.has(g.key);
+    // The star is a <button>, not part of the run link — its click must never
+    // open the gauge page, and it needs its own generous tap target on mobile.
+    const starHtml = `<button class="fav-btn${isFav ? ' on' : ''}" data-key="${escapeHtml(g.key)}"` +
+      ` aria-pressed="${isFav}" aria-label="${isFav ? 'Unpin' : 'Pin to top'}"` +
+      ` title="${isFav ? 'Unpin' : 'Pin to top'}">${isFav ? '★' : '☆'}</button>`;
+    const rowCls = status +
+      (i < pinnedCount ? ' pinned' : '') +
+      (pinnedCount > 0 && i === pinnedCount - 1 ? ' pinned-last' : '');
+    return `<tr class="${rowCls}">
+      <td data-label="Run">${starHtml}<a class="river-name" href="${gaugeUrl}" target="_blank" rel="noopener">${name}</a><span class="river-sub">${location}</span></td>
       <td class="location col-location" data-label="Location">${location}</td>
       <td class="flow" data-label="Flow">${flow}${trendHtml}</td>
       <td class="cmd" data-label="Text this">${textKey}</td>
@@ -156,6 +214,15 @@ function renderRows(rows) {
     </tr>`;
   }).join('');
 }
+
+// ONE delegated listener on the (persistent) tbody — renderRows rebuilds row
+// innerHTML every refresh, so per-row listeners would die on the first tick.
+document.getElementById('gauge-body').addEventListener('click', e => {
+  const btn = e.target.closest('.fav-btn');
+  if (!btn) return;
+  e.preventDefault();
+  toggleFavorite(btn.dataset.key);
+});
 
 function updateHeaders() {
   document.querySelectorAll('th[data-col]').forEach(th => {

@@ -234,3 +234,108 @@ describe('email-canary watchdog', () => {
     expect(result.status).toBe('error');
   });
 });
+
+// ---------------------------------------------------------------------------
+// trend baselines (v3 — flow_history-fed baseline_* columns)
+
+import { buildTrendHealthCheck, TREND_STATE_KEY } from '../src/canarySweep.js';
+
+interface TrendRowOver {
+  key?: string;
+  discharge?: number | null;
+  reading_time?: string | null;
+  baseline_reading_time?: string | null;
+}
+const trendRow = (over: TrendRowOver = {}) => ({
+  key: 'gauley',
+  discharge: 2800,
+  reading_time: hoursAgo(1),
+  baseline_reading_time: hoursAgo(24),
+  ...over,
+});
+
+function trendCheck(rows: unknown, kvStore: Record<string, string> = {}, status = 200, body?: string) {
+  const store = kv(kvStore);
+  const fetchFn = vi.fn(async () =>
+    body !== undefined
+      ? new Response(body, { status })
+      : jsonResponse(rows, status),
+  ) as unknown as typeof fetch;
+  const check = buildTrendHealthCheck({
+    supabaseUrl: 'https://x.supabase.co',
+    anonKey: 'anon',
+    kv: store,
+    fetchFn,
+    now: () => NOW,
+  });
+  return { check, store };
+}
+
+describe('buildTrendHealthCheck', () => {
+  it('reports ok when fresh gauges carry recent baselines', async () => {
+    const { check } = trendCheck([
+      trendRow(),
+      trendRow({ key: 'kings', baseline_reading_time: hoursAgo(28) }),
+    ]);
+    const result = await check.run();
+    expect(result.status).toBe('ok');
+    expect(result.summary).toContain('2/2 fresh gauges');
+    expect(result.findings).toEqual([]);
+  });
+
+  it('skips (never alerts) before migration 011 exists', async () => {
+    const { check } = trendCheck(null, {}, 400, JSON.stringify({
+      message: 'column gauges.baseline_reading_time does not exist',
+    }));
+    const result = await check.run();
+    expect(result.status).toBe('skipped');
+    expect(result.summary).toContain('not migrated');
+  });
+
+  it('skips while baselines warm up after deploy (all null)', async () => {
+    const { check } = trendCheck([trendRow({ baseline_reading_time: null })]);
+    const result = await check.run();
+    expect(result.status).toBe('skipped');
+    expect(result.summary).toContain('warming up');
+  });
+
+  it('ignores gauges whose source is dark (the sweep owns those)', async () => {
+    const { check } = trendCheck([
+      trendRow({ key: 'dead', discharge: null, baseline_reading_time: hoursAgo(90) }),
+      trendRow({ key: 'stale-src', reading_time: hoursAgo(60), baseline_reading_time: hoursAgo(90) }),
+      trendRow(),
+    ]);
+    const result = await check.run();
+    expect(result.status).toBe('ok');
+    expect(result.summary).toContain('1/1 fresh gauges');
+  });
+
+  it('flags stuck baselines once on transition, with the gauge named', async () => {
+    const rows = [trendRow({ key: 'kings', baseline_reading_time: hoursAgo(40) }), trendRow()];
+    const { check, store } = trendCheck(rows);
+    const first = await check.run();
+    expect(first.status).toBe('findings');
+    expect(first.findings).toHaveLength(1);
+    expect(first.findings![0]).toContain('kings');
+    expect(store.store[TREND_STATE_KEY]).toBe('stale');
+
+    // Standing state repeats without re-alerting.
+    const { check: again } = trendCheck(rows, { [TREND_STATE_KEY]: 'stale' });
+    const second = await again.run();
+    expect(second.status).toBe('findings');
+    expect(second.findings).toEqual([]);
+  });
+
+  it('announces recovery exactly once', async () => {
+    const { check } = trendCheck([trendRow()], { [TREND_STATE_KEY]: 'stale' });
+    const result = await check.run();
+    expect(result.status).toBe('ok');
+    expect(result.findings).toEqual(['trend baselines are promoting again']);
+  });
+
+  it('reports error (not findings) when the read fails outright', async () => {
+    const { check } = trendCheck(null, {}, 500, 'oops');
+    const result = await check.run();
+    expect(result.status).toBe('error');
+  });
+});

@@ -1,5 +1,12 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { GAUGES, type GaugeSource } from './gauges.ts';
+import {
+  baselineWindow,
+  historyRow,
+  pickBaseline,
+  retentionCutoff,
+  type HistoryRow,
+} from './trend.ts';
 
 const NO_DATA = -999999;
 
@@ -252,11 +259,45 @@ Deno.serve(async () => {
   const hasDreamflows = GAUGES.some(g => g.source === 'dreamflows');
   const dreamflowsMap = hasDreamflows ? await fetchDreamflowsMap() : new Map<string, string[]>();
 
-  // Snapshot current discharge before overwriting it, so the UI can show a trend arrow.
-  const { data: existingRows } = await client
+  // Snapshot current discharge before overwriting it, so the bot's outage
+  // fallback (prev_*) can carry the last-known-good reading forward. ABORT the
+  // whole run if this select fails: proceeding against an empty snapshot would
+  // null prev_* fleet-wide in one tick and silently kill that fallback — the
+  // cron retries in 15 minutes anyway.
+  const { data: existingRows, error: snapshotError } = await client
     .from('gauges')
     .select('key, discharge, reading_time, prev_discharge');
+  if (snapshotError) {
+    return new Response(
+      JSON.stringify({ error: `snapshot select failed, run aborted: ${snapshotError.message}` }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
+    );
+  }
   const existingByKey = new Map((existingRows ?? []).map(r => [r.key as string, r]));
+
+  // Trend baselines: one query serves every gauge — the readings recorded
+  // ~24h ago (±6h) by earlier runs of this same function. Empty on the first
+  // day after deploy (arrows simply wait), and a failure here only stales the
+  // arrows (the nightly trend-health check catches it), never the readings.
+  const now = new Date();
+  const { from: windowFrom, to: windowTo } = baselineWindow(now);
+  const baselineCandidates = new Map<string, HistoryRow[]>();
+  try {
+    const { data: windowRows, error: windowError } = await client
+      .from('flow_history')
+      .select('key, discharge, reading_time')
+      .gte('reading_time', windowFrom)
+      .lte('reading_time', windowTo);
+    if (windowError) throw new Error(windowError.message);
+    for (const row of (windowRows ?? []) as HistoryRow[]) {
+      const list = baselineCandidates.get(row.key);
+      if (list) list.push(row);
+      else baselineCandidates.set(row.key, [row]);
+    }
+  } catch (err) {
+    console.error(`flow_history window read failed — baselines stale this tick: ${err}`);
+  }
+  const newHistoryRows: HistoryRow[] = [];
 
   const results = await Promise.allSettled(
     GAUGES.map(async (g) => {
@@ -278,10 +319,17 @@ Deno.serve(async () => {
       }
 
       // Carry the last known discharge forward through null readings, so a brief
-      // outage doesn't reset the trend baseline back to "unknown".
+      // outage doesn't leave the bot's outage fallback (prev_*) "unknown".
       const existing = existingByKey.get(g.key);
       const prevDischarge = existing?.discharge ?? existing?.prev_discharge ?? null;
       const prevReadingTime = existing?.discharge != null ? existing.reading_time : null;
+
+      // Trend pipeline (trend.ts): record this reading for future baselines,
+      // pick today's ~24h-ago baseline. Explicit fields in the payload every
+      // tick — never rely on PostgREST column-merge to "leave them alone".
+      const history = historyRow(g.key, reading);
+      if (history) newHistoryRows.push(history);
+      const baseline = pickBaseline(baselineCandidates.get(g.key) ?? [], now);
 
       const { error } = await client.from('gauges').upsert({
         key: g.key,
@@ -302,6 +350,8 @@ Deno.serve(async () => {
         reading_time: reading.reading_time,
         prev_discharge: prevDischarge,
         prev_reading_time: prevReadingTime,
+        baseline_discharge: baseline.baseline_discharge,
+        baseline_reading_time: baseline.baseline_reading_time,
         updated_at: new Date().toISOString(),
       });
       if (error) throw new Error(`${g.key}: ${error.message}`);
@@ -311,6 +361,22 @@ Deno.serve(async () => {
   const errors = results
     .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
     .map(r => r.reason instanceof Error ? r.reason.message : String(r.reason));
+
+  // Append this tick's readings to flow_history (sources repeat readings
+  // between 15-min ticks, so on-conflict do-nothing dedupes to one row per
+  // actual reading) and enforce retention. Both best-effort: a hiccup stales
+  // tomorrow's baseline at worst, and the nightly trend-health check watches.
+  try {
+    if (newHistoryRows.length > 0) {
+      const { error } = await client
+        .from('flow_history')
+        .upsert(newHistoryRows, { onConflict: 'key,reading_time', ignoreDuplicates: true });
+      if (error) throw new Error(error.message);
+    }
+    await client.from('flow_history').delete().lt('reading_time', retentionCutoff(now));
+  } catch (err) {
+    console.error(`flow_history append/retention failed: ${err}`);
+  }
 
   // Delete any row whose key is no longer in the canonical GAUGES list, so the table
   // stays exactly in sync with the curated gauge set instead of accumulating rows

@@ -404,6 +404,28 @@ tr.grey .flow { color: var(--faint); }
 .trend-up   { color: var(--muted); }
 .trend-down { color: var(--muted); }
 
+/* Favorites star — pins a run to the top (localStorage, no accounts).
+   A real <button> with a generous hit area: it sits right next to the
+   target=_blank gauge link, and a mobile mis-tap must not leave the site. */
+.fav-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.95em;
+  line-height: 1;
+  color: var(--border-mid);
+  cursor: pointer;
+  padding: 0.45rem 0.55rem 0.45rem 0;
+  margin-left: -0.1rem;
+  vertical-align: baseline;
+}
+.fav-btn:hover { color: var(--border); }
+.fav-btn.on { color: var(--border); }
+
+/* Pinned group: same rows, just first — one hairline under the last pinned
+   row is all the chrome the feature gets. */
+tr.pinned-last td { border-bottom: 2px solid var(--border-mid); }
+
 /* Text command */
 .cmd {
   font-size: 0.78rem;
