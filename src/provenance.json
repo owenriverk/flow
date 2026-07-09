@@ -34,6 +34,30 @@
       "verifiedOn": "2026-07-03",
       "source": "usgs",
       "notes": "Owen asked for a second, mid-canyon Colorado R gauge (Lees Ferry alone is up to a day+ ahead of what's actually flowing past a party already in the canyon, since Glen Canyon Dam releases take time to propagate downstream). USGS 09402500 'COLORADO RIVER NEAR GRAND CANYON, AZ' sits at Phantom Ranch (RM ~87.5, coords 36.101,-112.086 match the Phantom Ranch/Bright Angel Creek confluence area). Same run as 'grand canyon'/'lees ferry' (AW #114, Lee's Ferry to Lake Mead) — this is a second real-time reference point on it, not a distinct trip. Live-verified 8,470 cfs / 6.67 ft at add time."
+    },
+    "wsc:08CE001": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-09",
+      "source": "wsc",
+      "notes": "Stikine Grand Canyon at Telegraph Creek. Range audit 2026-07-09: previous 400-1500 cms band showed GOOD at 920 cms, badly wrong for a class V+ expedition river. Corrected to 225-550 per Owen + the Oracle model itself (weth watch.py Q=550, the window-opens threshold; forecast card says 'good under 550 cms') + bcwhitewater.org reach 58 ('generally paddled 250-450 cms, 350 optimal'). Live-verified 920 cms reading HIGH after fix."
+    },
+    "wsc:08EF005": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-09",
+      "source": "wsc",
+      "notes": "Clore Grand Canyon, quoted off the Zymoetz above O.K. Creek gauge (the Clore itself is ungauged; it is the Zymoetz's major tributary). Range audit 2026-07-09: previous 50-200 guess showed GOOD at 190 cms. Corrected to 100-150 per bcwhitewater.org/reaches/clore-river-grand-canyon: 'The Zymoetz River should be between 100-150 cms for the Clore to be runnable.' Late-summer fly-in classic; high water = continuous class V."
+    },
+    "wsc:08CG001": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-09",
+      "source": "wsc",
+      "notes": "Iskut below Johnson River. Range audit 2026-07-09: NO runnable band on this station on purpose. Paddler beta (bcwhitewater.org/reaches/74-iskut-river) judges the run off the STIKINE gauge ('paddle when the Stikine is a bit high, 400-600 cms') plus a roadside gauge rock near Burrage Creek - nobody quotes the Johnson station, which sits below major tributaries and runs ~1000+ cms in season. Previous 100-500 band was fabricated and read HIGH year-round. Grey/no-range is the honest display; the gauge stays for trend/reference."
+    },
+    "usgs:15292000": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-07-09",
+      "source": "usgs",
+      "notes": "Susitna at Gold Creek (Devils Canyon). Range audit 2026-07-09: NO runnable band on purpose. Previous 3000-10000 cfs guess called the documented ideal flow HIGH - americanwhitewater.org/content/River/detail/id/46 cites ideal kayak flows ~15,000 cfs, but no published min/max band exists for this once-a-generation class V+ run, and the river can rise 15,000 cfs in hours. Grey/no-range until someone with firsthand Devils Canyon knowledge sets a receipted band."
     }
   },
   "rituals": []
