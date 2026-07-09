@@ -18,7 +18,7 @@ import provenanceJson from '../src/provenance.json' with { type: 'json' };
 import type { GaugeAlias } from '../src/lookupGauge.js';
 
 // Lower this as the audit progresses. Never raise it.
-const MAX_UNAUDITED = 35;
+const MAX_UNAUDITED = 31;
 
 const aliases = aliasesJson as Record<string, GaugeAlias>;
 const provenance = provenanceJson as unknown as {
