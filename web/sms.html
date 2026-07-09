@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LateBoof SMS — Text Alerts Opt-In &amp; Program Terms</title>
+  <meta name="description" content="How to opt in to LateBoof river-flow text messages, what we send, how often, and how to stop — the full SMS program terms.">
+  <link rel="canonical" href="https://lateboof.com/sms">
+  <meta property="og:title" content="LateBoof SMS — Text Alerts Opt-In &amp; Program Terms">
+  <meta property="og:description" content="How to opt in to LateBoof river-flow text messages, what we send, how often, and how to stop.">
+  <meta property="og:url" content="https://lateboof.com/sms">
+  <meta property="og:site_name" content="LateBoof">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://lateboof.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=2026070103">
+  <style>
+    .help-page { max-width: 44rem; padding: 1.5rem 1rem; }
+    .help-page h2 { font-size: 0.9rem; font-weight: 700; margin: 1.6rem 0 0.4rem; }
+    .help-page p, .help-page ul { color: var(--muted); font-size: 0.82rem; margin-bottom: 1rem; line-height: 1.7; }
+    .help-page ul { margin-left: 1.2rem; }
+    .help-page code { font-family: inherit; background: #ececec; padding: 0.08rem 0.3rem; font-size: 0.78rem; }
+    .optin-box { border: 2px solid var(--border); padding: 1rem 1.1rem; margin: 1.2rem 0; }
+    .optin-box h2 { margin-top: 0; }
+    .optin-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.8rem 0 0.6rem; }
+    .optin-row input[type="tel"] { font: inherit; padding: 0.4rem 0.55rem; border: 1px solid var(--border); min-width: 220px; }
+    .optin-row button { font: inherit; font-weight: 700; padding: 0.4rem 0.9rem; background: #ff5a00; color: #fff; border: 1px solid #ff5a00; cursor: pointer; }
+    .optin-row button:disabled { opacity: 0.5; cursor: default; }
+    .consent-label { display: flex; gap: 0.55rem; align-items: flex-start; color: var(--muted); font-size: 0.78rem; line-height: 1.6; }
+    .consent-label input { margin-top: 0.25rem; }
+    .optin-note { color: var(--faint); font-size: 0.72rem; line-height: 1.6; margin-top: 0.7rem; }
+    .optin-done { color: var(--good, #005a00); font-size: 0.82rem; font-weight: 700; }
+    .optin-err { color: #a00; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap">LateBoof SMS program — opt-in and terms</h1>
+  <header class="site-header">
+    <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
+    <span class="header-sub">River flows by text — for paddlers, from paddlers</span>
+    <span class="header-actions">
+      <a class="help-btn" href="/forecast">Oracle</a>
+      <a class="help-btn" href="/">GaugeDirectory</a>
+      <a class="contact-btn" href="/#contact">+ Contact</a>
+    </span>
+  </header>
+
+  <div class="help-page">
+    <h2>What the LateBoof text line is</h2>
+    <p>
+      LateBoof sends <strong>river gauge readings and flow alerts by SMS</strong> to whitewater
+      paddlers in the United States and Canada. Two kinds of messages exist, and both require
+      your opt-in first:
+    </p>
+    <ul>
+      <li><strong>Gauge replies</strong> — you text us a river name, we text back one message with
+        the current reading. Example reply:
+        <code>Middle Fork Salmon, At MF Lodge, ID · 2,800 cfs / 4.21 ft · USGS 13309220</code></li>
+      <li><strong>Flow alerts</strong> — recurring notifications when a river you follow changes
+        state (comes into its runnable range, spikes, or drops out).</li>
+    </ul>
+
+    <div class="optin-box">
+      <h2>Opt in to flow alerts</h2>
+      <form id="sms-optin" novalidate>
+        <div class="optin-row">
+          <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel"
+                 placeholder="(555) 555-0100" aria-label="Mobile phone number" required>
+          <button type="submit">Sign up for text alerts</button>
+        </div>
+        <label class="consent-label">
+          <input type="checkbox" id="consent" required>
+          <span>
+            I agree to receive recurring river-flow alert text messages from
+            <strong>LateBoof</strong> at the mobile number I provided. Consent is not a condition
+            of any purchase. Message frequency varies (typically 2&ndash;8 messages per month).
+            Message and data rates may apply. Reply <strong>STOP</strong> to cancel at any time or
+            <strong>HELP</strong> for help. See the <a href="/privacy">Privacy Policy</a> and the
+            SMS terms below.
+          </span>
+        </label>
+      </form>
+      <p class="optin-note">
+        The checkbox is never pre-checked; submitting this form with the box checked is the sole
+        opt-in mechanism for recurring alerts. We keep a timestamped record of your consent.
+      </p>
+    </div>
+
+    <h2>Opting in by texting us first</h2>
+    <p>
+      If you text a river name to the LateBoof toll-free number, that message is your opt-in to
+      receive <strong>one reply per request</strong> with the reading you asked for. We send
+      nothing else to your number unless you separately sign up for flow alerts above. Message
+      and data rates may apply to each reply.
+    </p>
+
+    <h2>How to stop, get help, or reach a human</h2>
+    <ul>
+      <li>Reply <strong>STOP</strong> to any LateBoof message to unsubscribe immediately. You'll
+        receive one final confirmation message and nothing further.</li>
+      <li>Reply <strong>HELP</strong> for assistance, or email
+        <a href="mailto:owen@lateboof.com">owen@lateboof.com</a> any time.</li>
+      <li>Carriers are not liable for delayed or undelivered messages.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>
+      Your phone number is used only to deliver the messages described above.
+      <strong>No mobile information is shared with third parties or affiliates for marketing or
+      promotional purposes.</strong> Full policy: <a href="/privacy">lateboof.com/privacy</a>.
+    </p>
+  </div>
+
+  <script>
+    // Consent log: anon INSERT-only into sms_optin (same trust model as query_log —
+    // the browser can write a consent record, nothing public can ever read one).
+    const SUPABASE_URL = 'https://vfkoegvzllxvshcnfbox.supabase.co';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZma29lZ3Z6bGx4dnNoY25mYm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NzE1MTcsImV4cCI6MjA5ODI0NzUxN30.PdQ8fbjVE0s8LoTED5WHyb1zx8WU-X3QqO4td9XBHqo';
+
+    document.getElementById('sms-optin').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const phoneEl = document.getElementById('phone');
+      const consentEl = document.getElementById('consent');
+      const digits = phoneEl.value.replace(/\D/g, '');
+      let err = form.querySelector('.optin-err');
+      if (!err) {
+        err = document.createElement('p');
+        err.className = 'optin-err';
+        form.appendChild(err);
+      }
+      if (!consentEl.checked) { err.textContent = 'Please check the consent box to opt in.'; return; }
+      if (digits.length < 10 || digits.length > 11) { err.textContent = 'That doesn’t look like a full phone number.'; return; }
+      const e164 = '+1' + digits.slice(-10);
+      const button = form.querySelector('button');
+      button.disabled = true;
+      err.textContent = '';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/sms_optin`, {
+          method: 'POST',
+          headers: {
+            apikey: ANON_KEY,
+            Authorization: `Bearer ${ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal',
+          },
+          body: JSON.stringify({ phone: e164, source: 'lateboof.com/sms' }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        form.outerHTML = '<p class="optin-done">You’re on the list — we’ll text a confirmation when alerts go live. Reply STOP any time.</p>';
+      } catch {
+        button.disabled = false;
+        err.textContent = 'Signup hiccuped — try again in a minute, or email owen@lateboof.com.';
+      }
+    });
+  </script>
+</body>
+</html>
