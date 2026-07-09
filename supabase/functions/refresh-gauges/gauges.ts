@@ -58,14 +58,14 @@ export const GAUGES: GaugeConfig[] = [
   { key: 'salt',             name: 'Salt R',                     location: 'Near Chrysotile, AZ',    source: 'usgs',  site: '09497500',  text_key: 'salt',          gauge_url: 'https://waterdata.usgs.gov/monitoring-location/09497500/',  low: 800,   high: 3000 },
 
   // ── Alaska USGS (cfs) ────────────────────────────────────────────
-  { key: 'susitna',  name: 'Susitna (Devils Canyon)',  location: 'At Gold Creek, AK',  source: 'usgs',  site: '15292000',  text_key: 'susitna',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/15292000/',  low: 3000,  high: 10000 },
+  { key: 'susitna',  name: 'Susitna (Devils Canyon)',  location: 'At Gold Creek, AK',  source: 'usgs',  site: '15292000',  text_key: 'susitna',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/15292000/',  low: null,  high: null },
 
   // ── BC / Yukon WSC (cms) ──────────────────────────────────────────
   { key: 'tatshenshini',  name: 'Tatshenshini R',      location: 'Near Dalton Post, YT',         source: 'wsc',   site: '08AC002',  text_key: 'tat',         gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08AC002', low: 85,    high: 184 },
   { key: 'alsek',         name: 'Alsek R',             location: 'Above Bates River, YT',        source: 'wsc',   site: '08AB001',  text_key: 'alsek',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08AB001',  low: 565,   high: 1135 },
-  { key: 'stikine',       name: 'Stikine (Grand Canyon)',           location: 'At Telegraph Creek, BC',       source: 'wsc',   site: '08CE001',  text_key: 'stikine',     gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CE001',  low: 400,   high: 1500 },
-  { key: 'iskut',         name: 'Iskut R',             location: 'Below Johnson River, BC',      source: 'wsc',   site: '08CG001',  text_key: 'iskut',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CG001',  low: 100,   high: 500 },
-  { key: 'calor',         name: 'Clore (Zymoetz R)',  location: 'Above O.K. Creek, BC',         source: 'wsc',   site: '08EF005',  text_key: 'calor',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08EF005',  low: 50,    high: 200 },
+  { key: 'stikine',       name: 'Stikine (Grand Canyon)',           location: 'At Telegraph Creek, BC',       source: 'wsc',   site: '08CE001',  text_key: 'stikine',     gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CE001',  low: 225,   high: 550 },
+  { key: 'iskut',         name: 'Iskut R',             location: 'Below Johnson River, BC',      source: 'wsc',   site: '08CG001',  text_key: 'iskut',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CG001',  low: null,  high: null },
+  { key: 'calor',         name: 'Clore (Zymoetz R)',  location: 'Above O.K. Creek, BC',         source: 'wsc',   site: '08EF005',  text_key: 'calor',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08EF005',  low: 100,   high: 150 },
   { key: 'clearwater',    name: 'Clearwater R',        location: 'Near Clearwater Station, BC',  source: 'wsc',   site: '08LA001',  text_key: 'clearwater',  gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08LA001',  low: 50,    high: 200 },
 
   // ── New Zealand (cms) ──────────────────────────────────────────────
