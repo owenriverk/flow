@@ -8,13 +8,14 @@
  *
  *   'inreach' — reply delivered via Garmin's web form
  *   'email'   — reply delivered via message.reply()
+ *   'sms'     — reply delivered as TwiML on the Twilio webhook response
  *   'none'    — no reply path existed for the inbound message
  *   'canary'  — the nightly synthetic email from the GitHub Action; identified
  *               at the adapter layer (worker.ts) so it never pollutes real
  *               paddler telemetry. The channel-agnostic core never sees it.
  */
 
-export type Channel = 'inreach' | 'email' | 'none' | 'canary';
+export type Channel = 'inreach' | 'email' | 'sms' | 'none' | 'canary';
 
 /** Channels a reply is actually delivered (and health-tracked) on. */
 export type DeliveryChannel = Exclude<Channel, 'none'>;
