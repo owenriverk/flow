@@ -35,6 +35,7 @@ export interface SelfCheckStatus {
 export interface StatusSummary {
   inreach: ChannelStatus;
   email: ChannelStatus;
+  sms: ChannelStatus;
   canary: ChannelStatus;
   selfCheck: SelfCheckStatus;
 }
@@ -126,11 +127,12 @@ async function readSelfCheck(kv: KvLike): Promise<SelfCheckStatus> {
 }
 
 export async function getStatusSummary(kv: KvLike): Promise<StatusSummary> {
-  const [inreach, email, canary, selfCheck] = await Promise.all([
+  const [inreach, email, sms, canary, selfCheck] = await Promise.all([
     readChannelStatus(kv, 'inreach'),
     readChannelStatus(kv, 'email'),
+    readChannelStatus(kv, 'sms'),
     readChannelStatus(kv, 'canary'),
     readSelfCheck(kv),
   ]);
-  return { inreach, email, canary, selfCheck };
+  return { inreach, email, sms, canary, selfCheck };
 }

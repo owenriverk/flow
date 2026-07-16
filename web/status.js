@@ -76,6 +76,7 @@ async function loadStatus() {
     const channels = [
       ['InReach replies', summary.inreach],
       ['Email replies', summary.email],
+      ['SMS replies', summary.sms],
       ['Nightly canary delivery', summary.canary],
     ];
     for (const [label, channel] of channels) {

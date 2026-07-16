@@ -11,7 +11,10 @@
   // the fetch() handler in src/worker.ts. Coexists with the Email Routing catch-all
   // above; only this one path is routed to the Worker, everything else on the zone
   // continues to hit the static site.
-  "routes": [{ "pattern": "lateboof.com/api/status", "zone_name": "lateboof.com" }],
+  "routes": [
+    { "pattern": "lateboof.com/api/status", "zone_name": "lateboof.com" },
+    { "pattern": "lateboof.com/api/sms", "zone_name": "lateboof.com" }
+  ],
   // Nightly self-check (src/canaryRunner.ts): ONE cron dispatches every check
   // sequentially — gauge sweep, canary watchdog, Garmin form check. 14:00 UTC,
   // a few hours AFTER the GitHub Actions email canary (~10:00 UTC) so the

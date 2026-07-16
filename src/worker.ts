@@ -34,7 +34,8 @@ import { buildSweepCheck, buildTrendHealthCheck, buildWatchdogCheck } from './ca
 import { buildGarminCheck } from './canaryGarmin.js';
 import { cacheInboundToken, isCanaryMessage } from './canaryHelpers.js';
 import { parseInbound } from './parseInbound.js';
-import { NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
+import { handleQuery, NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
+import { validateTwilioSignature, parseSmsWebhook, isOptOutOrHelp, twimlMessage, twimlEmpty } from './sms.js';
 import { buildReplyHeaders } from './emailReply.js';
 import {
   recordReplySuccess,
@@ -43,7 +44,7 @@ import {
   getStatusSummary,
 } from './statusTracking.js';
 import aliasesJson from './aliases.json' with { type: 'json' };
-import type { GaugeAlias } from './lookupGauge.js';
+import type { GaugeAlias, GaugeSource } from './lookupGauge.js';
 
 const aliases = aliasesJson as Record<string, GaugeAlias>;
 
@@ -58,6 +59,10 @@ const BOT_EMAIL = 'flow@lateboof.com';
 // (see src/statusTracking.ts) rather than provisioning a second namespace for what
 // is, from the Worker's side, just more small counters.
 const STATUS_ENDPOINT_PATH = '/api/status';
+// Twilio inbound-SMS webhook. Bound to lateboof.com/api/sms via `routes` in
+// wrangler.jsonc, beside the status endpoint. Distinct from the static /sms
+// opt-in page, which stays on the static site.
+const SMS_ENDPOINT_PATH = '/api/sms';
 
 interface Env {
   AI: Ai;
@@ -70,6 +75,10 @@ interface Env {
   // treated as real traffic. See src/canaryHelpers.ts.
   CANARY_FROM?: string;
   CANARY_SECRET?: string;
+  // Twilio account auth token — set via `wrangler secret put TWILIO_AUTH_TOKEN`
+  // (never committed; the repo is public). Used ONLY to validate inbound SMS
+  // webhook signatures. Unset => every SMS webhook is rejected (fail closed).
+  TWILIO_AUTH_TOKEN?: string;
 }
 
 // Plain-text alert to the owner, usable both from the email handler and from the
@@ -83,6 +92,76 @@ async function notifyOwner(env: Env, subject: string, text: string): Promise<voi
   msg.setSubject(subject);
   msg.addMessage({ contentType: 'text/plain', data: text });
   await env.SEND_EMAIL.send(new EmailMessage(BOT_EMAIL, OWNER_EMAIL, msg.asRaw()));
+}
+
+// Core query dependencies (fuzzy AI matcher + last-known-good cache) for the SMS
+// route. Deliberately separate from the inline wiring in email() so this change
+// leaves the InReach/email handler untouched; a later cleanup can DRY the two.
+function makeCoreDeps(env: Env) {
+  return {
+    aliases,
+    resolveFuzzy: async (text: string): Promise<string | null> => {
+      const allowed = await claimAiCall(env.AI_BUDGET as unknown as KvLike, MAX_AI_CALLS_PER_DAY);
+      if (!allowed) return null;
+      return aiResolve(text, aliases, env.AI as unknown as AiBinding);
+    },
+    fetchCached: (source: GaugeSource, site: string) =>
+      fetchCachedReading(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, source, site),
+  };
+}
+
+function xmlResponse(body: string): Response {
+  return new Response(body, { headers: { 'Content-Type': 'text/xml; charset=utf-8' } });
+}
+
+// Twilio inbound-SMS webhook. Mirrors the email path's shape (validate sender →
+// core query → deliver reply → fire-and-forget telemetry) but the reply rides
+// back as TwiML on this same HTTP response instead of a separate send. The
+// InReach/email paths are unaffected. See src/sms.ts for the primitives and the
+// signature-validation rationale.
+async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  if (request.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+
+  const form = await request.formData();
+  const params: Record<string, string> = {};
+  for (const [k, v] of form) {
+    if (typeof v === 'string') params[k] = v;
+  }
+
+  // Reject spoofed callers before touching the gauge core — a public HTTP endpoint
+  // has no gatekeeper the way the Email Routing catch-all does.
+  const signature = request.headers.get('X-Twilio-Signature') ?? '';
+  const valid = await validateTwilioSignature(request.url, params, env.TWILIO_AUTH_TOKEN ?? '', signature);
+  if (!valid) return new Response('invalid signature', { status: 403 });
+
+  const { query } = parseSmsWebhook(params);
+
+  // STOP/HELP/START are compliance keywords — stand aside and let Twilio's
+  // toll-free Advanced Opt-Out own the reply, so we never double-send.
+  if (isOptOutOrHelp(query)) return xmlResponse(twimlEmpty());
+
+  // handleQuery is designed never to throw, but SMS is a metered channel — guard
+  // it so an unexpected dep failure (e.g. the AI-budget KV) still returns a reply,
+  // never a bare 500 that costs the paddler a message for nothing.
+  let reply: string;
+  try {
+    reply = await handleQuery(query, makeCoreDeps(env));
+  } catch (err) {
+    console.error('handleQuery threw on SMS path:', err);
+    reply = UNAVAILABLE;
+  }
+
+  // Fire-and-forget telemetry, mirroring the email path (never blocks the reply).
+  const resolved = reply !== NOT_FOUND && reply !== UNAVAILABLE;
+  const kv = env.AI_BUDGET as unknown as KvLike;
+  ctx.waitUntil(
+    logQuery(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, query, resolved, 'sms').catch((err) =>
+      console.error('logQuery failed:', err),
+    ),
+  );
+  ctx.waitUntil(recordReplySuccess(kv, 'sms'));
+
+  return xmlResponse(twimlMessage(reply));
 }
 
 export default {
@@ -256,21 +335,29 @@ export default {
     );
   },
 
-  // Public, read-only reply-health JSON for status.html — see src/statusTracking.ts.
-  // Bound to lateboof.com/api/status via the `routes` entry in wrangler.jsonc,
-  // separately from the Email Routing catch-all above.
-  async fetch(request: Request, env: Env): Promise<Response> {
+  // HTTP routes, bound via `routes` in wrangler.jsonc separately from the Email
+  // Routing catch-all above (that path is email; this one is HTTP):
+  //   POST /api/sms    — Twilio inbound-SMS webhook (handleSmsWebhook).
+  //   GET  /api/status — public read-only reply-health JSON for status.html
+  //                      (src/statusTracking.ts).
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
-    if (url.pathname !== STATUS_ENDPOINT_PATH) {
-      return new Response('Not found', { status: 404 });
+
+    if (url.pathname === SMS_ENDPOINT_PATH) {
+      return handleSmsWebhook(request, env, ctx);
     }
-    const summary = await getStatusSummary(env.AI_BUDGET as unknown as KvLike);
-    return new Response(JSON.stringify(summary), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'no-store',
-      },
-    });
+
+    if (url.pathname === STATUS_ENDPOINT_PATH) {
+      const summary = await getStatusSummary(env.AI_BUDGET as unknown as KvLike);
+      return new Response(JSON.stringify(summary), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'no-store',
+        },
+      });
+    }
+
+    return new Response('Not found', { status: 404 });
   },
 };
