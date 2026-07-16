@@ -15,6 +15,19 @@
 - **Where to start:** `handleQuery` is already channel-agnostic; SMS is a new
   adapter beside the email one in `src/worker.ts`, plus Twilio webhook signature
   validation and A2P/toll-free registration (the real cost — research first).
+- **Status (2026-07-15):** Tier-1 SMS gauge replies (transactional "text a run
+  name, get one reply") BUILT on `feat/sms-twilio` — a signature-validated
+  `POST /api/sms` webhook, verified live in `wrangler dev` (accept/reject + a real
+  USGS reply). Toll-free number 866-284-5181 provisioned; verification submitted.
+  NOT public: still gated on the trigger above, and personal-number testing only.
+  Deploy steps before any real use: `wrangler secret put TWILIO_AUTH_TOKEN`, apply
+  `supabase/migrations/013_sms_channel.sql`, point the Twilio webhook at
+  `https://lateboof.com/api/sms`. Tier-2 flow **alerts** (outbound push) not built.
+- **Harden before public launch** (from the 2026-07-15 pre-landing + adversarial
+  review; all accepted for personal testing, revisit before opening to strangers):
+  a Cloudflare rate-limit/WAF rule on `/api/sms` (it parses the body pre-auth);
+  replay-dedup on Twilio `MessageSid` via short-TTL KV; and a per-channel AI budget
+  so SMS gibberish can't drain the shared daily fuzzy-match budget email/InReach use.
 
 ## Searchable AKAs on the web gauge table
 
