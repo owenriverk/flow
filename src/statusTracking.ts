@@ -1,6 +1,6 @@
 /**
- * Tracks reply-delivery health per channel (InReach web-form POST, plain email) in
- * KV. The Garmin web form (src/replyToInreach.ts) is an unofficial, undocumented
+ * Tracks reply-delivery health per channel (InReach web-form POST, plain email,
+ * SMS/TwiML, plus the nightly canary) in KV. The Garmin web form (src/replyToInreach.ts) is an unofficial, undocumented
  * endpoint with no platform-level reliability guarantee — if it silently breaks, the
  * only signal today is a per-failure email, which only fires when a real paddler
  * happens to hit it. This adds two things: an escalation alert once failures look

@@ -42,6 +42,10 @@ describe('validateTwilioSignature', () => {
     expect(await validateTwilioSignature(url, params, token, '')).toBe(false);
   });
 
+  test('rejects a non-empty but wrong-length signature', async () => {
+    expect(await validateTwilioSignature(url, params, token, 'short')).toBe(false);
+  });
+
   test("matches Twilio's documented reference vector", async () => {
     // The URL keeps its query string; only POST params are sorted and appended.
     const docUrl = 'https://mycompany.com/myapp.php?foo=1&bar=2';
@@ -73,9 +77,14 @@ describe('parseSmsWebhook', () => {
 });
 
 describe('isOptOutOrHelp', () => {
-  test.each(['STOP', 'stop', ' Stop ', 'UNSUBSCRIBE', 'CANCEL', 'QUIT', 'START', 'HELP', 'help', 'INFO'])(
-    '%j is a reserved keyword the app must not treat as a gauge query',
-    (kw) => expect(isOptOutOrHelp(kw)).toBe(true),
+  // Pin every entry in RESERVED_KEYWORDS (plus case/whitespace variants) so
+  // silently dropping one — which would let a compliance keyword be answered as a
+  // gauge query — fails a test.
+  test.each([
+    'STOP', 'stop', ' Stop ', 'STOPALL', 'UNSUBSCRIBE', 'CANCEL', 'END', 'QUIT',
+    'START', 'YES', 'UNSTOP', 'HELP', 'help', 'INFO',
+  ])('%j is a reserved keyword the app must not treat as a gauge query', (kw) =>
+    expect(isOptOutOrHelp(kw)).toBe(true),
   );
 
   test.each(['gauley', 'stop the river', 'help me find selway', ''])(

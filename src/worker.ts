@@ -122,14 +122,26 @@ function xmlResponse(body: string): Response {
 async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (request.method !== 'POST') return new Response('Method not allowed', { status: 405 });
 
-  const form = await request.formData();
+  // formData() throws on a malformed or non-form body. Parsing happens pre-auth (we
+  // need the params to compute the signature), so a junk POST from any anonymous
+  // caller would otherwise surface as a logged 500 on every hit — return a quiet
+  // 400 instead.
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return new Response('bad request', { status: 400 });
+  }
   const params: Record<string, string> = {};
   for (const [k, v] of form) {
     if (typeof v === 'string') params[k] = v;
   }
 
   // Reject spoofed callers before touching the gauge core — a public HTTP endpoint
-  // has no gatekeeper the way the Email Routing catch-all does.
+  // has no gatekeeper the way the Email Routing catch-all does. The signature base
+  // is request.url, so Twilio's configured webhook URL must byte-match what the
+  // Worker sees (https://lateboof.com/api/sms, no trailing slash) or every request
+  // 403s — fail-closed, but configure it exactly.
   const signature = request.headers.get('X-Twilio-Signature') ?? '';
   const valid = await validateTwilioSignature(request.url, params, env.TWILIO_AUTH_TOKEN ?? '', signature);
   if (!valid) return new Response('invalid signature', { status: 403 });
@@ -152,6 +164,11 @@ async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContex
   }
 
   // Fire-and-forget telemetry, mirroring the email path (never blocks the reply).
+  // The SMS channel is success-only by nature: the TwiML reply rides this HTTP
+  // response, so there's no separate delivery step that can fail from the Worker's
+  // side the way the InReach web form or message.reply() can. Hence no
+  // recordReplyFailure('sms') here — the status page's SMS row staying green is
+  // expected, not a broken monitor.
   const resolved = reply !== NOT_FOUND && reply !== UNAVAILABLE;
   const kv = env.AI_BUDGET as unknown as KvLike;
   ctx.waitUntil(
@@ -159,7 +176,7 @@ async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContex
       console.error('logQuery failed:', err),
     ),
   );
-  ctx.waitUntil(recordReplySuccess(kv, 'sms'));
+  ctx.waitUntil(recordReplySuccess(kv, 'sms').catch((err) => console.error('recordReplySuccess failed:', err)));
 
   return xmlResponse(twimlMessage(reply));
 }
