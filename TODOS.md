@@ -60,19 +60,52 @@
 - **Where to start:** `handleQuery` is already channel-agnostic; SMS is a new
   adapter beside the email one in `src/worker.ts`, plus Twilio webhook signature
   validation and A2P/toll-free registration (the real cost — research first).
-- **Status (2026-07-15):** Tier-1 SMS gauge replies (transactional "text a run
-  name, get one reply") BUILT on `feat/sms-twilio` — a signature-validated
-  `POST /api/sms` webhook, verified live in `wrangler dev` (accept/reject + a real
-  USGS reply). Toll-free number 866-284-5181 provisioned; verification submitted.
-  NOT public: still gated on the trigger above, and personal-number testing only.
-  Deploy steps before any real use: `wrangler secret put TWILIO_AUTH_TOKEN`, apply
-  `supabase/migrations/013_sms_channel.sql`, point the Twilio webhook at
-  `https://lateboof.com/api/sms`. Tier-2 flow **alerts** (outbound push) not built.
+- **Status (2026-08-05):** Tier-1 SMS gauge replies (transactional "text a run
+  name, get one reply") are BUILT AND DEPLOYED — `POST /api/sms` is live and
+  answering (`GET` → 405, unsigned `POST` → 403, and `/api/status` now carries an
+  `sms` row). `TWILIO_AUTH_TOKEN` is set. Toll-free number 866-284-5181
+  provisioned; verification submitted 2026-07-15. Still on the Twilio trial and
+  personal-number testing only — NOT public, and still gated on the trigger above.
+  Tier-2 flow **alerts** (outbound push) not built.
+- **Verified working 2026-08-05:** migration 013 applied (`query_log.channel` CHECK
+  now accepts `'sms'`); Twilio webhook live on the `riverlizard` Messaging Service
+  → `https://lateboof.com/api/sms`; regular text AND iPhone satellite both answered
+  end to end. Inbound calls rejected via a `<Reject/>` TwiML Bin (toll-free bills
+  the *called* party, so a robocall sweep costs real money). Voice + Messaging geo
+  permissions locked to US/CA.
+- **Cost:** ~$3/mo all in — $2.15 toll-free rental plus ~$0.02 per answered query
+  at current volume (~30 real queries/month across all channels). The rental is
+  ~80% of the bill; message spend only overtakes it past ~130 SMS queries/month.
+  Every other piece of the stack is on a free tier. Trial billing runs ~2x per
+  message because the trial prefix pushes the 160-char reply to a second segment.
+- **Still prepaid on purpose:** no card on the Twilio account means the balance is
+  a hard spending ceiling. Twilio bills inbound toll-free messages on receipt,
+  before the Worker runs, so no code we write can cap the inbound leg — the
+  balance is the only real limit. When a card is added: auto-recharge OFF and a
+  $1/day usage trigger.
 - **Harden before public launch** (from the 2026-07-15 pre-landing + adversarial
-  review; all accepted for personal testing, revisit before opening to strangers):
-  a Cloudflare rate-limit/WAF rule on `/api/sms` (it parses the body pre-auth);
-  replay-dedup on Twilio `MessageSid` via short-TTL KV; and a per-channel AI budget
-  so SMS gibberish can't drain the shared daily fuzzy-match budget email/InReach use.
+  review). Two of three now DONE (2026-08-05):
+  - DONE — replay-dedup on Twilio `MessageSid` via 15-min KV TTL
+    (`claimMessageSid`, `src/sms.ts`). Twilio signs no timestamp, so a captured
+    request replays with a valid signature forever; the window is the whole
+    defense. Fails open, unlike the AI budget — see the docstring.
+  - DONE — per-ingress AI budget (`DAILY_AI_CAPS`, `src/budget.ts`): `email` 800 /
+    `sms` 200 against a 1,000/day total, keyed `ai:<ingress>:<date>`. SMS gibberish
+    can no longer drain the allowance the InReach path depends on. Split by
+    *ingress*, not reply channel — on the email path the reply channel isn't known
+    until after the AI call is spent.
+  - DONE — per-sender throttle (`src/smsThrottle.ts`): 10/hr burst, 300/month
+    sustained, one notice per window then silence, plus an owner email capped at
+    one per number per 24h (without that cap the feature is an amplifier). Sender
+    ids are HMAC'd with the Twilio auth token, so KV holds no phone numbers — a
+    bare hash of a US number is brute-forceable. `SMS_OWNER_NUMBER` (secret)
+    exempts the owner's own phone so a long test session can't self-block.
+    Caveat to remember: these caps are PER SENDER, so they bound what one number
+    can cost (~$5 at 300), never total spend. Only the prepaid balance does that.
+  - TODO — a Cloudflare rate-limit/WAF rule on `/api/sms`. It still parses the body
+    pre-auth, so an anonymous flood costs CPU before the signature check runs. This
+    one is dashboard/API config, not code. Note it saves no Twilio money: inbound
+    is billed on receipt regardless of what the Worker does.
 
 ## Searchable AKAs on the web gauge table
 
