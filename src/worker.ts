@@ -25,7 +25,7 @@ import PostalMime from 'postal-mime';
 import { handleInbound } from './handleInbound.js';
 import { replyToInreach as defaultReplyToInreach } from './replyToInreach.js';
 import { aiResolve, type AiBinding } from './aiResolve.js';
-import { claimAiCall, type KvLike } from './budget.js';
+import { claimAiCall, DAILY_AI_CAPS, type KvLike } from './budget.js';
 import { fetchCachedReading } from './supabaseCache.js';
 import { logQuery } from './queryLog.js';
 import { looksLikeSpam } from './spamFilter.js';
@@ -35,7 +35,15 @@ import { buildGarminCheck } from './canaryGarmin.js';
 import { cacheInboundToken, isCanaryMessage } from './canaryHelpers.js';
 import { parseInbound } from './parseInbound.js';
 import { handleQuery, NOT_FOUND, UNAVAILABLE } from './handleQuery.js';
-import { validateTwilioSignature, parseSmsWebhook, isOptOutOrHelp, twimlMessage, twimlEmpty } from './sms.js';
+import {
+  validateTwilioSignature,
+  claimMessageSid,
+  parseSmsWebhook,
+  isOptOutOrHelp,
+  twimlMessage,
+  twimlEmpty,
+} from './sms.js';
+import { senderKey, checkSmsThrottle, claimOwnerAlert } from './smsThrottle.js';
 import { buildReplyHeaders } from './emailReply.js';
 import {
   recordReplySuccess,
@@ -48,8 +56,9 @@ import type { GaugeAlias, GaugeSource } from './lookupGauge.js';
 
 const aliases = aliasesJson as Record<string, GaugeAlias>;
 
-// ~2.3 neurons/call → 1,000/day ≈ 2,300 neurons, well under the free 10k/day tier.
-const MAX_AI_CALLS_PER_DAY = 1000;
+// Daily AI-call caps now live with the counter that enforces them, split per
+// ingress so SMS traffic cannot exhaust the email path's allowance — see
+// src/budget.ts (DAILY_AI_CAPS) for the neuron math and the rationale.
 
 const OWNER_EMAIL = 'okurthdev@gmail.com';
 // Fixed sender for owner alerts — deliberately not message.to, since the catch-all
@@ -76,9 +85,15 @@ interface Env {
   CANARY_FROM?: string;
   CANARY_SECRET?: string;
   // Twilio account auth token — set via `wrangler secret put TWILIO_AUTH_TOKEN`
-  // (never committed; the repo is public). Used ONLY to validate inbound SMS
-  // webhook signatures. Unset => every SMS webhook is rejected (fail closed).
+  // (never committed; the repo is public). Validates inbound SMS webhook
+  // signatures, and doubles as the HMAC key that makes stored sender ids opaque
+  // (src/smsThrottle.ts). Unset => every SMS webhook is rejected (fail closed).
   TWILIO_AUTH_TOKEN?: string;
+  // The owner's own mobile number in Twilio's E.164 form (e.g. +15551234567),
+  // exempted from the per-sender SMS throttle. A secret rather than a var because
+  // the repo is public and this is a personal phone number. Optional: unset means
+  // no exemption, and the throttle simply applies to everyone.
+  SMS_OWNER_NUMBER?: string;
 }
 
 // Plain-text alert to the owner, usable both from the email handler and from the
@@ -101,7 +116,7 @@ function makeCoreDeps(env: Env) {
   return {
     aliases,
     resolveFuzzy: async (text: string): Promise<string | null> => {
-      const allowed = await claimAiCall(env.AI_BUDGET as unknown as KvLike, MAX_AI_CALLS_PER_DAY);
+      const allowed = await claimAiCall(env.AI_BUDGET as unknown as KvLike, 'sms', DAILY_AI_CAPS.sms);
       if (!allowed) return null;
       return aiResolve(text, aliases, env.AI as unknown as AiBinding);
     },
@@ -146,11 +161,61 @@ async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContex
   const valid = await validateTwilioSignature(request.url, params, env.TWILIO_AUTH_TOKEN ?? '', signature);
   if (!valid) return new Response('invalid signature', { status: 403 });
 
-  const { query } = parseSmsWebhook(params);
+  const kv = env.AI_BUDGET as unknown as KvLike;
+
+  // Authenticated, but not necessarily NEW: Twilio's signature covers the URL and
+  // params, never a timestamp, so a captured request replays with a valid signature
+  // indefinitely. MessageSid is unique per message — remembering it briefly collapses
+  // a replayed burst into the single reply the paddler actually asked for. Empty
+  // TwiML, so Twilio sends nothing and the duplicate costs no message.
+  if (!(await claimMessageSid(kv, params.MessageSid ?? ''))) {
+    console.warn('SMS replay ignored (MessageSid already seen):', params.MessageSid);
+    return xmlResponse(twimlEmpty());
+  }
+
+  const { from, query } = parseSmsWebhook(params);
 
   // STOP/HELP/START are compliance keywords — stand aside and let Twilio's
-  // toll-free Advanced Opt-Out own the reply, so we never double-send.
+  // toll-free Advanced Opt-Out own the reply, so we never double-send. Checked
+  // BEFORE the throttle on purpose: a sender who has blown their cap must still be
+  // able to opt out, and a compliance keyword we answer with silence costs nothing
+  // anyway, so there is nothing to ration.
   if (isOptOutOrHelp(query)) return xmlResponse(twimlEmpty());
+
+  // Per-sender throttle. This can only protect the OUTBOUND leg — Twilio bills the
+  // inbound message before this Worker runs — but outbound is the pricier half on
+  // toll-free and the only half an abuser amplifies. See src/smsThrottle.ts.
+  // The owner's own number is exempt when SMS_OWNER_NUMBER is set, so a long
+  // satellite test session can't lock out the person testing it.
+  if (!env.SMS_OWNER_NUMBER || from !== env.SMS_OWNER_NUMBER) {
+    const sender = await senderKey(from, env.TWILIO_AUTH_TOKEN ?? '');
+    const throttle = await checkSmsThrottle(kv, sender);
+    if (!throttle.allow) {
+      console.warn('SMS sender throttled:', throttle.alert ?? 'already over cap');
+      if (throttle.alert && (await claimOwnerAlert(kv, sender))) {
+        ctx.waitUntil(
+          notifyOwner(
+            env,
+            'LateBoof: SMS sender throttled',
+            [
+              `A number hit an SMS rate limit: ${throttle.alert}.`,
+              '',
+              `Number:  ${from}`,
+              `Message: ${query.slice(0, 100)}`,
+              '',
+              'They got one notice and are silent for the rest of the window.',
+              'At most one of these emails per number per 24h.',
+              '',
+              'If this is a real paddler, raise the cap in src/smsThrottle.ts.',
+              'If it is abuse, block the number in the Twilio console — note that',
+              'inbound is billed on receipt, so only Twilio can stop the cost.',
+            ].join('\n'),
+          ).catch((e) => console.error('notifyOwner failed:', e)),
+        );
+      }
+      return xmlResponse(throttle.notice ? twimlMessage(throttle.notice) : twimlEmpty());
+    }
+  }
 
   // handleQuery is designed never to throw, but SMS is a metered channel — guard
   // it so an unexpected dep failure (e.g. the AI-budget KV) still returns a reply,
@@ -170,7 +235,6 @@ async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContex
   // recordReplyFailure('sms') here — the status page's SMS row staying green is
   // expected, not a broken monitor.
   const resolved = reply !== NOT_FOUND && reply !== UNAVAILABLE;
-  const kv = env.AI_BUDGET as unknown as KvLike;
   ctx.waitUntil(
     logQuery(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, query, resolved, 'sms').catch((err) =>
       console.error('logQuery failed:', err),
@@ -303,8 +367,11 @@ export default {
     };
 
     // AI fuzzy match, gated by the daily budget. Only invoked on a lookup miss.
+    // Charged to the 'email' ingress — this covers InReach replies, plain email and
+    // the canary alike, since the reply channel isn't decided until handleInbound
+    // runs, well after the AI call has been spent.
     const resolveFuzzy = async (text: string): Promise<string | null> => {
-      const allowed = await claimAiCall(env.AI_BUDGET as unknown as KvLike, MAX_AI_CALLS_PER_DAY);
+      const allowed = await claimAiCall(env.AI_BUDGET as unknown as KvLike, 'email', DAILY_AI_CAPS.email);
       if (!allowed) return null;
       return aiResolve(text, aliases, env.AI as unknown as AiBinding);
     };
