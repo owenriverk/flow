@@ -1,5 +1,50 @@
 # TODOs
 
+## Stikine watch-list alerts through the bot (InReach push)
+
+- **What:** Subscription-style alert — a paddler texts `watch stikine` from an
+  InReach; the bot pushes a message when the basin instruments spike (tributary
+  rise / main-stem trend toward a reclose).
+- **Why:** The person who needs a reclose warning is at the put-in or in the
+  canyon with no internet — the planner page can't reach them; the bot already
+  can. Identified by the outside-voice review of the Stikine Hindcast design
+  (2026-07-06, T4).
+- **Where to start:** `handleQuery` is channel-agnostic; this needs a watch-list
+  store (KV/Supabase), a cron check against the same GeoMet queries the planner
+  page uses, and an outbound-initiated reply path (the hard part — today the bot
+  only replies to inbound tokens).
+- **Blocked by:** the v2-whistles trigger (one clean month of v1.5 self-checking
+  + gauge audit complete) — same gate as SMS below.
+- **Effort:** L (human) → M with CC. **Priority:** P3.
+
+## Stikine time machine (season replay scrubber)
+
+- **What:** A scrubber over the recorded seasons (1954→) replaying the whole
+  instrument panel — main stem, tributaries, and what the Oracle's call would
+  have said that morning. Approach C of the 2026-07-06 office-hours session;
+  mock at `~/.gstack/projects/owenriverk-flow/designs/stikine-mocks.html`.
+- **Why:** Every historical reclose becomes a watchable story; strong material
+  for the Stikine-watch newsletter issue. Pre-baked JSON frames keep it static
+  and $0/mo.
+- **Depends on:** the Stikine Hindcast dataset (event extractor + per-season
+  masks) — dramatically cheaper once that ships. Design doc:
+  `~/.gstack/projects/owenriverk-flow/owen-main-design-20260706-114735.md`.
+- **Effort:** ~2 weekends now → less after the Hindcast. **Priority:** P3.
+
+## MODIS melt-out vs opening-date scatter
+
+- **What:** Use NASA's daily 500 m snow-cover record (NSIDC MOD10A1 /
+  Worldview, 2000→) to date the upper basin's melt-out each year; scatter
+  against the 26 opening dates since 2000.
+- **Why:** Answers "does melt-out timing predict the opening?" — a documented
+  yes or no either way fits the project's we-checked credibility; a yes gives
+  the April outlook newsletter a spring leading indicator. (Snow SWE famously
+  didn't help the flow model; melt-out *date* is a different question.)
+- **Where to start:** NSIDC MOD10A1 granules or Worldview snapshots for the
+  upper Stikine bbox; define melt-out as first day basin snow fraction < X%.
+- **Depends on:** nothing from the Hindcast release. **Effort:** S/M research
+  weekend. **Priority:** P3.
+
 ## Revisit v2 whistles (SMS / iPhone-satellite first)
 
 - **What:** Re-open the deferred feature list. Leading candidate: SMS via Twilio,
