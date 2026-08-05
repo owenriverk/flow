@@ -83,13 +83,14 @@ describe('shouldEscalate', () => {
 });
 
 describe('getStatusSummary', () => {
-  test('reflects all three channels independently', async () => {
+  test('reflects all channels independently', async () => {
     const store = kv({
       'status:inreach:last_success_at': t1.toISOString(),
       'status:inreach:consecutive_failures': '0',
       'status:email:last_failure_at': t2.toISOString(),
       'status:email:last_failure_detail': 'SEND_EMAIL rejected',
       'status:email:consecutive_failures': '2',
+      'status:sms:last_success_at': t1.toISOString(),
       'status:canary:last_success_at': t2.toISOString(),
     });
     const summary = await getStatusSummary(store);
@@ -98,6 +99,7 @@ describe('getStatusSummary', () => {
     expect(summary.email.lastFailureAt).toBe(t2.toISOString());
     expect(summary.email.lastFailureDetail).toBe('SEND_EMAIL rejected');
     expect(summary.email.consecutiveFailures).toBe(2);
+    expect(summary.sms.lastSuccessAt).toBe(t1.toISOString());
     expect(summary.canary.lastSuccessAt).toBe(t2.toISOString());
   });
 
@@ -133,6 +135,7 @@ describe('getStatusSummary', () => {
     expect(summary).toEqual({
       inreach: empty,
       email: empty,
+      sms: empty,
       canary: empty,
       selfCheck: { lastRunAt: null, checks: {} },
     });
