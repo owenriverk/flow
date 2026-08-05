@@ -12,6 +12,12 @@ on:
   push:
     branches: [main]
 
+# The job only reads code — it never comments, pushes, or publishes. Pinning
+# least privilege matters more here than in a private repo: `pull_request`
+# runs on fork PRs too, and the repo is public.
+permissions:
+  contents: read
+
 # A rapid re-push should supersede its own in-flight run, not queue behind it.
 concurrency:
   group: ci-${{ github.ref }}
