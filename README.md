@@ -53,8 +53,9 @@ flow comes back to the device.
 
 ## Implemented beyond v1
 
-Fuzzy/LLM name matching (`src/aiResolve.ts` — Workers AI, gated by a daily call budget,
-only fires on a lookup miss, and can only ever resolve to a real alias key or nothing)
+Fuzzy/LLM name matching (`src/aiResolve.ts` — Workers AI, gated by a daily call budget
+that is split per ingress so one channel can't starve another, only fires on a lookup
+miss, and can only ever resolve to a real alias key or nothing)
 and a last-known-good cache fallback via Supabase (`src/supabaseCache.ts`, used when
 the live upstream API is down) both shipped after v1. There's also a companion
 gauge-directory website (`web/`) backed by a Supabase cron refresher — see `supabase/`.
