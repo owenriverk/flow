@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  <lastmod> is the only sitemap hint Google actually uses (priority and
+  changefreq are ignored), and it only helps if it's honest — a date Google
+  can catch lying about gets the whole signal discounted.
+
+  The six forecast-* pages carry NO lastmod here on purpose — do not add one by
+  hand. They are nightly build outputs of the private weth repo, so their real
+  modified date is "last night", which a static file can't track. Both deploy
+  paths fill it in instead:
+
+    - weth/.github/workflows/refresh.yml stamps the build date at deploy time,
+      which is the only place that date is actually known.
+    - this repo's .github/workflows/deploy-pages.yml carries the live values
+      across on a web/ push, so a deploy here never strips what weth stamped.
+
+  The pages below are authored in this repo, so their git commit date is
+  accurate and lives in the file. Bump lastmod when you meaningfully change a
+  page's content — a date Google catches lying about discounts the signal for
+  the whole sitemap.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lateboof.com/forecast</loc>
@@ -26,10 +46,22 @@
   </url>
   <url>
     <loc>https://lateboof.com/</loc>
+    <lastmod>2026-07-09</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://lateboof.com/help</loc>
+    <lastmod>2026-08-05</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lateboof.com/sms</loc>
+    <lastmod>2026-07-09</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lateboof.com/privacy</loc>
+    <lastmod>2026-08-05</lastmod>
+    <priority>0.3</priority>
   </url>
 </urlset>

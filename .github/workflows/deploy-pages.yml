@@ -26,6 +26,45 @@ jobs:
               || echo "keeping committed $p.html (live fetch failed)"
           done
 
+      # Same reasoning, applied to the sitemap. weth's nightly run stamps a real
+      # <lastmod> onto the six forecast urls (it's the only job that knows when
+      # they were rebuilt); the committed sitemap deliberately carries none. So
+      # deploying the committed copy verbatim would strip those dates until the
+      # next night, making lastmod flap in and out — a worse signal than never
+      # sending it. Carry the live values across instead.
+      - name: Preserve live forecast lastmod in sitemap
+        run: |
+          curl -sf https://lateboof.com/sitemap.xml -o /tmp/live-sitemap.xml || {
+            echo "live sitemap fetch failed — deploying committed sitemap as-is"
+            exit 0
+          }
+          python3 - <<'PY'
+          import re
+
+          live = open('/tmp/live-sitemap.xml').read()
+          path = 'web/sitemap.xml'
+          xml = open(path).read()
+
+          pattern = r'<url>\s*<loc>(https://lateboof\.com/forecast[^<]*)</loc>(.*?)</url>'
+          dates = {m.group(1): d.group(1)
+                   for m in re.finditer(pattern, live, flags=re.S)
+                   if (d := re.search(r'<lastmod>([^<]*)</lastmod>', m.group(2)))}
+
+          if not dates:
+              print('live sitemap has no forecast lastmod yet — nothing to carry over')
+              raise SystemExit(0)
+
+          def carry(match):
+              date = dates.get(match.group(1))
+              if not date:
+                  return match.group(0)
+              block = re.sub(r'\s*<lastmod>[^<]*</lastmod>', '', match.group(0))
+              return block.replace('</loc>', f'</loc>\n    <lastmod>{date}</lastmod>', 1)
+
+          open(path, 'w').write(re.sub(pattern, carry, xml, flags=re.S))
+          print(f'carried over lastmod for {len(dates)} forecast urls: {sorted(dates.values())}')
+          PY
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
