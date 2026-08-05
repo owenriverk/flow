@@ -1,6 +1,7 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import {
   validateTwilioSignature,
+  claimMessageSid,
   parseSmsWebhook,
   isOptOutOrHelp,
   twimlMessage,
@@ -58,6 +59,68 @@ describe('validateTwilioSignature', () => {
     };
     const docSig = 'RSOYDt4T1cUTdK1PDd93/VVr8B8=';
     expect(await validateTwilioSignature(docUrl, docParams, '12345', docSig)).toBe(true);
+  });
+});
+
+describe('claimMessageSid', () => {
+  function kv(initial: Record<string, string> = {}) {
+    const store = { ...initial };
+    return {
+      store,
+      get: vi.fn(async (k: string) => store[k] ?? null),
+      put: vi.fn(async (k: string, v: string) => {
+        store[k] = v;
+      }),
+    };
+  }
+
+  test('first delivery is claimed and remembered', async () => {
+    const store = kv();
+    expect(await claimMessageSid(store, 'SM0123456789')).toBe(true);
+    expect(store.store['sms:sid:SM0123456789']).toBe('1');
+  });
+
+  test('a replay of the same sid is rejected', async () => {
+    const store = kv({ 'sms:sid:SM0123456789': '1' });
+    expect(await claimMessageSid(store, 'SM0123456789')).toBe(false);
+  });
+
+  test('a different sid is unaffected by a claimed one', async () => {
+    const store = kv({ 'sms:sid:SM0123456789': '1' });
+    expect(await claimMessageSid(store, 'SMdifferentsid')).toBe(true);
+  });
+
+  test('the remembered sid expires — the window IS the defense', async () => {
+    const store = kv();
+    await claimMessageSid(store, 'SM0123456789');
+    expect(store.put).toHaveBeenCalledWith('sms:sid:SM0123456789', '1', {
+      expirationTtl: 15 * 60,
+    });
+  });
+
+  // Opposite posture to claimAiCall (test/budget.test.ts): that one fails closed
+  // because the downside is money, this one fails open because the downside is a
+  // paddler's single satellite message going unanswered.
+  test('fails OPEN if the store is unreadable', async () => {
+    const broken = {
+      get: vi.fn(async () => { throw new Error('kv down'); }),
+      put: vi.fn(async () => {}),
+    };
+    expect(await claimMessageSid(broken, 'SM0123456789')).toBe(true);
+  });
+
+  test('a write failure still lets the message through', async () => {
+    const halfBroken = {
+      get: vi.fn(async () => null),
+      put: vi.fn(async () => { throw new Error('write failed'); }),
+    };
+    expect(await claimMessageSid(halfBroken, 'SM0123456789')).toBe(true);
+  });
+
+  test('an absent sid is processed rather than dropped', async () => {
+    const store = kv();
+    expect(await claimMessageSid(store, '')).toBe(true);
+    expect(store.get).not.toHaveBeenCalled();
   });
 });
 

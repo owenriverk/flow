@@ -2,13 +2,16 @@
  * SMS (Twilio) adapter primitives — the v2 channel that lights up iPhone-satellite
  * texting and doubles as the fallback if Garmin ever changes the InReach reply form.
  *
- * Everything here is pure and testable with no Worker runtime and no network: the
- * Worker's fetch() handler (src/worker.ts) decodes the inbound webhook form, calls
- * these, and hands the query to the same channel-agnostic core the email/InReach
- * paths use (src/handleQuery.ts). The InReach path is untouched — SMS is additive.
+ * Everything here runs with no Worker runtime and no network — pure functions, or
+ * (claimMessageSid) a KV dependency injected the way src/budget.ts does it, so the
+ * whole module is unit-testable with a fake store. The Worker's fetch() handler
+ * (src/worker.ts) decodes the inbound webhook form, calls these, and hands the query
+ * to the same channel-agnostic core the email/InReach paths use
+ * (src/handleQuery.ts). The InReach path is untouched — SMS is additive.
  *
  *   Twilio ──POST form──▶ fetch() /api/sms
  *                            │ validateTwilioSignature  (reject spoofed callers)
+ *                            │ claimMessageSid          (collapse replays)
  *                            │ parseSmsWebhook          (From + Body -> query)
  *                            │ isOptOutOrHelp?          (STOP/HELP -> stand aside)
  *                            ▼
@@ -23,6 +26,8 @@
  * exists here only to *validate inbound* requests. (Outbound-initiated sends, i.e.
  * flow alerts, are a later feature that would need the REST API + Account SID.)
  */
+
+import type { KvLike } from './budget.js';
 
 /**
  * Verify an inbound webhook actually came from Twilio.
@@ -75,6 +80,52 @@ function timingSafeEqual(a: string, b: string): boolean {
     mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
   }
   return mismatch === 0;
+}
+
+/**
+ * How long a MessageSid is remembered for replay detection. Twilio signs the URL
+ * and the params but NOT a timestamp, so a captured signed request stays valid
+ * forever and the signature alone cannot tell a replay from a first delivery. The
+ * window is therefore the whole defense, and it is a trade: long enough to cover a
+ * realistic replay burst, short enough that KV never accumulates. Fifteen minutes
+ * also comfortably covers Twilio's own webhook retry behavior.
+ */
+const REPLAY_TTL_SECONDS = 15 * 60;
+
+/**
+ * Claim an inbound message by its Twilio MessageSid. Returns true the first time a
+ * sid is seen (caller should process it) and false on a repeat (caller should reply
+ * with nothing).
+ *
+ * Fails OPEN — the exact opposite of claimAiCall in src/budget.ts, and deliberately
+ * so. That counter guards money, so an unreadable store means don't spend. This one
+ * guards against a duplicate reply, so an unreadable store must not cost a paddler
+ * the one message they sent from a canyon. Cheap-to-lose vs expensive-to-lose points
+ * the two failure postures in opposite directions.
+ *
+ * Best-effort by construction: KV is eventually consistent and get-then-put is not
+ * atomic, so two truly simultaneous replays can both slip through. That is fine —
+ * this collapses a replayed burst, it is not a distributed lock.
+ */
+export async function claimMessageSid(kv: KvLike, sid: string): Promise<boolean> {
+  // No sid to dedup on. Not a real vector: a replay is a captured *legitimate*
+  // request, which always carries one, and forging a sid-less request needs the
+  // auth token — at which point dedup is moot. Process it.
+  if (!sid) return true;
+
+  const key = `sms:sid:${sid}`;
+  try {
+    if (await kv.get(key)) return false;
+  } catch {
+    return true; // store unreadable → reply anyway (see docstring)
+  }
+
+  try {
+    await kv.put(key, '1', { expirationTtl: REPLAY_TTL_SECONDS });
+  } catch {
+    // tolerate: worst case a genuine replay of this one message gets a second reply.
+  }
+  return true;
 }
 
 /**
