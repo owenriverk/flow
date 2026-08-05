@@ -1,0 +1,34 @@
+# Pull-request gate. Until this existed, nothing ran the test suite before
+# a merge — `deploy-pages` only fires on push to main under web/**, and
+# `canary` is a nightly cron, so a Worker regression's first signal was the
+# next morning's canary email (or a user).
+#
+# Hermetic by design: test/live.test.ts is gated behind LIVE=1 and stays
+# skipped here, so this job needs no secrets and never touches USGS/WSC/
+# Dreamflows. That also means it is safe on fork PRs.
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A rapid re-push should supersede its own in-flight run, not queue behind it.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Tests
+        run: npm test
