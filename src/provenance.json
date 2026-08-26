@@ -60,5 +60,12 @@
       "notes": "Susitna at Gold Creek (Devils Canyon). Range audit 2026-07-09: NO runnable band on purpose. Previous 3000-10000 cfs guess called the documented ideal flow HIGH - americanwhitewater.org/content/River/detail/id/46 cites ideal kayak flows ~15,000 cfs, but no published min/max band exists for this once-a-generation class V+ run, and the river can rise 15,000 cfs in hours. Grey/no-range until someone with firsthand Devils Canyon knowledge sets a receipted band."
     }
   },
-  "rituals": []
+  "rituals": [
+    {
+      "date": "2026-08-26",
+      "device": "Owen's inReach",
+      "result": "delivered",
+      "notes": "Unscheduled ritual forced by Garmin moving the reply page to messenger.garmin.com (first failures 2026-08-26 04:13Z). Rewritten src/replyToInreach.ts sent the undelivered reply to Owen's own token from a laptop: HTTP 200 + 1:\"$undefined\", confirmed on the device. Worker redeployed 23:17Z (version aa406adf)."
+    }
+  ]
 }

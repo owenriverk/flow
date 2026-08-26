@@ -3,7 +3,7 @@
  *
  * Bound as the catch-all action on lateboof.com Email Routing. Decodes the inbound
  * MIME, then hands the plain-text body to the tested core. Reply paths:
- *   - InReach (body has an inreachlink token) → Garmin web-form POST.
+ *   - InReach (body has an inreachlink token) → Garmin reply-page POST (src/replyToInreach.ts).
  *   - normal email → message.reply() (also lets you test from a laptop).
  * Fuzzy run-name matching falls back to Workers AI, but only on a lookup miss and
  * only while under the daily call cap (keeps us inside the free neuron tier).
@@ -11,8 +11,8 @@
  * Both reply paths are wrapped: on every failure a notification goes to the owner's
  * Gmail (via the SEND_EMAIL binding) with enough info to manually respond to the
  * paddler, and the outcome is recorded via src/statusTracking.ts. If InReach
- * failures start stacking up with no success in between (Garmin changed the form,
- * most likely) a second, escalated alert fires — see shouldEscalate. The same
+ * failures start stacking up with no success in between (Garmin changed the reply
+ * page, most likely) a second, escalated alert fires — see shouldEscalate. The same
  * tracked state is served as JSON from fetch() for status.html to read.
  *
  * This is the only file that touches the Workers runtime; everything it calls is
@@ -231,7 +231,7 @@ async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContex
   // Fire-and-forget telemetry, mirroring the email path (never blocks the reply).
   // The SMS channel is success-only by nature: the TwiML reply rides this HTTP
   // response, so there's no separate delivery step that can fail from the Worker's
-  // side the way the InReach web form or message.reply() can. Hence no
+  // side the way the InReach reply page or message.reply() can. Hence no
   // recordReplyFailure('sms') here — the status page's SMS row staying green is
   // expected, not a broken monitor.
   const resolved = reply !== NOT_FOUND && reply !== UNAVAILABLE;
@@ -297,7 +297,7 @@ export default {
           env,
           '[LateBoof] InReach reply failed',
           [
-            'Could not deliver reply to paddler via the Garmin web form.',
+            "Could not deliver reply to paddler via Garmin's reply page.",
             '',
             `From:       ${message.from}`,
             `Reply link: https://inreachlink.com/${token}`,
@@ -315,9 +315,9 @@ export default {
             env,
             `[LateBoof] ALERT: ${failureCount} consecutive InReach reply failures`,
             [
-              `The InReach reply path (Garmin's unofficial web form) has failed ${failureCount}`,
+              `The InReach reply path (Garmin's unofficial reply page) has failed ${failureCount}`,
               'times in a row with no successful reply in between. This usually means Garmin',
-              'changed the form and src/replyToInreach.ts needs an update — check',
+              'changed the page and src/replyToInreach.ts needs an update — check',
               `${STATUS_ENDPOINT_PATH} or status.html for the latest state.`,
               '',
               `Most recent error: ${detail}`,

@@ -12,7 +12,7 @@ Worker cron, nightly 14:00 UTC (wrangler.jsonc triggers)
   src/canaryRunner.ts   isolated checks, ≤1 email/night, state → KV → /api/status
     ├─ gauge sweep      src/canarySweep.ts   offline/stale/flatline vs Supabase gauges
     ├─ watchdog         (same file)          canary_last_seen() < 48h, else GitHub died
-    └─ garmin form      src/canaryGarmin.ts  GET last real token's reply page, 3 fields
+    └─ garmin form      src/canaryGarmin.ts  GET last real token's reply page, find the reply action id
 
 GitHub Action, nightly 10:00 UTC (.github/workflows/canary.yml)
     ├─ email canary     scripts/email-canary.mjs  real email in → reply out (IMAP-verified)
@@ -23,7 +23,9 @@ The Worker watches the Action (watchdog) and the Action exercises the Worker
 (email canary) — neither can die silently.
 
 **Honest gap (accepted in review):** nothing automated exercises the actual
-Garmin POST. That's what the seasonal ritual below is for.
+Garmin send. That's what the seasonal ritual below is for. (The GET check earned
+its keep on 2026-08-26: Garmin moved the reply page to messenger.garmin.com and
+the check flagged it the same morning, alongside the first real failures.)
 
 ## One-time setup (~45 min total)
 
@@ -76,7 +78,7 @@ Garmin POST. That's what the seasonal ritual below is for.
 
 | Signal | Means | Do |
 |---|---|---|
-| "Nightly self-check: N item(s)" email | a state CHANGED (gauge died/recovered, canary stopped, form changed) | read the lines; standing state on lateboof.com/status |
+| "Nightly self-check: N item(s)" email | a state CHANGED (gauge died/recovered, canary stopped, reply page changed) | read the lines; standing state on lateboof.com/status |
 | red `email-canary` Action run | reply pipe broke somewhere before the Garmin hop | check Worker logs (`npx wrangler tail`), Email Routing, mailbox |
 | red `replay` Action run | a real paddler phrasing resolves differently than yesterday | intentional alias edit? then this red run is the receipt. Otherwise check recent commits to aliases.json / lookupGauge.ts |
 | "garmin form: unknown" on status page | no fresh token to check — normal in the off-season | nothing; the ritual refreshes it |

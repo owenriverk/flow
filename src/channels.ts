@@ -6,7 +6,7 @@
  * Now it's a type error. Adding a channel: extend Channel here, extend the
  * CHECK constraint in a new migration, done.
  *
- *   'inreach' — reply delivered via Garmin's web form
+ *   'inreach' — reply delivered via Garmin's web reply page (src/replyToInreach.ts)
  *   'email'   — reply delivered via message.reply()
  *   'sms'     — reply delivered as TwiML on the Twilio webhook response
  *   'none'    — no reply path existed for the inbound message

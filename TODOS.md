@@ -49,7 +49,7 @@
 
 - **What:** Re-open the deferred feature list. Leading candidate: SMS via Twilio,
   which unlocks iPhone satellite messaging and doubles as the fallback if Garmin
-  changes their reply web form.
+  changes their reply page (which they did on 2026-08-24; see DESIGN.md).
 - **Trigger (both must hold):** v1.5 self-checking has run **one month with no
   false-alarm week**, AND the gauge audit is complete (`MAX_UNAUDITED === 0` in
   `test/provenance.test.ts`).
@@ -116,6 +116,33 @@
     `X-Twilio-Signature` header would stop the pre-auth `formData()` parse on
     request #1, which the rate limit only does after ~5. Marginal: it is trivially
     bypassed by sending a junk header, so it only filters unauthenticated noise.
+
+## InReach via SMS as a second delivery path (resilience, not a feature)
+
+- **What:** Let InReach users save the bot's phone number as the contact instead
+  of (or as well as) the email address. The device texts the number, Garmin's SMS
+  gateway delivers it, the Worker's existing `/api/sms` answers, and the TwiML
+  reply rides Garmin's documented "reply to the thread" path back to the device.
+- **Why:** Garmin's reply page is a human UI and changed under us on 2026-08-24
+  (see DESIGN.md). Garmin lists five ways to message an inReach; the SMS reply is
+  the only one where our side is a real API (Twilio) and Garmin's side is the same
+  carrier path every phone contact uses. Two independent channels means the next
+  redesign degrades one path instead of zeroing the bot. Redundancy is per user
+  (which contact they saved), not per message.
+- **Unverified, one text settles it:** can an inReach deliver to the toll-free
+  866-284-5181 at all? Garmin's FAQ only says delivery depends on "support for SMS
+  carriers from the inReach SMS provider". If not, a 10DLC local number (A2P
+  registration) is the fallback.
+- **Code before public use:** (1) strip the `inreachlink.com/...` location link
+  Garmin appends to SMS bodies in `parseSmsWebhook` (`src/sms.ts`), the way
+  `parseInbound` strips the email footer, or alias lookup misses and burns an AI
+  call; (2) rethink `senderKey` (`src/smsThrottle.ts`): Garmin's gateway numbers
+  are pooled and "can change from recipient to recipient", so several paddlers may
+  share one `From` and trip the 10/hr cap together; (3) site copy listing the
+  number first for InReach users, email as fallback.
+- **Gated by:** the v2 trigger above (still trial + prepaid, not public).
+- **Effort:** S with CC. **Priority:** P2 (was P3 as a feature; the 2026-08-24
+  outage promoted it).
 
 ## Searchable AKAs on the web gauge table
 

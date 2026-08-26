@@ -16,7 +16,7 @@ src/
   worker.ts          Cloudflare Email Worker entry — decodes MIME, calls handleInbound
   handleInbound.ts   glue: parseInbound -> handleQuery -> replyToInreach
   parseInbound.ts    InReach email body -> { query, reply token }
-  replyToInreach.ts  reply via Garmin's web form (GET token page -> POST), verified live
+  replyToInreach.ts  reply via Garmin's web reply page (GET token page -> find Server Action -> POST)
   lookupGauge.ts     text -> { site, source, name?, location? } | null  (aliases + raw id)
   usgs.ts            USGS IV API (native cfs/ft), typed errors, 8s timeout
   wsc.ts             Water Survey of Canada (native cms/m), 8s timeout

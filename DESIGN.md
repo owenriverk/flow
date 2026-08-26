@@ -49,14 +49,25 @@ signal, no login. It turns a $400 satellite messenger into a river-flow oracle.
 - **You CANNOT reply by email.** Garmin's auto-reply: "Replies to this email are not
   answered... return to the original email and click the link." The only reply path
   is the web form behind that link. (This disproved the original email-reply plan.)
-- **Reply mechanism (verified live, returned `{"Success":true}` + landed on device):**
+- **Reply mechanism (rewritten 2026-08-26 after Garmin moved the page; the original
+  form-POST version was verified live 2026-06-28):**
   1. Extract `<token>` from the inbound email body.
-  2. GET `https://inreachlink.com/<token>` → redirects to `https://<pod>.explore.garmin.com/textmessage/txtmsg?extId=<token>` (pod = us0/eu0/… — read it from the redirect, do not hardcode).
-  3. Scrape `MessageId`, `Guid`, `ReplyAddress` from the page HTML.
-  4. POST form-urlencoded `{ReplyAddress, ReplyMessage, MessageId, Guid}` to
-     `https://<pod>.explore.garmin.com/TextMessage/TxtMsg`. `{"Success":true}` = delivered.
-- Caveat: this is an **unofficial Garmin endpoint**. Monitor reply failures; if Garmin
-  changes the form, SMS (v2) becomes the fallback.
+  2. GET `https://inreachlink.com/<token>` → redirects to Garmin's reply page, today
+     `https://messenger.garmin.com/r?extId=<token>` (a Next.js app; read the host from
+     the redirect, do not hardcode).
+  3. Read the page's `<script src>` chunks and find the Server Action id registered as
+     `createServerReference("<id>", …, "sendReplyAction")` — the id changes on every
+     Garmin deploy, so it is discovered per reply, never stored.
+  4. POST back to the page URL with `Next-Action: <id>`, `Accept: text/x-component`,
+     body `["<token>", "<text>"]`. HTTP 200 with no `N:E{…}` error chunk = delivered
+     (live: `1:"$undefined"`, the action returns void); a thrown action is HTTP 500 +
+     `1:E{"digest":…}`. Verified on a real InReach 2026-08-26.
+  - Until 2026-08-23 the redirect went to `<pod>.explore.garmin.com/textmessage/txtmsg`,
+    an HTML form (`MessageId`/`Guid`/`ReplyAddress` inputs, form-urlencoded POST to
+    `/TextMessage/TxtMsg`, `{"Success":true}`). Garmin retired it between 2026-08-23 and
+    2026-08-26; the nightly Garmin check flagged it the same morning.
+- Caveat: this is an **unofficial Garmin endpoint** and it HAS changed once already.
+  Monitor reply failures; if Garmin changes the page again, SMS becomes the fallback.
 - iPhone satellite is SMS only (no email), so it stays **out of scope for v1**.
 
 ## Architecture (locked via /plan-eng-review)
@@ -66,8 +77,9 @@ signal, no login. It turns a $400 satellite messenger into a river-flow oracle.
 - **Module boundaries** (single responsibility, thin Worker adapter):
   - `parseInbound(body)` → `{ query, token }` — strips Garmin footer, pulls the
     `inreachlink.com` reply token out of the body.
-  - `replyToInreach(token, text, deps)` → resolves the pod, scrapes Guid/MessageId/
-    ReplyAddress, POSTs the reply. Throws on non-`Success`.
+  - `replyToInreach(token, text, deps)` → follows the token redirect, finds the reply
+    Server Action id in the page's scripts, invokes it. Throws `InreachReplyError`
+    with a `kind` (transport / format / rejected).
   - `lookupGauge(text)` → `siteId | null` — normalize (lowercase/trim/collapse
     spaces), exact alias match, else 8-digit raw ID passthrough, else null.
   - `usgs(siteId)` → `reading` — fetch IV API with an ~8s timeout.
@@ -85,10 +97,10 @@ InReach ──sat──▶ Garmin relay ──email──▶ Cloudflare Email Ro
                                    ( lookupGauge → usgs/wsc/cdec → formatReply )
                                               │
                                               ▼
-                          replyToInreach: GET token page → POST web form
+                    replyToInreach: GET token page → find action id → POST action
                                               │
                                               ▼
-                                   us0.explore.garmin.com ──▶ Garmin ──▶ device
+                                    messenger.garmin.com ──▶ Garmin ──▶ device
 ```
 
 ## Failure modes (each needs a test AND a user-visible reply, never silence)

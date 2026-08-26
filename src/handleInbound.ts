@@ -7,7 +7,7 @@
  *                              │
  *                  handleQuery(query) ─▶ reply text ─▶ onResolved(query, reply, channel)
  *                              │
- *          token? ─▶ replyToInreach(token, reply)    (InReach: Garmin web form)
+ *          token? ─▶ replyToInreach(token, reply)    (InReach: Garmin reply page)
  *          else   ─▶ replyByEmail(reply)             (normal email: message.reply)
  *          else   ─▶ onNoReplyPath(query)            (no way to answer)
  *

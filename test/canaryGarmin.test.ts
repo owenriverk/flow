@@ -2,15 +2,33 @@ import { describe, expect, it, vi } from 'vitest';
 import { buildGarminCheck, GARMIN_STATE_KEY } from '../src/canaryGarmin.js';
 import { LAST_TOKEN_KEY } from '../src/canaryHelpers.js';
 
-const NOW = new Date('2026-07-02T14:00:00Z');
+const NOW = new Date('2026-08-27T14:00:00Z');
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000).toISOString();
 
-const FORM_HTML = `
-  <form>
-    <input id="MessageId" value="12345">
-    <input name="Guid" type="hidden" value="abc-def">
-    <input id="ReplyAddress" value="paddler@example.com">
-  </form>`;
+// The messenger.garmin.com reply page and its route chunk, as the reply path sees them.
+const PAGE_URL = 'https://messenger.garmin.com/r?extId=tok-1';
+const PAGE_HTML = `
+  <html><head>
+  <script src="/web/_next/static/chunks/main-app-7a8446b6733de863.js" async=""></script>
+  <script src="/web/_next/static/chunks/app/(public)/reply/%5BtinyUrlId%5D/page-bd52b15b7da15760.js" async=""></script>
+  </head><body>Garmin Messenger</body></html>`;
+const ROUTE_CHUNK =
+  'let g=(0,m.createServerReference)("60e0518dd113775ab471a769fddd3860d84bad10e6",m.callServer,void 0,m.findSourceMapURL,"sendReplyAction");';
+const OTHER_CHUNK = '(function(){"use strict"})();';
+
+type Stub = { ok?: boolean; status?: number; url?: string; body?: string };
+const stub = (s: Stub, url: string, body: string) =>
+  ({ ok: s.ok ?? true, status: s.status ?? 200, url: s.url ?? url, text: async () => s.body ?? body }) as unknown as Response;
+
+/** Routes the page GET, the route chunk and any other chunk separately. */
+function garminFetch(over: { page?: Stub; route?: Stub; other?: Stub } = {}) {
+  return vi.fn(async (input: RequestInfo | URL) => {
+    const url = String(input);
+    if (url.includes('inreachlink.com')) return stub(over.page ?? {}, PAGE_URL, PAGE_HTML);
+    if (url.includes('/page-')) return stub(over.route ?? {}, url, ROUTE_CHUNK);
+    return stub(over.other ?? {}, url, OTHER_CHUNK);
+  }) as unknown as typeof fetch;
+}
 
 function kv(initial: Record<string, string> = {}) {
   const store = { ...initial };
@@ -28,34 +46,48 @@ const freshToken = () => JSON.stringify({ token: 'tok-1', receivedAt: hoursAgo(6
 function deps(over: Record<string, unknown> = {}) {
   return {
     kv: kv({ [LAST_TOKEN_KEY]: freshToken() }),
-    fetchFn: vi.fn(async () => new Response(FORM_HTML, { status: 200 })) as unknown as typeof fetch,
+    fetchFn: garminFetch(),
     now: () => NOW,
     ...over,
   };
 }
 
 describe('garmin form check', () => {
-  it('fresh token + parseable form is ok', async () => {
+  it('fresh token + discoverable reply action is ok', async () => {
     const result = await buildGarminCheck(deps()).run();
     expect(result.status).toBe('ok');
+    expect(result.summary).toContain('reply action found');
     expect(result.findings).toEqual([]);
   });
 
-  it('fresh token + 200 + missing fields is THE alert state', async () => {
+  it('never invokes the action — GETs only', async () => {
+    const fetchFn = garminFetch();
+    await buildGarminCheck(deps({ fetchFn })).run();
+    const posts = (fetchFn as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(
+      ([, init]) => (init as RequestInit | undefined)?.method === 'POST',
+    );
+    expect(posts).toHaveLength(0);
+  });
+
+  it('fresh token + 200 page + no reply action in any chunk is THE alert state', async () => {
+    const result = await buildGarminCheck(deps({ fetchFn: garminFetch({ route: { body: OTHER_CHUNK } }) })).run();
+    expect(result.status).toBe('findings');
+    expect(result.summary).toBe('reply page missing sendReplyAction');
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings![0]).toContain('could not find sendReplyAction');
+  });
+
+  it('fresh token + 200 page with no script chunks (the 2026-08 symptom shape) alerts too', async () => {
     const result = await buildGarminCheck(
-      deps({ fetchFn: vi.fn(async () => new Response('<html>totally different page</html>', { status: 200 })) }),
+      deps({ fetchFn: garminFetch({ page: { body: '<html>totally different page</html>' } }) }),
     ).run();
     expect(result.status).toBe('findings');
-    expect(result.findings).toHaveLength(1);
-    expect(result.findings![0]).toContain('MessageId, Guid, ReplyAddress');
+    expect(result.findings![0]).toContain('no script chunks');
   });
 
   it('a persisting alert goes quiet after the first night; recovery alerts once', async () => {
     const store = kv({ [LAST_TOKEN_KEY]: freshToken() });
-    const broken = deps({
-      kv: store,
-      fetchFn: vi.fn(async () => new Response('<html>nope</html>', { status: 200 })),
-    });
+    const broken = deps({ kv: store, fetchFn: garminFetch({ route: { body: OTHER_CHUNK } }) });
     const first = await buildGarminCheck(broken).run();
     expect(first.findings).toHaveLength(1);
     const second = await buildGarminCheck(broken).run();
@@ -65,7 +97,7 @@ describe('garmin form check', () => {
 
     const recovered = await buildGarminCheck(deps({ kv: store })).run();
     expect(recovered.status).toBe('ok');
-    expect(recovered.findings).toEqual(['Garmin reply form parses again']);
+    expect(recovered.findings).toEqual(['Garmin reply page parses again']);
   });
 
   it('stale token is unknown, never alerts', async () => {
@@ -92,14 +124,22 @@ describe('garmin form check', () => {
     }
   });
 
-  it('non-200 (bot challenge, expiry page) is unknown — a monitor-side block is not proof', async () => {
+  it('non-200 page (bot challenge, expiry page) is unknown — a monitor-side block is not proof', async () => {
     for (const status of [403, 404, 503]) {
       const result = await buildGarminCheck(
-        deps({ fetchFn: vi.fn(async () => new Response('challenge', { status })) }),
+        deps({ fetchFn: garminFetch({ page: { ok: false, status, body: 'challenge' } }) }),
       ).run();
       expect(result.status).toBe('skipped');
       expect(result.summary).toContain(`HTTP ${status}`);
     }
+  });
+
+  it('a script chunk that fails to load is unknown, not an alert', async () => {
+    const result = await buildGarminCheck(
+      deps({ fetchFn: garminFetch({ route: { ok: false, status: 503 } }) }),
+    ).run();
+    expect(result.status).toBe('skipped');
+    expect(result.summary).toContain('page scripts unreachable');
   });
 
   it('network failure/timeout is unknown', async () => {

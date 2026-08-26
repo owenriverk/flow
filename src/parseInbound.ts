@@ -11,7 +11,7 @@
  *   This message was sent to you using the inReach ...
  *
  * The token feeds replyToInreach() — there is no email reply path (Garmin's
- * no.reply address bounces; the web form is the only way back to the device).
+ * no.reply address bounces; the reply page behind the link is the only way back to the device).
  */
 
 export interface ParsedInbound {
