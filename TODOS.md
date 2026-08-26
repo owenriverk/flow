@@ -102,10 +102,20 @@
     exempts the owner's own phone so a long test session can't self-block.
     Caveat to remember: these caps are PER SENDER, so they bound what one number
     can cost (~$5 at 300), never total spend. Only the prepaid balance does that.
-  - TODO — a Cloudflare rate-limit/WAF rule on `/api/sms`. It still parses the body
-    pre-auth, so an anonymous flood costs CPU before the signature check runs. This
-    one is dashboard/API config, not code. Note it saves no Twilio money: inbound
-    is billed on receipt regardless of what the Worker does.
+  - DONE — Cloudflare rate-limiting rule on `/api/sms`: 5 requests / 10s per IP,
+    block 10s. Verified live 2026-08-05 by firing 12 concurrent unsigned POSTs —
+    9 reached the Worker (403 invalid signature), 3 got 429 / error 1015. The
+    threshold is approximate by design: Cloudflare counts per edge PoP, not in one
+    global ledger, so it errs permissive. Saves no Twilio money (inbound is billed
+    on receipt regardless) — this bounds Worker CPU under an anonymous flood.
+    **Revisit before opening the number to strangers:** the counter is per IP for
+    this path, so several real users texting within the same few seconds can trip
+    it, and Twilio does NOT retry inbound message webhooks — a blocked legitimate
+    message is silently lost, not delayed.
+  - OPTIONAL — a WAF custom rule blocking `/api/sms` requests that lack an
+    `X-Twilio-Signature` header would stop the pre-auth `formData()` parse on
+    request #1, which the rate limit only does after ~5. Marginal: it is trivially
+    bypassed by sending a junk header, so it only filters unauthenticated noise.
 
 ## Searchable AKAs on the web gauge table
 
