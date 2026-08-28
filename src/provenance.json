@@ -58,6 +58,18 @@
       "verifiedOn": "2026-07-09",
       "source": "usgs",
       "notes": "Susitna at Gold Creek (Devils Canyon). Range audit 2026-07-09: NO runnable band on purpose. Previous 3000-10000 cfs guess called the documented ideal flow HIGH - americanwhitewater.org/content/River/detail/id/46 cites ideal kayak flows ~15,000 cfs, but no published min/max band exists for this once-a-generation class V+ run, and the river can rise 15,000 cfs in hours. Grey/no-range until someone with firsthand Devils Canyon knowledge sets a receipted band."
+    },
+    "usgs:13246000": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-08-28",
+      "source": "usgs",
+      "notes": "North Fork Payette nr Banks — the Banks gauge is the standard reference for the Smiths Ferry-to-Banks class V run. Station specified by the owner when the run was added."
+    },
+    "usgs:13235000": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-08-28",
+      "source": "usgs",
+      "notes": "South Fork Payette at Lowman — the Lowman gauge is the standard reference for the canyon reach. Station specified by the owner when the run was added."
     }
   },
   "rituals": [

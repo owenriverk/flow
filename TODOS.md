@@ -157,6 +157,30 @@
 - **Effort:** S with CC. **Priority:** P2 (was P3 as a feature; the 2026-08-24
   outage promoted it).
 
+## Ashlu Creek (the Box) — needs an Innergex source adapter
+
+- **What:** Add Ashlu Creek near Squamish, BC. Innergex publishes a live number
+  for the diversion reach at https://www.innergex.com/en/kayak/ashlu-creek
+  (6.59 m3/s when checked 2026-08-28, "updated every 15 minutes or less
+  frequently, subject to availability").
+- **Why it is not a normal gauge add:** three problems, none of them the number.
+  1. **No API.** The value is rendered in the page; it would be an HTML scrape,
+     the first in the project. Every other source is a documented JSON endpoint,
+     and a scrape breaks silently on a redesign the way Garmin's reply page did.
+  2. **The current flow is usually not the runnable flow.** It reads the
+     *diversion* reach between intake and powerhouse. What a paddler needs is
+     the **scheduled release**: bookable dates at 16 / 20 / 24 / 28 / 32 m3/s,
+     which Innergex requires 48h notice to confirm. A bot that texts back the
+     residual flow when the real answer is "the next release is Sep 12 at
+     24 cms" would be actively misleading.
+  3. It is a **release calendar**, which is closer to the Oracle pages than to
+     the gauge bot.
+- **Where to start:** decide the product question first — does the reply carry
+  the live number, the next scheduled release, or both? Then a `source:
+  'innergex'` fetcher beside `src/wsc.ts`, plus a canary check, since a scraped
+  page needs the sweep more than an API does.
+- **Effort:** M. **Priority:** P3.
+
 ## Searchable AKAs on the web gauge table
 
 - **What:** Let the directory search match alias phrases, not just name/location/

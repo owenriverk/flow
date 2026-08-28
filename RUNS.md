@@ -1,10 +1,10 @@
 # Run roster
 
 What to text the bot → the run it maps to → the gauge it reads.
-This roster is generated from `src/aliases.json` **as of 2026-07-04** and lists
+This roster is generated from `src/aliases.json` **as of 2026-08-28** and lists
 every phrase the bot will currently resolve to a gauge. It is **not** a live-API
 verification pass — it reflects what's configured, not a fresh check that every
-upstream station is reporting data right now. The 40-gauge set here matches
+upstream station is reporting data right now. The 41-gauge set here matches
 `supabase/functions/refresh-gauges/gauges.ts` (the website's source list).
 Units are native: US runs **cfs / ft**, Canadian runs **cms / m**, New Zealand
 runs **cms** (discharge only, no stage).
@@ -78,6 +78,8 @@ Middle Kings).
 | `tuolumne grand canyon` / `tgc` | Grand Canyon of the Tuolumne (AKA: `gc t`, `tuolumne gc`; shares gauge 531 with `tuolumne`) | 531 | Dreamflows | Above Hetch Hetchy Reservoir, CA |
 | `tuolumne` / `the t` | Tuolumne (Main) — "the T" (AKA: `main t`; shares gauge 531 with `tuolumne grand canyon`) | 531 | Dreamflows | Above Hetch Hetchy Reservoir, CA |
 | `clarks fork` | Clarks Fork (the Box) (AKA: `clarks fork box`, `the box`, `clarks`) | 06207500 | USGS | Near Belfry, MT |
+| `nf payette` | North Fork Payette — Smiths Ferry to Banks (AKA: `north fork payette`) | 13246000 | USGS | Near Banks, ID |
+| `sf payette` | South Fork Payette (AKA: `south fork payette`) | 13235000 | USGS | At Lowman, ID |
 
 ## Removed / deferred (no usable live gauge)
 

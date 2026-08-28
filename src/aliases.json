@@ -58,6 +58,8 @@
   "the middle fork":       { "site": "13309220",   "name": "Middle Fork Salmon",             "location": "At MF Lodge, ID" },
   "south salmon":          { "site": "13310700",   "name": "South Fork Salmon",              "location": "Near Krassel Ranger Station, ID" },
   "sf salmon":             { "site": "13310700",   "name": "South Fork Salmon",              "location": "Near Krassel Ranger Station, ID" },
+  "nf payette":            { "site": "13246000",   "name": "North Fork Payette",             "location": "Near Banks, ID" },
+  "sf payette":            { "site": "13235000",   "name": "South Fork Payette",             "location": "At Lowman, ID" },
   "sfs":                   { "site": "13310700",   "name": "South Fork Salmon",              "location": "Near Krassel Ranger Station, ID" },
   "owyhee":                { "site": "13181000",   "name": "Owyhee R",                       "location": "Near Rome, OR" },
 
