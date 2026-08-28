@@ -60,9 +60,18 @@ and a last-known-good cache fallback via Supabase (`src/supabaseCache.ts`, used 
 the live upstream API is down) both shipped after v1. There's also a companion
 gauge-directory website (`web/`) backed by a Supabase cron refresher — see `supabase/`.
 
+## SMS (public since 2026-08-28)
+
+Toll-free **+1 (866) 284-5181** answers the same queries from any US/Canada phone,
+including iPhone satellite messaging where the carrier supports SMS over satellite.
+`POST /api/sms` (Twilio webhook, signature-validated) → `handleQuery` → TwiML reply.
+Guards: replay dedup on MessageSid, per-sender throttle (10/hr, 300/month),
+per-ingress AI budget, Cloudflare rate limit on the route, STOP/HELP handled by
+Twilio. Program terms at lateboof.com/sms. Twilio account is prepaid by design —
+the balance is the only hard spending cap.
+
 ## Not in scope
 
-SMS / iPhone-satellite (v2 — the reply path there is clean SMS, no web form), Magpie
-(Quebec CEHQ), saved gauges. Runnable-judgment is not part of the satellite reply
+Magpie (Quebec CEHQ), saved gauges, and Tier-2 flow *alerts* (outbound push). Runnable-judgment is not part of the satellite reply
 itself (it's always raw numbers) — the website's color-coded ranges are a separate,
 browsable feature, not something the bot ever texts back.

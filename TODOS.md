@@ -60,6 +60,12 @@
 - **Where to start:** `handleQuery` is already channel-agnostic; SMS is a new
   adapter beside the email one in `src/worker.ts`, plus Twilio webhook signature
   validation and A2P/toll-free registration (the real cost — research first).
+- **PUBLIC as of 2026-08-28.** Owen waived the trigger below (audit still at
+  `MAX_UNAUDITED = 31`) and opened +1 (866) 284-5181 to everyone; site copy,
+  vCard, and QR now lead with the number. Remaining from the pre-public list:
+  the per-IP Cloudflare rate-limit rule on `/api/sms` must be raised (Twilio's
+  webhooks share egress IPs, so 5 req / 10 s can drop real texts), and the
+  Twilio card / auto-recharge-off / $1-day trigger setup once a card exists.
 - **Status (2026-08-05):** Tier-1 SMS gauge replies (transactional "text a run
   name, get one reply") are BUILT AND DEPLOYED — `POST /api/sms` is live and
   answering (`GET` → 405, unsigned `POST` → 403, and `/api/status` now carries an

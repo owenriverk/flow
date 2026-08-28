@@ -2,6 +2,8 @@ BEGIN:VCARD
 VERSION:3.0
 N:Flow Gauge;LateBoof;;;
 FN:LateBoof Flow Gauge
+TEL;TYPE=CELL:+18662845181
 EMAIL;TYPE=INTERNET:flow@lateboof.com
-NOTE:Text a river name (e.g.\, mf salmon\, grand canyon) over InReach or satellite to get real-time CFS/ft flow data.
+URL:https://lateboof.com
+NOTE:Text a river name (e.g.\, mf salmon\, grand canyon) by SMS from any phone\, or by email from an InReach\, to get the live flow back.
 END:VCARD
