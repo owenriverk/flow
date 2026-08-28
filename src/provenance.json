@@ -63,13 +63,13 @@
       "verifiedBy": "owen",
       "verifiedOn": "2026-08-28",
       "source": "usgs",
-      "notes": "North Fork Payette nr Banks — the Banks gauge is the standard reference for the Smiths Ferry-to-Banks class V run. Station specified by the owner when the run was added."
+      "notes": "North Fork Payette nr Banks — the Banks gauge is the standard reference for the Smiths Ferry-to-Banks class V run. Station specified by the owner when the run was added. Runnable band 400-3000 cfs from American Whitewater reach 592 (Payette, N. Fork / 5. Smiths Ferry to Banks), which correlates to this same USGS station."
     },
     "usgs:13235000": {
       "verifiedBy": "owen",
       "verifiedOn": "2026-08-28",
       "source": "usgs",
-      "notes": "South Fork Payette at Lowman — the Lowman gauge is the standard reference for the canyon reach. Station specified by the owner when the run was added."
+      "notes": "South Fork Payette at Lowman — station specified by the owner when the run was added. Runnable band 600-5000 cfs from American Whitewater reach 593 (Payette, S. Fork / 1. Grandjean to Deadwood), the reach AW correlates to this station. Caveat: AW keys the downstream Canyon/Staircase reaches to a CALCULATED gauge below the Deadwood confluence, not to Lowman, so this band describes the reach above Deadwood."
     }
   },
   "rituals": [
