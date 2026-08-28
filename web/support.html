@@ -54,9 +54,11 @@
     .kl-others { border-top: 2px solid var(--border); margin-top: 0.85rem; padding-top: 0.7rem; }
     .kl-others .k { margin-bottom: 0.4rem; }
     .kl-others ul { list-style: none; margin: 0; padding: 0; }
-    .kl-others li { font-size: 0.78rem; line-height: 1.45; padding: 0.18rem 0; }
-    .kl-others li a { color: var(--text); font-weight: 700; }
-    .kl-others li span { display: block; color: var(--faint); font-size: 0.68rem; line-height: 1.45; }
+    .kl-others li { display: grid; grid-template-columns: 20px minmax(0, 1fr); column-gap: 0.55rem; align-items: start;
+      font-size: 0.78rem; line-height: 1.45; padding: 0.2rem 0; }
+    .kl-others li .org-logo { grid-row: 1 / span 2; width: 20px; height: 20px; object-fit: contain; margin-top: 0.1rem; }
+    .kl-others li a { color: var(--text); font-weight: 700; grid-column: 2; }
+    .kl-others li span { display: block; color: var(--faint); font-size: 0.68rem; line-height: 1.45; grid-column: 2; }
 
     .kl-thanks { border: 2px solid #ff5a00; background: #fff4ee; padding: 0.6rem 0.9rem; margin: 0 0 1rem; font-size: 0.82rem; color: var(--text); }
 
@@ -205,13 +207,13 @@
         <div class="kl-others">
           <div class="k">Or support the people we support</div>
           <ul>
-            <li><a href="https://www.americanwhitewater.org/support/donate/" target="_blank" rel="noopener">American Whitewater</a><span>River access, flow releases, dam relicensing</span></li>
-            <li><a href="https://www.bcwhitewater.org/get-involved" target="_blank" rel="noopener">BC Whitewater</a><span>Access and conservation for BC's rivers</span></li>
-            <li><a href="https://www.riostorivers.org/donate" target="_blank" rel="noopener">Ríos to Rivers</a><span>Paddle Tribal Waters</span></li>
-            <li><a href="https://diversifywhitewater.org/" target="_blank" rel="noopener">Diversify Whitewater</a><span>Free kayak progression programs</span></li>
-            <li><a href="https://www.teamriverrunner.org/ways-to-donate/" target="_blank" rel="noopener">Team River Runner</a><span>Veterans on the water</span></li>
-            <li><a href="https://firstdescents.org/donate/" target="_blank" rel="noopener">First Descents</a><span>Young adults with cancer, on the river</span></li>
-            <li><a href="https://www.dreamflows.com/" target="_blank" rel="noopener">Dreamflows</a><span>One person's flow data our California runs depend on</span></li>
+            <li><img class="org-logo" src="/logos/aw.svg" alt="" width="20" height="20" loading="lazy"><a href="https://www.americanwhitewater.org/support/donate/" target="_blank" rel="noopener">American Whitewater</a><span>River access, flow releases, dam relicensing</span></li>
+            <li><img class="org-logo" src="/logos/bcw.png" alt="" width="20" height="20" loading="lazy"><a href="https://www.bcwhitewater.org/get-involved" target="_blank" rel="noopener">BC Whitewater</a><span>Access and conservation for BC's rivers</span></li>
+            <li><img class="org-logo" src="/logos/r2r.png" alt="" width="20" height="20" loading="lazy"><a href="https://www.riostorivers.org/donate" target="_blank" rel="noopener">Ríos to Rivers</a><span>Paddle Tribal Waters</span></li>
+            <li><img class="org-logo" src="/logos/dw.png" alt="" width="20" height="20" loading="lazy"><a href="https://diversifywhitewater.org/" target="_blank" rel="noopener">Diversify Whitewater</a><span>Free kayak progression programs</span></li>
+            <li><img class="org-logo" src="/logos/trr.png" alt="" width="20" height="20" loading="lazy"><a href="https://www.teamriverrunner.org/ways-to-donate/" target="_blank" rel="noopener">Team River Runner</a><span>Veterans on the water</span></li>
+            <li><img class="org-logo" src="/logos/fd.png" alt="" width="20" height="20" loading="lazy"><a href="https://firstdescents.org/donate/" target="_blank" rel="noopener">First Descents</a><span>Young adults with cancer, on the river</span></li>
+            <li><img class="org-logo" src="/logos/dreamflows.png" alt="" width="20" height="20" loading="lazy"><a href="https://www.dreamflows.com/" target="_blank" rel="noopener">Dreamflows</a><span>One person's flow data our California runs depend on</span></li>
           </ul>
         </div>
       </aside>
