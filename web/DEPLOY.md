@@ -60,6 +60,61 @@ endpoint degrades to a friendly "email us and we'll add you by hand" message —
 it never breaks the page. `BEEHIIV_PUBLICATION_ID` is baked in as a default
 and only needs setting if the publication ever changes.
 
+### Donations (Stripe → /support)
+
+`web/support.html` shows a live goal bar and supporters list. The data path:
+Stripe Payment Link → `POST /api/stripe-webhook` (`web/functions/api/stripe-webhook.ts`,
+signature-verified, idempotent on the Checkout Session id) → `donations` table →
+two anon-readable views (`donation_totals`, `supporters_public`) that expose only
+names and the season total, never amounts or emails. The table has no anon policy
+on purpose: a public insert key would let anyone put a name on the list for free.
+
+One-time setup:
+
+1. Apply `supabase/migrations/014_donations.sql` (SQL editor).
+2. Create the Stripe objects — product, choose-your-amount price, Payment Link
+   with the optional "name for the supporters list" field, and the webhook
+   endpoint. Done 2026-08-27 on the Lateboof account (`acct_1U9GPFJGEtXhrzdO`)
+   through the Stripe MCP: `prod_V9ZuljmpN2wYHt`, `price_1U9GlpJGEtXhrzdOWgRCL1jn`,
+   `plink_1U9GmQJGEtXhrzdOPUMnwPBK`, webhook `we_1U9GlNJGEtXhrzdOC6wyMV7H`.
+   For a fresh account, `STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs`
+   recreates the same set and prints the link URL and signing secret.
+3. Paste the Payment Link URL into `web/support.html` as `PAYMENT_LINK` and as the
+   Chip in button's `href` (the no-JS fallback).
+4. Secrets on the Pages project (Production):
+   ```
+   npx wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name=flow
+   npx wrangler pages secret put SUPABASE_SERVICE_ROLE_KEY --project-name=flow
+   ```
+   Optional: `DONATION_SEASON` (defaults to `2027`; also set `data-season` on the
+   goal box in `support.html` when it changes).
+5. Send yourself a $1 donation with a name; it should appear on `/support` within
+   a minute. Stripe retries any non-2xx, so a missing secret (503) or a Supabase
+   hiccup (502) is recovered, not lost.
+
+River and Title sponsors pay by invoice and are entered by hand (example insert
+at the bottom of migration 014). Hide a name without deleting the record with
+`update donations set approved = false where id = …`. Refunds are rare enough to
+handle the same way: delete the row (or set `approved = false` and zero
+`amount_cents`) after refunding in Stripe.
+
+Testing the webhook the way Stripe recommends, against a local `wrangler pages dev`:
+
+```
+cd web && npx wrangler pages dev . --port 8790 \
+  --binding STRIPE_WEBHOOK_SECRET=<secret printed by stripe listen> \
+  --binding SUPABASE_SERVICE_ROLE_KEY=<key>
+stripe listen --forward-to localhost:8790/api/stripe-webhook   # prints a whsec_ for this session
+stripe trigger checkout.session.completed                       # a paid fixture → one row lands
+```
+
+Optional hardening Stripe suggests alongside signatures: a Cloudflare WAF custom
+rule that blocks `POST /api/stripe-webhook` from any IP not on Stripe's published
+webhook list (https://stripe.com/files/ips/ips_webhooks.txt). The signature check
+already rejects forgeries; the rule only saves the Function from parsing junk.
+Stripe announces list changes in advance, but a stale rule silently blocks real
+deliveries, so only add it if you'll keep it current.
+
 ### Step 3: Add Custom Domain
 
 1. In Cloudflare Pages, select your `flow` project

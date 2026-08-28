@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keep the Line Open — Support the LateBoof River-Flow Text Line | LateBoof</title>
+  <meta name="description" content="LateBoof is free to use. The infrastructure behind it costs money to maintain, and every donation goes toward keeping the line open. Chip in any amount and see your name on the supporters list.">
+  <link rel="canonical" href="https://lateboof.com/support">
+  <meta property="og:title" content="Keep the Line Open — LateBoof">
+  <meta property="og:description" content="Free river flows by text, kept running by the paddlers who use it. Chip in any amount.">
+  <meta property="og:url" content="https://lateboof.com/support">
+  <meta property="og:image" content="https://lateboof.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"LateBoof","item":"https://lateboof.com/"},
+    {"@type":"ListItem","position":2,"name":"Keep the line open"}
+  ]}</script>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" href="/favicon-192.png">
+  <link rel="stylesheet" href="style.css?v=2026070103">
+  <style>
+    .kl-page { max-width: 66rem; padding: 1.5rem 1rem; margin: 0 auto; }
+    .kl-page h2 { font-size: 0.9rem; font-weight: 700; margin: 1.6rem 0 0.4rem; }
+    .kl-page p, .kl-page ul { color: var(--muted); font-size: 0.82rem; margin-bottom: 1rem; line-height: 1.7; }
+    .kl-page ul { margin-left: 1.2rem; }
+
+    .kl-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin: 0.4rem 0 0.3rem; line-height: 1.15; }
+    .kl-lede { font-size: 0.9rem !important; color: var(--text) !important; max-width: 44rem; }
+
+    /* Main column + supporters sidebar. The sidebar is the page's proof that
+       people show up for this, so it rides beside the goal on wide screens and
+       moves above it on narrow ones. */
+    .kl-grid { display: grid; grid-template-columns: minmax(0, 44rem) minmax(15rem, 18rem); gap: 2rem; align-items: start; }
+    .kl-main { min-width: 0; }
+    .kl-main > h2:first-child { margin-top: 0.2rem; }
+
+    .kl-side { border: 2px solid var(--border); padding: 0.9rem 1rem 0.8rem; position: sticky; top: 1rem; }
+    .kl-side h2 { margin: 0 0 0.6rem !important; display: flex; justify-content: space-between; align-items: baseline; }
+    .kl-side h2 span { font-weight: 400; color: var(--faint); font-size: 0.72rem; }
+    .kl-side .group { margin-bottom: 0.75rem; }
+    .kl-side .group:last-of-type { margin-bottom: 0.4rem; }
+    .kl-side .k { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem; }
+    .kl-side ul { list-style: none; margin: 0; padding: 0; font-size: 0.8rem; color: var(--text); line-height: 1.55; }
+    .kl-side li { padding: 0.05rem 0; overflow-wrap: anywhere; }
+    .kl-side li.empty { color: var(--faint); font-size: 0.76rem; }
+    .kl-side li.more { color: var(--faint); font-size: 0.72rem; }
+    .kl-side li .river { color: var(--muted); }
+    .kl-side .kl-side-foot { color: var(--faint); font-size: 0.68rem; margin: 0.4rem 0 0; line-height: 1.5; }
+
+    .kl-thanks { border: 2px solid #ff5a00; background: #fff4ee; padding: 0.6rem 0.9rem; margin: 0 0 1rem; font-size: 0.82rem; color: var(--text); }
+
+    /* Goal + progress */
+    .kl-goal { border: 2px solid var(--border); padding: 1rem 1.1rem 0.9rem; margin: 0.6rem 0 1.2rem; }
+    .kl-goal-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+    .kl-goal-num { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .kl-goal-num small { font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+    .kl-goal-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .kl-bar { height: 14px; border: 2px solid var(--border); margin: 0.6rem 0 0.4rem; background: #fff; }
+    .kl-bar span { display: block; height: 100%; width: 0; background: #ff5a00; transition: width 0.5s ease; }
+    .kl-goal-foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: var(--faint); font-size: 0.72rem; }
+
+    /* Tiers */
+    .kl-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; margin: 0.8rem 0 0.4rem; }
+    .kl-tier { border: 2px solid var(--border); padding: 0.9rem 0.95rem 0.95rem; display: flex; flex-direction: column; gap: 0.45rem; }
+    .kl-tier.featured { border-color: #ff5a00; box-shadow: 4px 4px 0 #ff5a00; }
+    .kl-tier-name { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .kl-tier-price { font-size: 1.35rem; font-weight: 700; line-height: 1.1; }
+    .kl-tier-price small { font-size: 0.72rem; font-weight: 400; color: var(--muted); }
+    .kl-tier p { margin: 0 !important; font-size: 0.76rem !important; line-height: 1.55 !important; flex: 1; }
+    .kl-tier .spots { color: var(--faint); font-size: 0.7rem; }
+    .kl-btn { display: inline-block; font: inherit; font-weight: 700; font-size: 0.78rem; text-align: center; padding: 0.45rem 0.7rem;
+      border: 2px solid var(--border); background: #fff; color: var(--text); text-decoration: none; }
+    .kl-btn:hover { background: var(--text); color: #fff; }
+    .kl-btn.primary { background: #ff5a00; border-color: #ff5a00; color: #fff; }
+    .kl-btn.primary:hover { background: #d94c00; border-color: #d94c00; }
+    .kl-cap { color: var(--faint) !important; font-size: 0.72rem !important; line-height: 1.6 !important; }
+
+    /* What it buys */
+    .kl-buys { border: 2px solid var(--border); border-left-width: 8px; border-left-color: #ff5a00; padding: 0.8rem 1rem 0.2rem; margin: 1rem 0 1.2rem; }
+    .kl-buys h2 { margin-top: 0 !important; }
+    .kl-buys ul { margin-bottom: 0.8rem !important; }
+
+    @media (max-width: 900px) {
+      .kl-grid { grid-template-columns: minmax(0, 1fr); gap: 1.2rem; }
+      .kl-side { position: static; order: -1; }
+    }
+    @media (max-width: 640px) {
+      .kl-tiers { grid-template-columns: minmax(0, 1fr); }
+      .kl-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
+    <span class="header-sub">Text <strong>flow@lateboof.com</strong> from your InReach — flow comes back over satellite</span>
+    <span class="header-actions">
+      <a class="help-btn" href="/forecast">Oracle</a>
+      <a class="help-btn" href="/">GaugeDirectory</a>
+      <a class="contact-btn" href="/#contact">+ Contact</a>
+    </span>
+  </header>
+
+  <div class="kl-page">
+    <h1 class="kl-title">Keep the line open</h1>
+    <p class="kl-lede">
+      LateBoof is free to use and always will be. The infrastructure behind it —
+      the toll-free number, the carrier fees on every text, the gauge feeds, the
+      site — costs money to maintain. Every donation goes toward keeping the line
+      open. Nothing else.
+    </p>
+
+    <div class="kl-grid">
+      <div class="kl-main">
+        <div class="kl-thanks" id="thanks" hidden>
+          Thank you. If you added a name, it shows up in the supporters list within a minute.
+        </div>
+
+        <!-- GOAL is the only number set by hand. Raised comes from Supabase
+             (donation_totals view) on every page load. -->
+        <div class="kl-goal" id="goal" data-goal="500" data-season="2027">
+          <div class="kl-goal-row">
+            <span class="kl-goal-label">2027 season goal</span>
+            <span class="kl-goal-num"><span data-raised-out>…</span> <small>of <span data-goal-out>$500</span></small></span>
+          </div>
+          <div class="kl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="500" aria-valuenow="0" aria-label="Raised toward the season goal"><span data-bar></span></div>
+          <div class="kl-goal-foot">
+            <span>Keeps the SMS line, the gauge feeds, and the site running through the 2027 season</span>
+            <span data-live-note>Updates as donations land</span>
+          </div>
+        </div>
+
+        <h2>Three ways in</h2>
+        <div class="kl-tiers">
+          <div class="kl-tier featured">
+            <span class="kl-tier-name">Paddler</span>
+            <span class="kl-tier-price">Any amount</span>
+            <p>Chip in whatever the line is worth to you — Apple Pay, Google Pay, or a card, about twenty seconds. Add a name at checkout and it shows up on the supporters list within a minute, or leave it blank to stay anonymous.</p>
+            <span class="spots">Any amount from $1</span>
+            <a class="kl-btn primary" id="paddler-btn" href="https://donate.stripe.com/3cIdRa1jj7JMdbGbIhgMw00">Chip in</a>
+          </div>
+          <div class="kl-tier">
+            <span class="kl-tier-name">River</span>
+            <span class="kl-tier-price">$50 <small>/ year</small></span>
+            <p>Your name on one river's row in the gauge directory and on its Oracle page. Pick the river you run.</p>
+            <span class="spots" data-spots="river">6 spots</span>
+            <a class="kl-btn" href="mailto:owen@lateboof.com?subject=LateBoof%20river%20sponsor&body=Hi%20Owen%2C%20I%27d%20like%20to%20sponsor%20a%20river%3A%20">Email me about a river</a>
+          </div>
+          <div class="kl-tier">
+            <span class="kl-tier-name">Title</span>
+            <span class="kl-tier-price">$300 <small>/ year</small></span>
+            <p>"SMS line presented by ___" on the SMS page, the help page, and the printable put-in card that goes in rental kits.</p>
+            <span class="spots" data-spots="title">1 spot</span>
+            <a class="kl-btn" href="mailto:owen@lateboof.com?subject=LateBoof%20title%20sponsor">Email me about the title</a>
+          </div>
+        </div>
+        <p class="kl-cap">River and Title spots are meant for outfitters.</p>
+
+        <div class="kl-buys">
+          <h2>What your money buys</h2>
+          <ul>
+            <li>A free answer every time you text a river name — from a satellite messenger today, from any phone once the SMS line opens.</li>
+            <li>The toll-free number and the carrier fees on every reply.</li>
+            <li>Hosting, the gauge feeds, and the nightly checks that keep readings honest.</li>
+            <li>A backup number, so the line keeps answering if the toll-free path ever goes down.</li>
+            <li>A line that stays clean: no ads, no promo texts, and no one's number ever shared.</li>
+          </ul>
+        </div>
+
+        <h2>If we raise more than the goal</h2>
+        <p>
+          The extra rolls into next season or funds the backup number. Every dollar
+          stays with the line.
+        </p>
+      </div>
+
+      <aside class="kl-side" aria-labelledby="supporters-h">
+        <h2 id="supporters-h">Supporters <span data-count></span></h2>
+        <div class="group">
+          <div class="k">Title sponsor</div>
+          <ul data-list="title"><li class="empty">Open.</li></ul>
+        </div>
+        <div class="group">
+          <div class="k">River sponsors</div>
+          <ul data-list="river"><li class="empty">None yet — six rivers waiting.</li></ul>
+        </div>
+        <div class="group">
+          <div class="k">Paddlers</div>
+          <ul data-list="paddler"><li class="empty">Nobody yet. Be the first name here.</li></ul>
+        </div>
+        <p class="kl-side-foot" data-side-foot>Names appear as donations land.</p>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span><a href="/">← Back to gauge directory</a></span>
+    <span class="footer-links">
+      <a class="footer-status" href="/forecast">The Oracle</a>
+      <a class="footer-status" href="/help">How it works</a>
+      <a class="footer-status" href="/status">Status</a>
+    </span>
+  </footer>
+
+  <script>
+    // Stripe Payment Link for the Paddler tier (customer chooses the amount).
+    // plink_1U9GmQJGEtXhrzdOPUMnwPBK on the Lateboof account, created 2026-08-27.
+    // If it's ever emptied the button falls back to the href in the markup.
+    const PAYMENT_LINK = 'https://donate.stripe.com/3cIdRa1jj7JMdbGbIhgMw00';
+
+    // Same public anon key the gauge directory uses. It can only read the two
+    // views below (names + season total); the donations table itself has no
+    // anon policy, so nothing here can add, change, or read a donation.
+    const SUPABASE_URL = 'https://vfkoegvzllxvshcnfbox.supabase.co';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZma29lZ3Z6bGx4dnNoY25mYm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NzE1MTcsImV4cCI6MjA5ODI0NzUxN30.PdQ8fbjVE0s8LoTED5WHyb1zx8WU-X3QqO4td9XBHqo';
+    const MAX_PADDLERS_SHOWN = 150;
+    const RIVER_SPOTS = 6, TITLE_SPOTS = 1;
+
+    (function () {
+      if (PAYMENT_LINK) document.getElementById('paddler-btn').href = PAYMENT_LINK;
+      if (new URLSearchParams(location.search).get('thanks')) {
+        document.getElementById('thanks').hidden = false;
+      }
+    })();
+
+    const money = (n) => '$' + Math.round(n).toLocaleString('en-US');
+
+    function renderGoal(raisedCents) {
+      const g = document.getElementById('goal');
+      const goal = Number(g.dataset.goal) || 1;
+      const raised = raisedCents / 100;
+      const pct = Math.max(0, Math.min(100, Math.round((raised / goal) * 100)));
+      g.querySelector('[data-raised-out]').textContent = money(raised);
+      g.querySelector('[data-goal-out]').textContent = money(goal);
+      const bar = g.querySelector('.kl-bar');
+      bar.setAttribute('aria-valuemax', String(goal));
+      bar.setAttribute('aria-valuenow', String(Math.round(raised)));
+      g.querySelector('[data-bar]').style.width = pct + '%';
+    }
+
+    function renderList(tier, rows, emptyText) {
+      const ul = document.querySelector('[data-list="' + tier + '"]');
+      ul.textContent = '';
+      if (rows.length === 0) {
+        const li = document.createElement('li'); li.className = 'empty'; li.textContent = emptyText; ul.appendChild(li);
+        return;
+      }
+      const shown = rows.slice(0, MAX_PADDLERS_SHOWN);
+      for (const r of shown) {
+        const li = document.createElement('li');
+        li.textContent = r.display_name; // textContent: a name is never markup
+        if (r.river_name) {
+          const s = document.createElement('span'); s.className = 'river'; s.textContent = ' — ' + r.river_name; li.appendChild(s);
+        }
+        ul.appendChild(li);
+      }
+      if (rows.length > shown.length) {
+        const li = document.createElement('li'); li.className = 'more'; li.textContent = '+ ' + (rows.length - shown.length) + ' more'; ul.appendChild(li);
+      }
+    }
+
+    async function load() {
+      const season = document.getElementById('goal').dataset.season;
+      const headers = { apikey: ANON_KEY, Authorization: 'Bearer ' + ANON_KEY };
+      try {
+        const [totalsRes, namesRes] = await Promise.all([
+          fetch(SUPABASE_URL + '/rest/v1/donation_totals?season=eq.' + season + '&select=donations,raised_cents', { headers }),
+          fetch(SUPABASE_URL + '/rest/v1/supporters_public?season=eq.' + season + '&select=tier,display_name,river_name,created_at&order=created_at.desc', { headers }),
+        ]);
+        if (!totalsRes.ok || !namesRes.ok) throw new Error('supporters fetch failed: ' + totalsRes.status + '/' + namesRes.status);
+        const totals = (await totalsRes.json())[0] || { donations: 0, raised_cents: 0 };
+        const names = await namesRes.json();
+
+        renderGoal(Number(totals.raised_cents) || 0);
+
+        const by = (t) => names.filter((r) => r.tier === t);
+        const title = by('title'), river = by('river'), paddler = by('paddler');
+        renderList('title', title, 'Open.');
+        renderList('river', river, 'None yet — six rivers waiting.');
+        renderList('paddler', paddler, 'Nobody yet. Be the first name here.');
+
+        const n = Number(totals.donations) || 0;
+        document.querySelector('[data-count]').textContent = n ? n + (n === 1 ? ' donation' : ' donations') : '';
+        const riverOpen = Math.max(0, RIVER_SPOTS - river.length);
+        document.querySelector('[data-spots="river"]').textContent = RIVER_SPOTS + ' spots · ' + riverOpen + ' open';
+        document.querySelector('[data-spots="title"]').textContent = title.length >= TITLE_SPOTS ? '1 spot · taken' : '1 spot · open';
+        const anon = n - names.length;
+        document.querySelector('[data-side-foot]').textContent =
+          anon > 0 ? 'Plus ' + anon + ' anonymous. Names appear as donations land.' : 'Names appear as donations land.';
+      } catch (e) {
+        console.error(e);
+        document.querySelector('[data-raised-out]').textContent = '—';
+        document.querySelector('[data-live-note]').textContent = "Couldn't load the tally — refresh in a minute";
+      }
+    }
+    load();
+  </script>
+</body>
+</html>
