@@ -158,17 +158,17 @@
             <span class="kl-tier-price">$50 <small>/ year</small></span>
             <p>Your name on one river's row in the gauge directory and on its Oracle page. Pick the river you run.</p>
             <span class="spots" data-spots="river">6 spots</span>
-            <a class="kl-btn" href="mailto:owen@lateboof.com?subject=LateBoof%20river%20sponsor&body=Hi%20Owen%2C%20I%27d%20like%20to%20sponsor%20a%20river%3A%20">Email me about a river</a>
+            <a class="kl-btn" data-mail href="mailto:owen@lateboof.com?subject=LateBoof%20river%20sponsor&amp;body=Hi%20Owen%2C%20I%27d%20like%20to%20sponsor%20a%20river%3A%20">Email me about a river</a>
           </div>
           <div class="kl-tier">
             <span class="kl-tier-name">Title sponsor</span>
             <span class="kl-tier-price">$300 <small>/ year</small></span>
             <p>"SMS line presented by ___" on the SMS page, the help page, and the printable put-in card that goes in rental kits.</p>
             <span class="spots" data-spots="title">1 spot</span>
-            <a class="kl-btn" href="mailto:owen@lateboof.com?subject=LateBoof%20title%20sponsor">Email me about the title</a>
+            <a class="kl-btn" data-mail href="mailto:owen@lateboof.com?subject=LateBoof%20title%20sponsor">Email me about the title</a>
           </div>
         </div>
-        <p class="kl-cap">River and Title sponsor spots are meant for outfitters.</p>
+        <p class="kl-cap">River and Title sponsor spots are meant for outfitters. Email <a href="mailto:owen@lateboof.com">owen@lateboof.com</a>.</p>
 
         <div class="kl-buys">
           <h2>What your money buys</h2>
@@ -242,6 +242,29 @@
     const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZma29lZ3Z6bGx4dnNoY25mYm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NzE1MTcsImV4cCI6MjA5ODI0NzUxN30.PdQ8fbjVE0s8LoTED5WHyb1zx8WU-X3QqO4td9XBHqo';
     const MAX_PADDLERS_SHOWN = 150;
     const RIVER_SPOTS = 6, TITLE_SPOTS = 1;
+
+    // Sponsor buttons: a bare mailto: silently does nothing when no mail client is
+    // registered (common on desktop Chrome/Brave), so copy the address as well and
+    // say so on the button. The href stays, so a configured client still opens.
+    (function () {
+      const ADDR = 'owen@lateboof.com';
+      for (const a of document.querySelectorAll('[data-mail]')) {
+        a.addEventListener('click', () => {
+          const label = a.textContent;
+          // Show the address either way: a failed clipboard write (permissions,
+          // insecure context) must still leave something readable on screen.
+          const show = (msg) => {
+            a.textContent = msg;
+            setTimeout(() => { a.textContent = label; }, 3000);
+          };
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(ADDR).then(() => show(ADDR + ' — copied')).catch(() => show(ADDR));
+          } else {
+            show(ADDR);
+          }
+        });
+      }
+    })();
 
     (function () {
       if (PAYMENT_LINK) document.getElementById('paddler-btn').href = PAYMENT_LINK;
