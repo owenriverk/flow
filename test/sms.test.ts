@@ -131,11 +131,38 @@ describe('parseSmsWebhook', () => {
       from: '+15555550123',
       body: '  gauley summersville  ',
       query: 'gauley summersville',
+      inreach: false,
     });
   });
 
   test('defaults missing fields to empty strings', () => {
-    expect(parseSmsWebhook({})).toEqual({ from: '', body: '', query: '' });
+    expect(parseSmsWebhook({})).toEqual({ from: '', body: '', query: '', inreach: false });
+  });
+
+  // Garmin's inReach→SMS relay appends a location/reply link, sometimes with a
+  // line of boilerplate. None of it was typed by the paddler.
+  test('strips the inReach relay footer and flags the text as inReach-relayed', () => {
+    const r = parseSmsWebhook({
+      From: '+15005550001',
+      Body: 'mf salmon\n\nhttps://inreachlink.com/AbC12-xy\nDo not reply directly to this message.',
+    });
+    expect(r.query).toBe('mf salmon');
+    expect(r.inreach).toBe(true);
+  });
+
+  test('strips a trailing link on the same line and collapses whitespace', () => {
+    const r = parseSmsWebhook({ From: '+15005550001', Body: 'grand canyon   https://inreachlink.com/ZZZ' });
+    expect(r.query).toBe('grand canyon');
+    expect(r.inreach).toBe(true);
+  });
+
+  test('drops any other URL but does not flag it as inReach', () => {
+    const r = parseSmsWebhook({ From: '+15555550123', Body: 'stikine https://example.com/x' });
+    expect(r).toMatchObject({ query: 'stikine', inreach: false });
+  });
+
+  test('a body that is only a link becomes an empty query', () => {
+    expect(parseSmsWebhook({ From: '+1', Body: 'https://inreachlink.com/only' }).query).toBe('');
   });
 });
 

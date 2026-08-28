@@ -62,8 +62,11 @@ gauge-directory website (`web/`) backed by a Supabase cron refresher — see `su
 
 ## SMS (public since 2026-08-28)
 
-Toll-free **+1 (866) 284-5181** answers the same queries from any US/Canada phone,
-including iPhone satellite messaging where the carrier supports SMS over satellite.
+Toll-free **+1 (866) 284-5181** answers the same queries from a Garmin inReach (via
+Garmin's SMS relay) or any US/Canada phone, including iPhone satellite messaging where
+the carrier supports SMS over satellite. inReach-relayed texts are recognized by the
+`inreachlink.com` footer (stripped before lookup) and get a larger throttle bucket,
+since Garmin's gateway numbers are pooled across devices.
 `POST /api/sms` (Twilio webhook, signature-validated) → `handleQuery` → TwiML reply.
 Guards: replay dedup on MessageSid, per-sender throttle (10/hr, 300/month),
 per-ingress AI budget, Cloudflare rate limit on the route, STOP/HELP handled by

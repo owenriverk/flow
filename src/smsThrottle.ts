@@ -45,14 +45,34 @@ export const HOURLY_CAP = 10;
  */
 export const MONTHLY_CAP = 300;
 
+export interface ThrottleCaps {
+  hourly: number;
+  monthly: number;
+}
+
+export const DEFAULT_CAPS: ThrottleCaps = { hourly: HOURLY_CAP, monthly: MONTHLY_CAP };
+
+/**
+ * Caps for texts that arrived through Garmin's inReach→SMS relay. Garmin sends
+ * those from a POOL of gateway numbers that "can change from recipient to
+ * recipient", so `From` identifies a gateway, not a paddler, and one bucket may be
+ * shared by everyone whose device happened to route through it. 6x the phone
+ * caps keeps a busy put-in weekend from locking out real devices while still
+ * bounding what one gateway number (or someone spoofing the relay footer to get
+ * this bucket) can cost: 60 replies/hour is about $1.20.
+ */
+export const INREACH_GATEWAY_CAPS: ThrottleCaps = { hourly: 60, monthly: 1500 };
+
 const HOUR_TTL = 60 * 90; // 1.5h — outlives the window it counts, then vanishes
 const MONTH_TTL = 60 * 60 * 24 * 35;
 const ALERT_TTL = 60 * 60 * 24; // at most one owner email per sender per day
 
 // Both stay under the 160-char reply contract (src/formatReply.ts) so a notice is
 // a single billed segment, same as a real answer.
-const HOURLY_NOTICE = `LateBoof: too many texts this hour (limit ${HOURLY_CAP}). Try again later — every gauge is also at lateboof.com/gauges`;
-const MONTHLY_NOTICE = `LateBoof: monthly limit reached (${MONTHLY_CAP} texts). Resets on the 1st — every gauge is also at lateboof.com/gauges`;
+const hourlyNotice = (cap: number): string =>
+  `LateBoof: too many texts this hour (limit ${cap}). Try again later — every gauge is also at lateboof.com/gauges`;
+const monthlyNotice = (cap: number): string =>
+  `LateBoof: monthly limit reached (${cap} texts). Resets on the 1st — every gauge is also at lateboof.com/gauges`;
 
 export interface ThrottleDecision {
   /** May the caller run the query and reply normally? */
@@ -126,6 +146,7 @@ export async function checkSmsThrottle(
   kv: KvLike,
   sender: string,
   now: Date = new Date(),
+  caps: ThrottleCaps = DEFAULT_CAPS,
 ): Promise<ThrottleDecision> {
   const iso = now.toISOString();
   const hourKey = `sms:hr:${sender}:${iso.slice(0, 13)}`; // ...:YYYY-MM-DDTHH
@@ -158,14 +179,14 @@ export async function checkSmsThrottle(
 
   // Month is checked first so its notice wins — "resets on the 1st" is the more
   // useful thing to hear when both caps are blown.
-  if (nextMonth > MONTHLY_CAP) {
-    return nextMonth === MONTHLY_CAP + 1
-      ? { allow: false, notice: MONTHLY_NOTICE, alert: `monthly cap reached (${MONTHLY_CAP} texts)` }
+  if (nextMonth > caps.monthly) {
+    return nextMonth === caps.monthly + 1
+      ? { allow: false, notice: monthlyNotice(caps.monthly), alert: `monthly cap reached (${caps.monthly} texts)` }
       : { allow: false };
   }
-  if (nextHour > HOURLY_CAP) {
-    return nextHour === HOURLY_CAP + 1
-      ? { allow: false, notice: HOURLY_NOTICE, alert: `hourly cap exceeded (${HOURLY_CAP}/hr)` }
+  if (nextHour > caps.hourly) {
+    return nextHour === caps.hourly + 1
+      ? { allow: false, notice: hourlyNotice(caps.hourly), alert: `hourly cap exceeded (${caps.hourly}/hr)` }
       : { allow: false };
   }
   return { allow: true };

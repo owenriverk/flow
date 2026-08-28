@@ -125,6 +125,13 @@
 
 ## InReach via SMS as a second delivery path (resilience, not a feature)
 
+- **LIVE 2026-08-28.** Owen confirmed inReach devices deliver to the toll-free
+  number, so site copy now says "from an InReach or phone" and the vCard/QR
+  carry the number. Code caught up the same day: `parseSmsWebhook` strips
+  Garmin's relay link/boilerplate (`src/sms.ts`), and relay-flagged texts get
+  `INREACH_GATEWAY_CAPS` (60/hr, 1,500/mo) in the throttle because Garmin's
+  gateway numbers are pooled (`src/smsThrottle.ts`, `src/worker.ts`).
+
 - **What:** Let InReach users save the bot's phone number as the contact instead
   of (or as well as) the email address. The device texts the number, Garmin's SMS
   gateway delivers it, the Worker's existing `/api/sms` answers, and the TwiML

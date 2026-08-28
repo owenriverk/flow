@@ -43,7 +43,7 @@ import {
   twimlMessage,
   twimlEmpty,
 } from './sms.js';
-import { senderKey, checkSmsThrottle, claimOwnerAlert } from './smsThrottle.js';
+import { senderKey, checkSmsThrottle, claimOwnerAlert, INREACH_GATEWAY_CAPS } from './smsThrottle.js';
 import { buildReplyHeaders } from './emailReply.js';
 import {
   recordReplySuccess,
@@ -173,7 +173,7 @@ async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContex
     return xmlResponse(twimlEmpty());
   }
 
-  const { from, query } = parseSmsWebhook(params);
+  const { from, query, inreach } = parseSmsWebhook(params);
 
   // STOP/HELP/START are compliance keywords — stand aside and let Twilio's
   // toll-free Advanced Opt-Out own the reply, so we never double-send. Checked
@@ -189,7 +189,9 @@ async function handleSmsWebhook(request: Request, env: Env, ctx: ExecutionContex
   // satellite test session can't lock out the person testing it.
   if (!env.SMS_OWNER_NUMBER || from !== env.SMS_OWNER_NUMBER) {
     const sender = await senderKey(from, env.TWILIO_AUTH_TOKEN ?? '');
-    const throttle = await checkSmsThrottle(kv, sender);
+    // inReach texts arrive from Garmin's pooled gateway numbers, so `From` may be
+    // shared by many devices — they get the larger bucket (see INREACH_GATEWAY_CAPS).
+    const throttle = await checkSmsThrottle(kv, sender, new Date(), inreach ? INREACH_GATEWAY_CAPS : undefined);
     if (!throttle.allow) {
       console.warn('SMS sender throttled:', throttle.alert ?? 'already over cap');
       if (throttle.alert && (await claimOwnerAlert(kv, sender))) {

@@ -5,6 +5,7 @@ import {
   claimOwnerAlert,
   HOURLY_CAP,
   MONTHLY_CAP,
+  INREACH_GATEWAY_CAPS,
 } from '../src/smsThrottle.js';
 
 function kv(initial: Record<string, string> = {}) {
@@ -186,5 +187,32 @@ describe('claimOwnerAlert', () => {
       put: vi.fn(async () => {}),
     };
     expect(await claimOwnerAlert(broken, SENDER)).toBe(false);
+  });
+});
+
+describe('checkSmsThrottle with inReach gateway caps', () => {
+  // Garmin relays inReach texts from pooled gateway numbers, so one `From` can be
+  // many paddlers; the larger bucket must kick in only when the caller asks for it.
+  const sender = 'gateway-hash';
+  const now = new Date('2026-08-05T14:30:00Z');
+  const hourKey = `sms:hr:${sender}:2026-08-05T14`;
+  const monthKey = `sms:mo:${sender}:2026-08`;
+
+  test('the phone-sized hourly cap does not apply to a gateway sender', async () => {
+    const store = kv({ [hourKey]: String(HOURLY_CAP), [monthKey]: '20' });
+    expect(await checkSmsThrottle(store, sender, now, INREACH_GATEWAY_CAPS)).toEqual({ allow: true });
+  });
+
+  test('the gateway bucket still has a ceiling, with the cap in the notice', async () => {
+    const store = kv({ [hourKey]: String(INREACH_GATEWAY_CAPS.hourly), [monthKey]: '20' });
+    const d = await checkSmsThrottle(store, sender, now, INREACH_GATEWAY_CAPS);
+    expect(d.allow).toBe(false);
+    expect(d.notice).toContain(`limit ${INREACH_GATEWAY_CAPS.hourly}`);
+    expect(d.alert).toContain(`${INREACH_GATEWAY_CAPS.hourly}/hr`);
+  });
+
+  test('gateway caps are larger than phone caps in both windows', () => {
+    expect(INREACH_GATEWAY_CAPS.hourly).toBeGreaterThan(HOURLY_CAP);
+    expect(INREACH_GATEWAY_CAPS.monthly).toBeGreaterThan(MONTHLY_CAP);
   });
 });

@@ -129,18 +129,33 @@ export async function claimMessageSid(kv: KvLike, sid: string): Promise<boolean>
 }
 
 /**
- * Twilio's inbound-SMS webhook params -> the query the core understands. Far
- * simpler than parseInbound (email): the message body *is* the query — no Garmin
- * footer to strip, no reply token (the reply goes back on the HTTP response).
+ * Twilio's inbound-SMS webhook params -> the query the core understands. Simpler
+ * than parseInbound (email): no reply token, the reply rides the HTTP response.
+ * The one thing to strip is Garmin's relay footer, below — since 2026-08-28 the
+ * toll-free number is an inReach contact too, not just a phone one.
  */
+/**
+ * Garmin's inReach→SMS relay appends a location/reply link (and, depending on the
+ * plan, a line of boilerplate) to every text a device sends. The paddler never typed
+ * any of it, so it must not reach the resolver or query_log. Any other URL is
+ * dropped for the same reason — no supported query contains one.
+ */
+const INREACH_LINK = /https?:\/\/(?:www\.)?inreachlink\.com\/\S*/i;
+const ANY_URL = /https?:\/\/\S+/gi;
+const RELAY_BOILERPLATE = /^\s*(view (the )?location|do not reply|this message was sent|sent (to you )?(from|using)).*$/gim;
+
 export function parseSmsWebhook(params: Record<string, string>): {
   from: string;
   body: string;
   query: string;
+  /** True when the text came through Garmin's inReach→SMS relay (the body carried an inreachlink). */
+  inreach: boolean;
 } {
   const from = params.From ?? '';
   const body = params.Body ?? '';
-  return { from, body, query: body.trim() };
+  const inreach = INREACH_LINK.test(body);
+  const query = body.replace(RELAY_BOILERPLATE, ' ').replace(ANY_URL, ' ').replace(/\s+/g, ' ').trim();
+  return { from, body, query, inreach };
 }
 
 // Carrier/Twilio-reserved keywords. When the whole message is one of these, it's
