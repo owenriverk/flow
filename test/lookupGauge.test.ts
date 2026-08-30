@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { lookupGauge, type GaugeAlias } from '../src/lookupGauge.js';
+import realAliasesJson from '../src/aliases.json' with { type: 'json' };
 
 const aliases: Record<string, GaugeAlias> = {
   'gauley summersville': { site: '03189100', name: 'Gauley R', location: 'Summersville, WV' },
@@ -114,5 +115,57 @@ describe('lookupGauge', () => {
   test('returns null for empty or whitespace-only input', () => {
     expect(lookupGauge('', aliases)).toBeNull();
     expect(lookupGauge('   ', aliases)).toBeNull();
+  });
+});
+
+// The two blocks below run against the REAL roster, not the fixture above: both
+// behaviours depend on aliases that genuinely overlap (a river plus one of its
+// own gauges), which a hand-built fixture wouldn't reproduce faithfully.
+const real = realAliasesJson as Record<string, GaugeAlias>;
+
+describe('river qualified by one of its own gauges (regression)', () => {
+  // These used to return NOT_FOUND: tier 3 saw two disagreeing phrases and
+  // refused, and tier 4's subset filter was inverted so it never collapsed them.
+  // "grand canyon at phantom" is in the real query log — a paddler asked exactly
+  // this and got nothing back.
+  test.each([
+    ['grand canyon at phantom', '09402500'],
+    ['grand canyon at diamond creek', '09404200'],
+    ['san juan at four corners', '09371010'],
+    ['phantom grand canyon', '09402500'],
+    ['diamond creek grand canyon', '09404200'],
+  ])('%s resolves to the specific gauge', (q, site) => {
+    expect(lookupGauge(q, real)?.site).toBe(site);
+  });
+
+  test('still resolves when both phrases point at the same gauge', () => {
+    expect(lookupGauge('grand canyon at lees ferry', real)?.site).toBe('09380000');
+  });
+
+  test('keeps the more specific of two nested phrases', () => {
+    expect(lookupGauge('tuolumne grand canyon', real)?.site).toBe('531');
+  });
+
+  test('every alias still resolves to its own gauge', () => {
+    const broken = Object.keys(real).filter(
+      (k) => lookupGauge(k, real)?.site !== real[k]!.site,
+    );
+    expect(broken).toEqual([]);
+  });
+});
+
+describe('two rivers in one message are refused, never half-answered', () => {
+  // The dangerous case was "stikine, clore": the comma made "stikine"
+  // unmatchable, so it answered confidently about Clore alone. Punctuation is
+  // now a separator, and a conjunction forces a refusal rather than a guess.
+  test.each([
+    'grand canyon and phantom',
+    'mf salmon and selway',
+    'stikine, clore',
+    'kings, fantasy falls',
+    'selway & main salmon',
+    'flows in the grand canyon at lees ferry and phantom',
+  ])('refuses %s', (q) => {
+    expect(lookupGauge(q, real)).toBeNull();
   });
 });

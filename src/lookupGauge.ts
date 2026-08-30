@@ -39,7 +39,16 @@ const USGS_ID = /^\d{8,15}$/;
 const WSC_ID = /^\d{2}[A-Z]{2}\d{3}$/;
 
 function normalize(text: string): string {
-  return text.trim().toLowerCase().replace(/\s+/g, ' ');
+  // Punctuation is separator, not content: without this, "stikine, clore" leaves
+  // "stikine," unmatchable and the message silently resolves to Clore alone --
+  // a confident answer to half the question, which is the one outcome the
+  // agreement rule exists to prevent.
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[,;:/|]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function toRef(alias: GaugeAlias): GaugeRef {
@@ -63,6 +72,11 @@ function phraseSpan(text: string, phrase: string): [number, number] | null {
   if (idx !== -1) return [idx + 1, idx + 1 + phrase.length];
   return null;
 }
+
+// Joins two separate asks ("gauley and green", "stikine, clore"). Distinct from the
+// stop words below: a stop word is noise inside one river's name, a conjunction is
+// evidence the message names more than one river.
+const CONJUNCTION = /(^|\s)(and|plus|&|\+)(\s|$)|,/;
 
 // Stop words stripped before word-set matching so prepositions and articles
 // in the message don't prevent a match ("middle fork of the salmon" → mf salmon).
@@ -114,6 +128,7 @@ function contractForks(text: string): string {
 function lookupText(
   key: string,
   aliases: Record<string, GaugeAlias>,
+  multiAsk: boolean,
 ): GaugeRef | null {
   // Tier 1: exact alias.
   if (aliases[key]) return toRef(aliases[key]!);
@@ -138,7 +153,22 @@ function lookupText(
       topLevelSpans.map((m) => m.candidate),
       aliases,
     );
-    return tier3 ? toRef(aliases[tier3]!) : null;
+    if (tier3) return toRef(aliases[tier3]!);
+    // Two different gauges matched. That means one of two very different things:
+    //
+    //   "grand canyon AND phantom"  -> a genuine two-river ask. Refuse; we can
+    //                                  only answer one, and picking silently
+    //                                  would hide half the question.
+    //   "grand canyon AT phantom"   -> ONE river, qualified by which gauge. The
+    //                                  words of a more specific alias ("grand
+    //                                  canyon phantom") are all present but
+    //                                  non-contiguous, so phrase-span nesting
+    //                                  can't see it -- tier 4's word-subset rule
+    //                                  can, and collapses it correctly.
+    //
+    // A conjunction is the signal that separates them. Without one, fall through
+    // to tier 4, which runs its own agreement check and still refuses to guess.
+    if (multiAsk) return null;
   }
 
   // Tier 4: word-set — every content word of a known alias appears in the query,
@@ -155,9 +185,12 @@ function lookupText(
     (c) =>
       !wordMatches.some((o) => {
         if (o === c) return false;
-        const wordsO = contentWords(o);
-        const wordsC = new Set(contentWords(c));
-        return wordsO.length > wordsC.size && wordsO.every((w) => wordsC.has(w));
+        // Drop c when it is strictly less specific than o: every word of c also
+        // appears in o, and o says more. "grand canyon" and "phantom" are both
+        // subsets of "grand canyon phantom", so only the specific one survives.
+        const wordsC = contentWords(c);
+        const wordsO = new Set(contentWords(o));
+        return wordsC.length < wordsO.size && wordsC.every((w) => wordsO.has(w));
       }),
   );
   const tier4 = resolveCandidates(topLevelWords, aliases);
@@ -179,12 +212,16 @@ export function lookupGauge(
   // Tiers 1 + 3 + 4 on the fork-contracted form FIRST so "north fork flathead"
   // → "nf flathead" (tier 1 exact) before the original text ever reaches word-set
   // where a shorter alias like "the middle fork" could steal the match.
+  // Read the conjunction from the raw text: normalize() has already turned the
+  // separating comma in "stikine, clore" into a space by this point.
+  const multiAsk = CONJUNCTION.test(text.toLowerCase());
+
   const contracted = contractForks(key);
   if (contracted !== key) {
-    const result = lookupText(contracted, aliases);
+    const result = lookupText(contracted, aliases, multiAsk);
     if (result) return result;
   }
 
   // Fall through to original text (covers aliases that don't involve fork contractions).
-  return lookupText(key, aliases);
+  return lookupText(key, aliases, multiAsk);
 }
