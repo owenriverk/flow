@@ -109,6 +109,9 @@ live('tier 1 — exact alias', () => {
     ['the ditch',                'Grand Canyon (Colorado R)'],
     ['phantom',                  'Grand Canyon — Phantom (Colorado R)'],
     ['phantom ranch',            'Grand Canyon — Phantom (Colorado R)'],
+    ['diamond',                  'Grand Canyon — Diamond (Colorado R)'],
+    ['diamond creek',            'Grand Canyon — Diamond (Colorado R)'],
+    ['grand canyon diamond',     'Grand Canyon — Diamond (Colorado R)'],
     ['salt',                    'Salt R'],
     ['salt river',              'Salt R'],
     // Alaska (USGS)

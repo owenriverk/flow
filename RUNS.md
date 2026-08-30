@@ -4,7 +4,7 @@ What to text the bot → the run it maps to → the gauge it reads.
 This roster is generated from `src/aliases.json` **as of 2026-08-28** and lists
 every phrase the bot will currently resolve to a gauge. It is **not** a live-API
 verification pass — it reflects what's configured, not a fresh check that every
-upstream station is reporting data right now. The 41-gauge set here matches
+upstream station is reporting data right now. The 42-gauge set here matches
 `supabase/functions/refresh-gauges/gauges.ts` (the website's source list).
 Units are native: US runs **cfs / ft**, Canadian runs **cms / m**, New Zealand
 runs **cms** (discharge only, no stage).
@@ -36,6 +36,7 @@ Middle Kings).
 |---|---|---|---|---|
 | `grand canyon` / `lees ferry` | Grand Canyon (Colorado R) (AKA: `gc`, `the ditch`) | 09380000 | USGS | At Lees Ferry, AZ |
 | `phantom` / `phantom ranch` | Grand Canyon — Phantom (Colorado R) — mid-canyon reading (AKA: `grand canyon phantom`; same trip as `grand canyon`, see caveats) | 09402500 | USGS | Near Phantom Ranch, AZ |
+| `diamond` / `diamond creek` | Grand Canyon — Diamond (Colorado R) — takeout gauge, river mile 226 (AKA: `grand canyon diamond`) | 09404200 | USGS | Above Diamond Creek, AZ |
 | `cataract` | Cataract Canyon (Colorado R) (AKA: `cat`) | 09328960 | USGS | Near Hite, UT |
 | `yampa` | Yampa | 09260050 | USGS | At Deerlodge Park, CO |
 | `gates of lodore` / `lodore` | Gates of Lodore (Green R) (AKA: `gates`) | 09234500 | USGS | Near Greendale, UT |

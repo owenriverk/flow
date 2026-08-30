@@ -70,6 +70,12 @@
       "verifiedOn": "2026-08-28",
       "source": "usgs",
       "notes": "South Fork Payette at Lowman — station specified by the owner when the run was added. Runnable band 600-5000 cfs from American Whitewater reach 593 (Payette, S. Fork / 1. Grandjean to Deadwood), the reach AW correlates to this station. Caveat: AW keys the downstream Canyon/Staircase reaches to a CALCULATED gauge below the Deadwood confluence, not to Lowman, so this band describes the reach above Deadwood."
+    },
+    "usgs:09404200": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-08-30",
+      "source": "usgs",
+      "notes": "Colorado R above Diamond Creek nr Peach Springs — the Grand Canyon takeout gauge (river mile 226), completing the trip's three reference points alongside Lees Ferry (put-in, 09380000) and Phantom Ranch (mid-canyon, 09402500). Station specified by the owner. Runnable band mirrors the other two GC rows: one dam release, one trip."
     }
   },
   "rituals": [

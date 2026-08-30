@@ -94,6 +94,9 @@
   "phantom":               { "site": "09402500",   "name": "Grand Canyon \u2014 Phantom (Colorado R)","location": "Near Phantom Ranch, AZ" },
   "phantom ranch":         { "site": "09402500",   "name": "Grand Canyon \u2014 Phantom (Colorado R)","location": "Near Phantom Ranch, AZ" },
   "grand canyon phantom":  { "site": "09402500",   "name": "Grand Canyon \u2014 Phantom (Colorado R)","location": "Near Phantom Ranch, AZ" },
+  "diamond":               { "site": "09404200",   "name": "Grand Canyon — Diamond (Colorado R)", "location": "Above Diamond Creek, AZ" },
+  "diamond creek":         { "site": "09404200",   "name": "Grand Canyon — Diamond (Colorado R)", "location": "Above Diamond Creek, AZ" },
+  "grand canyon diamond":  { "site": "09404200",   "name": "Grand Canyon — Diamond (Colorado R)", "location": "Above Diamond Creek, AZ" },
   "salt":                  { "site": "09497500",   "name": "Salt R",                         "location": "Near Chrysotile, AZ" },
   "salt river":            { "site": "09497500",   "name": "Salt R",                         "location": "Near Chrysotile, AZ" },
 
