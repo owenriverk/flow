@@ -116,6 +116,13 @@ const FORK_CONTRACTIONS: Array<[RegExp, string]> = [
   [/\bmiddle fork\b/g, 'mf'],
   [/\bnorth fork\b/g,  'nf'],
   [/\bsouth fork\b/g,  'sf'],
+  // Spaced abbreviations, the form USGS itself uses ("N F Flathead River nr
+  // Columbia Falls MT"). Without these, "n f flathead" lost the fork entirely
+  // and matched the bare "flathead" alias -- which is the MIDDLE fork. A wrong
+  // river, not a failed lookup.
+  [/\bm f\b/g, 'mf'],
+  [/\bn f\b/g, 'nf'],
+  [/\bs f\b/g, 'sf'],
 ];
 
 function contractForks(text: string): string {
@@ -142,6 +149,17 @@ function lookupText(
     const span = phraseSpan(key, candidate);
     if (span) spanMatches.push({ candidate, start: span[0], end: span[1] });
   }
+  // A conjunction plus phrases naming two different gauges is a two-river ask,
+  // full stop -- decided here, BEFORE nesting, because nesting can hide the
+  // evidence. In "grand canyon clore, grand canyon" the longer alias swallows
+  // the shorter one and phraseSpan only ever reports a phrase's first
+  // occurrence, so the second river disappears and the message quietly answers
+  // about one of them.
+  if (multiAsk) {
+    const named = new Set(spanMatches.map((m) => gaugeKey(aliases[m.candidate]!)));
+    if (named.size > 1) return null;
+  }
+
   const topLevelSpans = spanMatches.filter(
     (m) =>
       !spanMatches.some(
@@ -188,9 +206,14 @@ function lookupText(
         // Drop c when it is strictly less specific than o: every word of c also
         // appears in o, and o says more. "grand canyon" and "phantom" are both
         // subsets of "grand canyon phantom", so only the specific one survives.
-        const wordsC = contentWords(c);
+        //
+        // Compare DISTINCT words on both sides. An alias can repeat a word
+        // ("grand canyon at grand canyon"), and counting the repeat made it look
+        // longer than the alias that actually contains it, so it escaped the
+        // filter and poisoned the agreement check for unrelated queries.
+        const wordsC = new Set(contentWords(c));
         const wordsO = new Set(contentWords(o));
-        return wordsC.length < wordsO.size && wordsC.every((w) => wordsO.has(w));
+        return wordsC.size < wordsO.size && [...wordsC].every((w) => wordsO.has(w));
       }),
   );
   const tier4 = resolveCandidates(topLevelWords, aliases);

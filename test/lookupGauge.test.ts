@@ -169,3 +169,61 @@ describe('two rivers in one message are refused, never half-answered', () => {
     expect(lookupGauge(q, real)).toBeNull();
   });
 });
+
+describe('official USGS station names resolve', () => {
+  // Paddlers quote gauges the way the agency names them ("what's White Bird
+  // reading?"). An audit of all 27 USGS stations against phrasings generated
+  // from their official names found 30 that did not resolve and 4 that resolved
+  // to the WRONG river.
+  test.each([
+    ['white bird', '13317000'],
+    ['salmon at white bird', '13317000'],
+    ['banks', '13246000'],
+    ['lowman', '13235000'],
+    ['greendale', '09234500'],
+    ['west glacier', '12358500'],
+    ['columbia falls', '12355500'],
+    ['agness', '14372300'],
+    ['bluff', '09379500'],
+    ['hite', '09328960'],
+  ])('%s resolves to its gauge', (q, site) => {
+    expect(lookupGauge(q, real)?.site).toBe(site);
+  });
+
+  // USGS writes the spaced form ("N F Flathead River nr Columbia Falls MT").
+  // Without a contraction for it the fork was lost and the bare "flathead"
+  // alias matched -- which is the MIDDLE fork. Wrong river, not a failed lookup.
+  test.each([
+    ['n f flathead at columbia falls', '12355500'],
+    ['s f flathead at twin c', '12359800'],
+    ['m f flathead', '12358500'],
+  ])('%s keeps its fork', (q, site) => {
+    expect(lookupGauge(q, real)?.site).toBe(site);
+  });
+
+  // "Grand Canyon" is a run name (Lees Ferry) AND a USGS place name: station
+  // 09402500 is literally "COLORADO RIVER NEAR GRAND CANYON, AZ". Qualified,
+  // the trailing mention is the gauge.
+  test('grand canyon at grand canyon is the Phantom station', () => {
+    expect(lookupGauge('grand canyon at grand canyon', real)?.site).toBe('09402500');
+  });
+  test('bare grand canyon stays Lees Ferry', () => {
+    expect(lookupGauge('grand canyon', real)?.site).toBe('09380000');
+  });
+
+  // Ambiguity we must keep refusing: there is no "Salmon at Riggins" gauge --
+  // 13316500 is the LITTLE Salmon, a much smaller tributary. Answering with it
+  // would be a wrong river on a safety call.
+  test.each(['salmon at riggins', 'riggins', 'salmon', 'green river'])(
+    'refuses ambiguous %s',
+    (q) => {
+      expect(lookupGauge(q, real)).toBeNull();
+    },
+  );
+
+  // A conjunction plus two named gauges is a two-river ask even when nesting
+  // hides one of them ("grand canyon clore, grand canyon").
+  test('refuses a two-river ask that nesting would otherwise hide', () => {
+    expect(lookupGauge('grand canyon clore, grand canyon', real)).toBeNull();
+  });
+});
