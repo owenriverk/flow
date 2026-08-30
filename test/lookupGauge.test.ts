@@ -227,3 +227,41 @@ describe('official USGS station names resolve', () => {
     expect(lookupGauge('grand canyon clore, grand canyon', real)).toBeNull();
   });
 });
+
+describe('punctuation + comma-qualifier hardening (from the 2026-08-30 exhaustive run)', () => {
+  // Terminal punctuation used to defeat every tier -- "kings?" was not-found.
+  test.each([
+    ['kings?', '100'],
+    ['stikine.', '08CE001'],
+    ['selway!', '13336500'],
+    ['13246000?', '13246000'],   // raw id with trailing punctuation
+    ['08ce001.', '08CE001'],
+  ])('%s resolves despite punctuation', (q, site) => {
+    expect(lookupGauge(q, real)?.site).toBe(site);
+  });
+
+  // Same-gauge pairs must resolve even when one alias embeds a DIFFERENT
+  // gauge's alias ("devils postpile" contains "devils", an MF Feather AKA):
+  // nested matches are not independent evidence.
+  test.each([
+    ['postpile, devils postpile', '494'],
+    ['phantom, grand canyon phantom', '09402500'],
+    // Unanimity: every top-level phrase here names the Phantom/Diamond gauge.
+    ['grand canyon, phantom ranch', '09402500'],
+    ['grand canyon, diamond creek', '09404200'],
+  ])('%s resolves (one gauge, however phrased)', (q, site) => {
+    expect(lookupGauge(q, real)?.site).toBe(site);
+  });
+
+  // Fork contraction must not hide the second river of a two-river ask:
+  // "the middle fork" is an MF Salmon AKA that contraction used to destroy.
+  test.each([
+    'kings, the middle fork',
+    'kings and the middle fork',
+    'phantom ranch, grand canyon',
+    'diamond creek, grand canyon',
+    'the ditch, phantom',
+  ])('refuses %s', (q) => {
+    expect(lookupGauge(q, real)).toBeNull();
+  });
+});

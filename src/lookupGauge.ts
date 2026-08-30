@@ -39,14 +39,15 @@ const USGS_ID = /^\d{8,15}$/;
 const WSC_ID = /^\d{2}[A-Z]{2}\d{3}$/;
 
 function normalize(text: string): string {
-  // Punctuation is separator, not content: without this, "stikine, clore" leaves
-  // "stikine," unmatchable and the message silently resolves to Clore alone --
-  // a confident answer to half the question, which is the one outcome the
-  // agreement rule exists to prevent.
+  // Punctuation is separator, not content. Two failure modes without this:
+  //   "stikine, clore"  -- the comma left "stikine," unmatchable, so the message
+  //                        silently resolved to Clore alone (a half-answer);
+  //   "kings?"          -- the trailing ? blocked every tier, so the single most
+  //                        natural phrasing there is returned not-found.
   return text
     .trim()
     .toLowerCase()
-    .replace(/[,;:/|]+/g, ' ')
+    .replace(/[,;:/|?!.]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -63,14 +64,55 @@ function toRef(alias: GaugeAlias): GaugeRef {
   return ref;
 }
 
-/** If `phrase` appears in `text` as a whole word/phrase, its [start, end) span; else null. */
-function phraseSpan(text: string, phrase: string): [number, number] | null {
-  if (text === phrase) return [0, text.length];
-  if (text.startsWith(`${phrase} `)) return [0, phrase.length];
-  if (text.endsWith(` ${phrase}`)) return [text.length - phrase.length, text.length];
-  const idx = text.indexOf(` ${phrase} `);
-  if (idx !== -1) return [idx + 1, idx + 1 + phrase.length];
-  return null;
+/**
+ * EVERY whole-word occurrence of `phrase` in `text`, as [start, end) spans.
+ * All occurrences matter: in "grand canyon clore grand canyon" the first
+ * "grand canyon" is nested inside the Clore alias, but the second stands alone
+ * -- an occurrence-blind matcher loses it, and with it the evidence that the
+ * message names two rivers.
+ */
+function phraseSpans(text: string, phrase: string): Array<[number, number]> {
+  const spans: Array<[number, number]> = [];
+  let from = 0;
+  for (;;) {
+    const idx = text.indexOf(phrase, from);
+    if (idx === -1) break;
+    const boundedLeft = idx === 0 || text[idx - 1] === ' ';
+    const boundedRight = idx + phrase.length === text.length || text[idx + phrase.length] === ' ';
+    if (boundedLeft && boundedRight) spans.push([idx, idx + phrase.length]);
+    from = idx + 1;
+  }
+  return spans;
+}
+
+interface SpanMatch {
+  candidate: string;
+  start: number;
+  end: number;
+}
+
+function allSpanMatches(key: string, aliases: Record<string, GaugeAlias>): SpanMatch[] {
+  const matches: SpanMatch[] = [];
+  for (const candidate of Object.keys(aliases)) {
+    for (const [start, end] of phraseSpans(key, candidate)) matches.push({ candidate, start, end });
+  }
+  return matches;
+}
+
+/**
+ * Drop spans strictly contained in a longer span: a match nested inside a more
+ * specific hit ("grand canyon" inside "tuolumne grand canyon", "devils" inside
+ * "devils postpile") is a substring of it, not independent evidence about a
+ * different river. Shared by tier 3 and the two-river guard so they can never
+ * disagree about what counts as evidence.
+ */
+function topLevel(matches: SpanMatch[]): SpanMatch[] {
+  return matches.filter(
+    (m) =>
+      !matches.some(
+        (o) => o !== m && o.start <= m.start && o.end >= m.end && o.end - o.start > m.end - m.start,
+      ),
+  );
 }
 
 // Joins two separate asks ("gauley and green", "stikine, clore"). Distinct from the
@@ -131,62 +173,30 @@ function contractForks(text: string): string {
   return result;
 }
 
+/** The distinct gauges named by top-level (non-nested) phrase matches in `key`. */
+function namedGauges(key: string, aliases: Record<string, GaugeAlias>): Set<string> {
+  return new Set(topLevel(allSpanMatches(key, aliases)).map((m) => gaugeKey(aliases[m.candidate]!)));
+}
+
 /** Run tiers 1 (exact), 3 (phrase-contains), and 4 (word-set) against a given key. */
-function lookupText(
-  key: string,
-  aliases: Record<string, GaugeAlias>,
-  multiAsk: boolean,
-): GaugeRef | null {
+function lookupText(key: string, aliases: Record<string, GaugeAlias>): GaugeRef | null {
   // Tier 1: exact alias.
   if (aliases[key]) return toRef(aliases[key]!);
 
-  // Tier 3: a known run name appearing verbatim inside the message. A match fully
-  // nested inside a longer match ("grand canyon" inside "tuolumne grand canyon") is
-  // just a substring of the more specific hit, not independent evidence about a
-  // different river -- so nested matches are dropped before checking agreement.
-  const spanMatches: Array<{ candidate: string; start: number; end: number }> = [];
-  for (const candidate of Object.keys(aliases)) {
-    const span = phraseSpan(key, candidate);
-    if (span) spanMatches.push({ candidate, start: span[0], end: span[1] });
-  }
-  // A conjunction plus phrases naming two different gauges is a two-river ask,
-  // full stop -- decided here, BEFORE nesting, because nesting can hide the
-  // evidence. In "grand canyon clore, grand canyon" the longer alias swallows
-  // the shorter one and phraseSpan only ever reports a phrase's first
-  // occurrence, so the second river disappears and the message quietly answers
-  // about one of them.
-  if (multiAsk) {
-    const named = new Set(spanMatches.map((m) => gaugeKey(aliases[m.candidate]!)));
-    if (named.size > 1) return null;
-  }
-
-  const topLevelSpans = spanMatches.filter(
-    (m) =>
-      !spanMatches.some(
-        (o) => o !== m && o.start <= m.start && o.end >= m.end && o.end - o.start > m.end - m.start,
-      ),
-  );
-  if (topLevelSpans.length > 0) {
+  // Tier 3: known run names appearing verbatim inside the message (every
+  // occurrence), nested matches dropped, survivors put to the agreement rule.
+  // Two-river conjunction messages never reach this point -- lookupGauge screens
+  // them -- so a disagreement here is a single-river message whose qualifier
+  // splits across phrases ("grand canyon AT phantom": the words of the more
+  // specific alias are all present but non-contiguous, which phrase matching
+  // can't see and tier 4's word-subset rule can). Fall through instead of dying.
+  const survivors = topLevel(allSpanMatches(key, aliases));
+  if (survivors.length > 0) {
     const tier3 = resolveCandidates(
-      topLevelSpans.map((m) => m.candidate),
+      [...new Set(survivors.map((m) => m.candidate))],
       aliases,
     );
     if (tier3) return toRef(aliases[tier3]!);
-    // Two different gauges matched. That means one of two very different things:
-    //
-    //   "grand canyon AND phantom"  -> a genuine two-river ask. Refuse; we can
-    //                                  only answer one, and picking silently
-    //                                  would hide half the question.
-    //   "grand canyon AT phantom"   -> ONE river, qualified by which gauge. The
-    //                                  words of a more specific alias ("grand
-    //                                  canyon phantom") are all present but
-    //                                  non-contiguous, so phrase-span nesting
-    //                                  can't see it -- tier 4's word-subset rule
-    //                                  can, and collapses it correctly.
-    //
-    // A conjunction is the signal that separates them. Without one, fall through
-    // to tier 4, which runs its own agreement check and still refuses to guess.
-    if (multiAsk) return null;
   }
 
   // Tier 4: word-set — every content word of a known alias appears in the query,
@@ -227,24 +237,36 @@ export function lookupGauge(
   const key = normalize(text);
   if (key === '') return null;
 
-  // Tier 2: raw id (uppercased original so WSC letters survive).
-  const raw = text.trim().toUpperCase();
+  // Tier 2: raw id (uppercased original so WSC letters survive; trailing
+  // sentence punctuation stripped so "13246000?" still passes through).
+  const raw = text.trim().toUpperCase().replace(/[?!.,;:]+$/, '');
   if (USGS_ID.test(raw)) return { site: raw, source: 'usgs' };
   if (WSC_ID.test(raw)) return { site: raw, source: 'wsc' };
+
+  const contracted = contractForks(key);
+
+  // Two-river guard. A conjunction (read from the RAW text -- normalize has
+  // already eaten the comma) plus top-level phrases naming two different gauges
+  // is a two-river ask: refuse, because answering would silently cover half the
+  // question. Evidence is gathered from BOTH text forms: contraction can destroy
+  // one river's alias ("kings, the middle fork" contracts to "kings, the mf",
+  // where MF Salmon's alias no longer matches), and only the union sees through
+  // that. Tier-1 exact matches are exempt on purpose: "grand canyon, phantom"
+  // normalizes to the curated alias "grand canyon phantom" -- one river,
+  // comma-qualified -- and a curated combined alias is explicit intent.
+  if (CONJUNCTION.test(text.toLowerCase()) && !aliases[key] && !aliases[contracted]) {
+    const named = new Set([...namedGauges(key, aliases), ...namedGauges(contracted, aliases)]);
+    if (named.size > 1) return null;
+  }
 
   // Tiers 1 + 3 + 4 on the fork-contracted form FIRST so "north fork flathead"
   // → "nf flathead" (tier 1 exact) before the original text ever reaches word-set
   // where a shorter alias like "the middle fork" could steal the match.
-  // Read the conjunction from the raw text: normalize() has already turned the
-  // separating comma in "stikine, clore" into a space by this point.
-  const multiAsk = CONJUNCTION.test(text.toLowerCase());
-
-  const contracted = contractForks(key);
   if (contracted !== key) {
-    const result = lookupText(contracted, aliases, multiAsk);
+    const result = lookupText(contracted, aliases);
     if (result) return result;
   }
 
   // Fall through to original text (covers aliases that don't involve fork contractions).
-  return lookupText(key, aliases, multiAsk);
+  return lookupText(key, aliases);
 }
