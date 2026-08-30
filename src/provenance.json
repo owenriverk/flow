@@ -76,6 +76,12 @@
       "verifiedOn": "2026-08-30",
       "source": "usgs",
       "notes": "Colorado R above Diamond Creek nr Peach Springs — the Grand Canyon takeout gauge (river mile 226), completing the trip's three reference points alongside Lees Ferry (put-in, 09380000) and Phantom Ranch (mid-canyon, 09402500). Station specified by the owner. Runnable band mirrors the other two GC rows: one dam release, one trip."
+    },
+    "usgs:09371010": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-08-30",
+      "source": "usgs",
+      "notes": "San Juan R at Four Corners — upstream indicator for the San Juan trip, not its own run: water here reaches Bluff/Sand Island roughly a day later, so it is the early read for a launch decision. Station specified by the owner. Band mirrors the Bluff row (500-5000) because it is the same river and trip and the two gauges track closely (662 vs 560 cfs when added); American Whitewater publishes no reach correlated to this station that could be cited instead."
     }
   },
   "rituals": [

@@ -4,7 +4,7 @@ What to text the bot → the run it maps to → the gauge it reads.
 This roster is generated from `src/aliases.json` **as of 2026-08-28** and lists
 every phrase the bot will currently resolve to a gauge. It is **not** a live-API
 verification pass — it reflects what's configured, not a fresh check that every
-upstream station is reporting data right now. The 42-gauge set here matches
+upstream station is reporting data right now. The 43-gauge set here matches
 `supabase/functions/refresh-gauges/gauges.ts` (the website's source list).
 Units are native: US runs **cfs / ft**, Canadian runs **cms / m**, New Zealand
 runs **cms** (discharge only, no stage).
@@ -42,6 +42,7 @@ Middle Kings).
 | `gates of lodore` / `lodore` | Gates of Lodore (Green R) (AKA: `gates`) | 09234500 | USGS | Near Greendale, UT |
 | `desolation` / `deso` | Desolation (Green R) — Deso/Gray Canyon (AKA: `deso grey`) | 09315000 | USGS | At Green River, UT |
 | `san juan` | San Juan (AKA: `the juan`) | 09379500 | USGS | Near Bluff, UT |
+| `four corners` / `4 corners` | San Juan — Four Corners — upstream indicator, ~1 day above Bluff (AKA: `san juan four corners`) | 09371010 | USGS | At Four Corners, CO |
 | `salt` / `salt river` | Salt River Canyon | 09497500 | USGS | Near Chrysotile, AZ |
 
 ## Far North
