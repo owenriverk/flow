@@ -1,0 +1,9 @@
+# Companion to the SHA-pinned actions in .github/workflows: every action
+# update arrives as a PR that bumps the pin and its version comment, instead
+# of arriving silently through a moving tag.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

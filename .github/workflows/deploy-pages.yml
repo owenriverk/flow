@@ -13,7 +13,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       # The six forecast pages are nightly build outputs of the private weth
       # repo (its refresh workflow deploys them at 14:17 UTC) — the copies
@@ -66,10 +68,14 @@ jobs:
           PY
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: c368641bb3e52824fdafbccb7437b5bc
+          # Same wrangler as package-lock.json and weth's nightly deploy. The
+          # action's baked-in default (3.90.0) would silently jump on every
+          # action bump and never match the nightly deploy path.
+          wranglerVersion: "4.105.0"
           # Run from web/ so Pages Functions (web/functions/) get bundled —
           # wrangler resolves functions/ relative to the working directory,
           # and the root wrangler config belongs to the email Worker.
