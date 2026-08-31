@@ -1,0 +1,96 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-08-31T06:34:21Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 890741982,
+  "lat": 38.1978323,
+  "lon": -119.8838086,
+  "tags": {
+    "name": "Gianelli Cabin",
+    "place": "locality"
+  }
+},
+{
+  "type": "node",
+  "id": 927499973,
+  "lat": 38.0994423,
+  "lon": -119.7891876,
+  "tags": {
+    "fixme": "draw area",
+    "name": "Lord Meadow",
+    "place": "locality",
+    "source": "USGS 24K Topo"
+  }
+},
+{
+  "type": "node",
+  "id": 1931827771,
+  "lat": 38.0569136,
+  "lon": -119.8804814,
+  "tags": {
+    "name": "Lookout Point",
+    "place": "locality"
+  }
+},
+{
+  "type": "node",
+  "id": 1931827772,
+  "lat": 38.1086490,
+  "lon": -119.8802843,
+  "tags": {
+    "name": "Mile 5",
+    "place": "locality",
+    "source": "USGS 24K Topo"
+  }
+},
+{
+  "type": "node",
+  "id": 2174315615,
+  "lat": 37.9678778,
+  "lon": -119.7655302,
+  "tags": {
+    "alt_name": "Hetch Hetchy Falls",
+    "height": "392",
+    "name": "Wapama Falls",
+    "waterway": "waterfall",
+    "wikidata": "Q38227",
+    "wikipedia": "en:Wapama Falls"
+  }
+},
+{
+  "type": "node",
+  "id": 2389339976,
+  "lat": 38.0081254,
+  "lon": -119.9716687,
+  "tags": {
+    "ele": "1697",
+    "gnis:feature_id": "261904",
+    "name": "Jawbone Falls",
+    "waterway": "waterfall"
+  }
+},
+{
+  "type": "node",
+  "id": 2389340047,
+  "lat": 37.9640060,
+  "lon": -119.7727615,
+  "tags": {
+    "ele": "1552",
+    "gnis:feature_id": "268448",
+    "height": "279",
+    "name": "Tueeulala Falls",
+    "waterway": "waterfall",
+    "wikidata": "Q38232",
+    "wikipedia": "en:Tueeulala Falls"
+  }
+}
+
+  ]
+}
