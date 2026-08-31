@@ -76,12 +76,12 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }): Promis
     if (!res.ok) {
       // 400 duplicate reads as success to the subscriber — they're on the list either way.
       if (res.status === 400) {
-        return reply(200, true, "You're in — first report lands with the April outlook.", wantsJson);
+        return reply(200, true, "You're in — next up: the season report card.", wantsJson);
       }
       console.error('beehiiv error', res.status, await res.text().catch(() => ''));
       return reply(502, false, 'Signup hiccuped upstream — try again in a minute.', wantsJson);
     }
-    return reply(200, true, "You're in — first report lands with the April outlook.", wantsJson);
+    return reply(200, true, "You're in — next up: the season report card.", wantsJson);
   } catch (e) {
     console.error('beehiiv request failed', e);
     return reply(502, false, 'Signup hiccuped upstream — try again in a minute.', wantsJson);
