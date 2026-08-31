@@ -38,16 +38,26 @@ const MIN_LENGTH = 0.12; // km
 const RIVERS = [
   {
     slug: "kings",
-    osm: "kings-osm.json",
-    names: ["Middle Fork Kings River"],
+    osm: ["kings-osm.json", "kings-main-osm.json"],
+    names: ["Middle Fork Kings River", "Kings River"],
     putIn: { at: [37.088, -118.598] }, // LeConte Canyon, Bishop Pass trail
-    takeOut: { end: true }, // the chain ends at the South Fork confluence
-    span: "LeConte Canyon → the confluence",
+    // through the Garlic Falls section of the main Kings, easing out below the falls
+    takeOut: { at: "kings-marks.json:Garlic Falls", plusKm: 2.5 },
+    span: "LeConte Canyon → below Garlic Falls",
     marks: [
-      { name: "Devils Washbowl", kind: "rapid", km: 8 }, // beta estimate
-      { name: "Simpson Meadow", kind: "camp", km: 21 }, // beta estimate
+      // km marks are Owen's-beta-pending estimates spaced across the run's known
+      // structure (Washbowl ~8 / Simpson ~21 / Tehipite 34.6 / confluence 49.1)
+      { name: "Devils Washbowl", kind: "rapid", km: 8 },
+      { name: "Cathedral Slide", kind: "rapid", km: 11 },
+      { name: "Butterbuns", kind: "rapid", km: 16 },
+      { name: "Simpson Meadow", kind: "camp", km: 21 },
+      { name: "Werner Paddle Gorge", kind: "rapid", km: 26 },
+      { name: "Waterfall Alley", kind: "rapid", km: 30 },
       { name: "Tehipite Valley", kind: "camp", at: "kings-marks.json:Tehipite Dome" },
-      { name: "the Bottom Nine", kind: "rapid", kmFromEnd: 7.2 }, // beta estimate — mid-section; the section starts right below Tehipite
+      { name: "Raw Dog", kind: "rapid", km: 38 },
+      { name: "Pearly Gates", kind: "rapid", km: 44 },
+      { name: "South Fork confluence", kind: "rapid", at: "kings-marks.json:way:South Fork Kings River" },
+      { name: "Garlic Falls", kind: "rapid", at: "kings-marks.json:Garlic Falls" },
     ],
     tribs: [{ osm: "kings-marks.json", names: ["South Fork Kings River"] }],
   },
@@ -59,10 +69,14 @@ const RIVERS = [
     takeOut: { lake: "Cherry Lake" },
     span: "put-in slabs → Cherry Lake",
     marks: [
-      // all beta estimates — nothing on this run carries an OSM name
-      { name: "Cherry Bomb Gorge", kind: "rapid", km: 5.5 },
+      // all beta estimates — nothing on this run carries an OSM name. Trip
+      // reports stack the famous stretch in the first ~4 miles: mini gorge
+      // (West Coast Gorilla) → Cherry Bomb Gorge → teacups → Dead Bear Falls.
+      { name: "West Coast Gorilla", kind: "rapid", km: 2 },
+      { name: "Cherry Bomb Gorge", kind: "rapid", km: 4.3 },
+      { name: "the Teacups", kind: "rapid", km: 5.4 },
+      { name: "Dead Bear Falls", kind: "rapid", km: 6.5 },
       { name: "Flintstone Camp", kind: "camp", km: 8 },
-      { name: "the Teacups", kind: "rapid", km: 13 },
     ],
     tribs: [],
   },
@@ -75,7 +89,10 @@ const RIVERS = [
     span: "Hermit Valley → Salt Springs",
     marks: [
       { name: "Summit City Creek", kind: "camp", at: "moke-marks.json:way:Summit City Creek" },
-      { name: "Fantasy Falls", kind: "rapid", frac: 0.55 }, // beta estimate
+      // Liquid Lore vitals: the last day of boating STARTS at Fantasy Falls,
+      // Island Slide sits in the closing miles into the lake — km still estimates
+      { name: "Fantasy Falls", kind: "rapid", frac: 0.77 },
+      { name: "Island Slide", kind: "rapid", frac: 0.93 },
     ],
     tribs: [{ osm: "moke-marks.json", names: ["Summit City Creek"] }],
   },
@@ -127,7 +144,10 @@ function dpSimplify(points, eps) {
   return [points[0], points[points.length - 1]];
 }
 
-const loadJson = (file) => JSON.parse(readFileSync(new URL(file, DATA), "utf8"));
+const loadJson = (file) =>
+  Array.isArray(file)
+    ? { elements: file.flatMap((f) => loadJson(f).elements) }
+    : JSON.parse(readFileSync(new URL(file, DATA), "utf8"));
 
 // chain OSM ways (digitized downstream) into the longest head→mouth line
 function chainWays(json, names) {
@@ -315,7 +335,7 @@ async function build(cfg) {
     const idx = raw.findIndex((p) => polys.some((poly) => inPoly(p, poly)));
     if (idx < 0) throw new Error(`${cfg.slug}: river never enters ${cfg.takeOut.lake}`);
     outKm = cum[idx];
-  } else outKm = kmNearest(cfg.takeOut.at).km;
+  } else outKm = kmNearest(resolveAt(cfg.takeOut.at)).km + (cfg.takeOut.plusKm ?? 0);
 
   let putKm;
   if (cfg.putIn.at) {
