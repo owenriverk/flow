@@ -45,16 +45,19 @@ const RIVERS = [
     takeOut: { at: "kings-marks.json:Garlic Falls", plusKm: 2.5 },
     span: "LeConte Canyon → below Garlic Falls",
     marks: [
-      // km marks are Owen's-beta-pending estimates spaced across the run's known
-      // structure (Washbowl ~8 / Simpson ~21 / Tehipite 34.6 / confluence 49.1)
-      { name: "Devils Washbowl", kind: "rapid", km: 8 },
-      { name: "Cathedral Slide", kind: "rapid", km: 11 },
-      { name: "Butterbuns", kind: "rapid", km: 16 },
-      { name: "Simpson Meadow", kind: "camp", km: 21 },
-      { name: "Werner Paddle Gorge", kind: "rapid", km: 26 },
-      { name: "Waterfall Alley", kind: "rapid", km: 30 },
+      // Owen's order (2026-08-31): Cathedral → Butterbuns → Werner Paddle Gorge
+      // → Devils Washbowl → Waterfall Alley → Raw Dog, ALL above Simpson Meadow;
+      // then Simpson (surveyed cabin) → Tehipite (surveyed dome) → the Bottom 9.
+      // km values are still his-beta-pending estimates.
+      { name: "Cathedral Slide", kind: "rapid", km: 5 },
+      { name: "Butterbuns", kind: "rapid", km: 8 },
+      { name: "Werner Paddle Gorge", kind: "rapid", km: 11 },
+      { name: "Devils Washbowl", kind: "rapid", km: 12.5 },
+      { name: "Waterfall Alley", kind: "rapid", km: 14.5 },
+      { name: "Raw Dog", kind: "rapid", km: 16.5 },
+      { name: "Simpson Meadow", kind: "camp", at: "kings-places.json:Simpson Meadow Patrol Cabin" },
       { name: "Tehipite Valley", kind: "camp", at: "kings-marks.json:Tehipite Dome" },
-      { name: "Raw Dog", kind: "rapid", km: 38 },
+      { name: "the Bottom 9 begins", kind: "rapid", km: 35.6 },
       { name: "Pearly Gates", kind: "rapid", km: 44 },
       { name: "South Fork confluence", kind: "rapid", at: "kings-marks.json:way:South Fork Kings River" },
       { name: "Garlic Falls", kind: "rapid", at: "kings-marks.json:Garlic Falls" },
