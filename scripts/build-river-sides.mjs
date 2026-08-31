@@ -91,11 +91,20 @@ const RIVERS = [
     takeOut: { lake: "Salt Springs Reservoir" },
     span: "Hermit Valley → Salt Springs",
     marks: [
+      // Ordering per Huber 2019 + Liquid Lore vitals: day 2 runs Big Boy Pants
+      // ("right around the corner is Jedi gorge") → Mommy Gorge → camp at
+      // Untouchables near Fantasy Falls proper; Island Slide + Show Me Your
+      // Tits sit in the closing miles into the lake. km values are estimates.
+      { name: "Jedi", kind: "rapid", km: 13 },
       { name: "Summit City Creek", kind: "camp", at: "moke-marks.json:way:Summit City Creek" },
-      // Liquid Lore vitals: the last day of boating STARTS at Fantasy Falls,
-      // Island Slide sits in the closing miles into the lake — km still estimates
+      { name: "Big Boy Pants", kind: "rapid", km: 15.5 },
+      { name: "Mommy Gorge", kind: "rapid", km: 18 },
+      { name: "Rifleman's Gorge", kind: "rapid", km: 21 },
+      { name: "Untouchables Gorge", kind: "rapid", km: 23.5 },
       { name: "Fantasy Falls", kind: "rapid", frac: 0.77 },
-      { name: "Island Slide", kind: "rapid", frac: 0.93 },
+      { name: "Island Slide", kind: "rapid", frac: 0.9 },
+      { name: "Show Me Your Tits", kind: "rapid", frac: 0.955 },
+      { name: "Salt Springs Reservoir", kind: "rapid", km: 32.0 },
     ],
     tribs: [{ osm: "moke-marks.json", names: ["Summit City Creek"] }],
   },
