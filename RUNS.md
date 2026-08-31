@@ -1,17 +1,23 @@
 # Run roster
 
 What to text the bot → the run it maps to → the gauge it reads.
-This roster is generated from `src/aliases.json` **as of 2026-08-28** and lists
+This roster is generated from `src/aliases.json` **as of 2026-08-30** and lists
 every phrase the bot will currently resolve to a gauge. It is **not** a live-API
 verification pass — it reflects what's configured, not a fresh check that every
-upstream station is reporting data right now. The 43-gauge set here matches
+upstream station is reporting data right now. The 45-gauge set here matches
 `supabase/functions/refresh-gauges/gauges.ts` (the website's source list).
 Units are native: US runs **cfs / ft**, Canadian runs **cms / m**, New Zealand
 runs **cms** (discharge only, no stage).
 
-The bot also accepts **raw gauge IDs** (USGS `13317000`, WSC `08CE001`) and
-matches a run name embedded in a longer message (`middle kings at rodger's` →
-Middle Kings).
+The bot also accepts **raw gauge IDs** (USGS `13317000`, WSC `08CE001` — any
+station in either network, not just this roster), matches a run name embedded in
+a longer message (`middle kings at rodger's` → Middle Kings), knows the **place
+names** off the official station names (`white bird`, `banks`, `lowman`,
+`greendale`, `agness`, …), and tolerates punctuation (`kings?` works). A gauge
+can be named alongside its run (`grand canyon at phantom`, `san juan, four
+corners`). A message naming **two different rivers** (`stikine, clore`) comes
+back "not found" on purpose — one reply can't carry two readings, and half an
+answer on a satellite link is worse than none.
 
 ## Class III–IV multiday overnighters
 

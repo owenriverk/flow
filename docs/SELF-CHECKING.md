@@ -59,7 +59,8 @@ the check flagged it the same morning, alongside the first real failures.)
 
 ## Recurring (all optional-pace)
 
-- **The 35-gauge audit** — for each `source:site` pair in `src/aliases.json`,
+- **The gauge audit** (45 `source:site` pairs at last count; the test prints
+  the live number) — for each pair in `src/aliases.json`,
   confirm it's the gauge paddlers actually quote for that section, then add an
   entry to `src/provenance.json` and lower `MAX_UNAUDITED` in
   `test/provenance.test.ts`. `npx vitest run test/provenance.test.ts` prints

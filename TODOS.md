@@ -185,7 +185,7 @@
 
 - **What:** Let the directory search match alias phrases, not just name/location/
   text_key — searching "the box" should find Clarks Fork (the Box).
-- **Why:** The bot accepts ~113 phrases but the website only searches 40 display
+- **Why:** The bot accepts ~150 phrases but the website only searches 45 display
   names; paddlers who know a run by slang can't find its row.
 - **Where to start:** add an `aliases text[]` column to the `gauges` table,
   populate it in `refresh-gauges` from a per-key phrase list, include it in the
@@ -199,6 +199,8 @@
 - **Why:** RUNS.md drifted twice within days (Tatshenshini gauge id, missing
   SF Flathead row) — hand-sync loses. The new `test/nameConsistency.test.ts`
   guards the two config files against each other, but RUNS.md stays manual.
+  Drifted AGAIN by 2026-08-30: the header said 43 gauges while gauges.ts had 45
+  (caught in a doc pass, not by any test). Third strike for hand-sync.
 - **Effort:** S/M. **Priority:** P3. **Blocked by:** nothing.
 
 ## GPS-assisted disambiguation fallback

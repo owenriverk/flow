@@ -1,64 +1,89 @@
 # Flow
 
-A satellite-text river-gauge bot for whitewater kayakers. Text a gauge name from a
-Garmin InReach (no cell signal needed) and get the current flow back — free, no app.
+A river-gauge bot for whitewater paddlers. Text a run name to **866-284-5181**
+from a Garmin inReach or any phone — or email `flow@lateboof.com` from an
+inReach — and the live gauge reading comes back in one message. Free, no app,
+no account.
 
-See [DESIGN.md](./DESIGN.md) for the design and [RUNS.md](./RUNS.md) for the run roster.
+See [DESIGN.md](./DESIGN.md) for the original design (with dated addenda),
+[RUNS.md](./RUNS.md) for the run roster, [docs/SELF-CHECKING.md](./docs/SELF-CHECKING.md)
+for how it watches itself, and [web/DEPLOY.md](./web/DEPLOY.md) for the website.
 
-## Status
+## Status (2026-08-30)
 
-**v1 built and tested end to end. Ready to deploy.** The full round trip is proven:
-inbound email → parse → gauge lookup → reply delivered to the device (the reply path
-was verified live against a real InReach — see DESIGN.md "How the email path works").
+**Live in production on both channels.** Email/inReach since 2026-06-28 (reply
+path verified on a real device; re-verified 2026-08-26 after Garmin moved their
+reply page). SMS public since 2026-08-28, including inReach-via-SMS through
+Garmin's relay. 45 gauges, ~150 curated phrases, US/Canada/NZ. Nightly
+self-checks with a public status page (lateboof.com/status), a live gauge
+directory (lateboof.com), come-in forecasts (lateboof.com/forecast, built by the
+companion `weth` repo), and a donations page (lateboof.com/support, Stripe →
+Supabase).
 
 ```
 src/
-  worker.ts          Cloudflare Email Worker entry — decodes MIME, calls handleInbound
-  handleInbound.ts   glue: parseInbound -> handleQuery -> replyToInreach
-  parseInbound.ts    InReach email body -> { query, reply token }
-  replyToInreach.ts  reply via Garmin's web reply page (GET token page -> find Server Action -> POST)
-  lookupGauge.ts     text -> { site, source, name?, location? } | null  (aliases + raw id)
-  usgs.ts            USGS IV API (native cfs/ft), typed errors, 8s timeout
-  wsc.ts             Water Survey of Canada (native cms/m), 8s timeout
-  cdec.ts            California CDEC (native cfs/ft, per-station sensor/dur)
-  errors.ts          shared GaugeError { kind: not_found | unavailable }
-  time.ts            upstream timestamp -> { instant, utc offset }
-  formatReply.ts     reading -> <=160 char reply, flow value never truncated
+  worker.ts          Cloudflare Worker entry: email() for inReach/email ingress, fetch() for /api/sms + status
+  handleInbound.ts   email glue: parseInbound -> handleQuery -> replyToInreach
+  parseInbound.ts    inReach email body -> { query, reply token }
+  replyToInreach.ts  reply via Garmin's messenger page (GET token page -> find Server Action -> POST)
+  sms.ts             Twilio adapter: signature check, replay dedup, relay-footer strip, TwiML
+  smsThrottle.ts     per-sender caps (10/hr, 300/mo; 6x for pooled inReach gateway numbers)
+  spamFilter.ts      keeps spam-shaped email out of failure stats
+  lookupGauge.ts     text -> gauge ref. Tiers: exact alias / raw USGS+WSC id / phrase / word-set;
+                     refuses two-river asks and ambiguity instead of guessing (see test/exhaustive.test.ts)
+  aiResolve.ts       last-resort fuzzy matcher (Workers AI); budgeted per ingress, can only
+                     return a real alias key or nothing
   handleQuery.ts     channel-agnostic core: text in, reply out, routes by source, never throws
-  aliases.json       ~40 curated runs -> gauge (US/Canada/NZ/CA class V)
+  usgs.ts wsc.ts cdec.ts dreamflows.ts noaa.ts envdata.ts flowrate.ts   per-source fetchers, native units
+  supabaseCache.ts   last-known-good fallback when an upstream API is down
+  formatReply.ts     reading -> <=160 char reply, flow value never truncated
+  budget.ts          daily AI-call budget, split per ingress
+  queryLog.ts        fire-and-forget query telemetry (Supabase, insert-only)
+  statusTracking.ts  per-channel success/failure state behind /api/status
+  canaryRunner/Sweep/Garmin/Helpers.ts   nightly self-checks (docs/SELF-CHECKING.md)
+  replayLogic.ts     nightly deterministic re-resolution of the real query corpus (CI)
+  stripeWebhook.ts   donation webhook verification/mapping (used by web/functions/)
+  aliases.json       ~150 curated phrases -> 45 gauges; provenance.json is the audit trail
 ```
 
 ## Develop
 
 ```bash
 npm install
-npm test                 # vitest, 67 unit tests
+npm test                 # vitest — 469 tests, offline, fast
 npm run typecheck        # tsc --noEmit
-LIVE=1 npm test -- test/live.test.ts   # hits real USGS/WSC/CDEC
+LIVE=1 npx vitest run test/live.test.ts     # hits the real gauge APIs
+LIVE=1 npx vitest run test/phrases.test.ts  # full phrase corpus against live APIs
+EXHAUSTIVE=1 npx vitest run test/exhaustive.test.ts
+    # the resolver acceptance gate: ~137k generated queries (every alias pair x
+    # six joiners, punctuation, junk), 8 invariants, all must hold at zero.
+    # Run it for ANY change to lookupGauge.ts or aliases.json. ~3s.
 ```
 
 ## Deploy
 
+Three deployables; nothing deploys automatically except the website.
+
 ```bash
-npx wrangler login
-npx wrangler deploy      # publishes the Worker
+npx wrangler deploy      # the bot Worker (email + SMS + nightly cron)
+git push                 # web/** changes -> Cloudflare Pages via deploy-pages.yml
+supabase functions deploy refresh-gauges --project-ref vfkoegvzllxvshcnfbox --no-verify-jwt
+                         # the website's gauge refresher (run after editing gauges.ts)
 ```
 
-Then bind it: Cloudflare dashboard → `lateboof.com` → Email → Email Routing →
-Routing rules → **Catch-all → action "Send to a Worker" → flow**. (Until then the
-catch-all forwards to a personal inbox for testing.)
+The Oracle forecast pages under `web/forecast*` are build outputs of the private
+`weth` repo — edit them there (`mock/build_mock.py`), never here.
 
-Live test: send a gauge name to `flow@lateboof.com` **from an InReach**, confirm the
-flow comes back to the device.
+## Guardrails worth knowing before changing anything
 
-## Implemented beyond v1
-
-Fuzzy/LLM name matching (`src/aiResolve.ts` — Workers AI, gated by a daily call budget
-that is split per ingress so one channel can't starve another, only fires on a lookup
-miss, and can only ever resolve to a real alias key or nothing)
-and a last-known-good cache fallback via Supabase (`src/supabaseCache.ts`, used when
-the live upstream API is down) both shipped after v1. There's also a companion
-gauge-directory website (`web/`) backed by a Supabase cron refresher — see `supabase/`.
+- The reply is a raw reading, never a runnable judgment — the website colors
+  ranges, the bot does not.
+- Every message gets a reply; on a satellite link, silence wastes the paddler's
+  credit.
+- A message naming two different rivers is refused, not half-answered.
+- Every gauge addition needs a `src/provenance.json` entry (enforced by an
+  inverted ratchet in `test/provenance.test.ts`) and must pass the exhaustive
+  resolver gate.
 
 ## SMS (public since 2026-08-28)
 

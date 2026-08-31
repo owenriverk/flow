@@ -265,3 +265,28 @@ Cloudflare and enable Email Routing so the Worker has an address to receive on.
 - You flagged premise #1 — the delivery path — as the one to rethink. That was the
   exact right thing to be suspicious of. The plumbing, not the features, is where
   this project lives or dies.
+
+## Addenda (dated) — what changed after this document was written
+
+The sections above are the 2026-06-27 design, kept as written (with the reply
+mechanism updated in place, dated, when Garmin forced it). Major changes since:
+
+- **2026-07-02 — v1.5 self-checking live.** Nightly email-loop canary, gauge
+  sweep, Garmin form check, CI query replay. See docs/SELF-CHECKING.md. Earned
+  its keep 2026-08-26 when Garmin moved the reply page and the check flagged it
+  the same morning.
+- **2026-08-05 — SMS tier 1 built** (Twilio webhook, toll-free 866-284-5181,
+  signature validation, replay dedup, per-sender throttle, per-ingress AI
+  budget). Trial/private at that point.
+- **2026-08-28 — SMS public**, overriding the v2 gate by owner decision
+  (TODOS.md records it). The number is also an inReach contact via Garmin's SMS
+  relay: relay footer stripped before lookup, pooled gateway numbers get a 6x
+  throttle bucket. Premise 1's "SMS is v2" is therefore done; premise 6's A2P
+  registration was avoided (toll-free verification instead).
+- **2026-08-28 — donations.** lateboof.com/support: Stripe Payment Link ->
+  signature-verified webhook (web/functions/api/stripe-webhook.ts) -> Supabase,
+  with public views exposing only names and a season total.
+- **2026-08-30 — resolver hardened against an exhaustive gate.** Punctuation
+  tolerance, official-station-name aliases, refusal of two-river asks instead of
+  half-answers. test/exhaustive.test.ts (~137k queries, 8 invariants at zero) is
+  now the acceptance bar for resolver/roster changes. Roster: 45 gauges.
