@@ -117,7 +117,6 @@
   "stikine":               { "site": "08CE001",    "name": "Stikine (Grand Canyon)",         "location": "At Telegraph Creek, BC", "source": "wsc" },
   "gc stikine":            { "site": "08CE001",    "name": "Stikine (Grand Canyon)",         "location": "At Telegraph Creek, BC", "source": "wsc" },
   "iskut":                 { "site": "08CG001",    "name": "Iskut R",                        "location": "Below Johnson River, BC", "source": "wsc" },
-  "calor":                 { "site": "08EF005",    "name": "Clore (Zymoetz R)",              "location": "Above O.K. Creek, BC", "source": "wsc" },
   "clore":                 { "site": "08EF005",    "name": "Clore (Zymoetz R)",              "location": "Above O.K. Creek, BC", "source": "wsc" },
   "gc clore":              { "site": "08EF005",    "name": "Clore (Zymoetz R)",              "location": "Above O.K. Creek, BC", "source": "wsc" },
   "grand canyon clore":    { "site": "08EF005",    "name": "Clore (Zymoetz R)",              "location": "Above O.K. Creek, BC", "source": "wsc" },

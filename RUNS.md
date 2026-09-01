@@ -60,7 +60,7 @@ answer on a satellite link is worse than none.
 | `susitna` | Susitna (Devils Canyon) (AKA: `the su`) | 15292000 | USGS | At Gold Creek, AK |
 | `stikine` | Stikine (Grand Canyon) — "Grand Canyon of the Stikine" (AKA: `gc stikine`) | 08CE001 | WSC | At Telegraph Creek, BC |
 | `iskut` | Iskut | 08CG001 | WSC | Below Johnson River, BC |
-| `copper` / `zymoetz` | Clore (Zymoetz R) — the Copper (AKA: `calor`, `clore`, `gc clore`, `grand canyon clore`, `copper river`) | 08EF005 | WSC | Above O.K. Creek, BC |
+| `copper` / `zymoetz` | Clore (Zymoetz R) — the Copper (AKA: `clore`, `gc clore`, `grand canyon clore`, `copper river`) | 08EF005 | WSC | Above O.K. Creek, BC |
 | `clearwater` | Clearwater, BC (AKA: `bc clearwater`) | 08LA001 | WSC | Near Clearwater Station, BC |
 
 ## New Zealand

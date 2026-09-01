@@ -69,7 +69,8 @@ export const GAUGES: GaugeConfig[] = [
   { key: 'alsek',         name: 'Alsek R',             location: 'Above Bates River, YT',        source: 'wsc',   site: '08AB001',  text_key: 'alsek',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08AB001',  low: 565,   high: 1135 },
   { key: 'stikine',       name: 'Stikine (Grand Canyon)',           location: 'At Telegraph Creek, BC',       source: 'wsc',   site: '08CE001',  text_key: 'stikine',     gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CE001',  low: 225,   high: 550 },
   { key: 'iskut',         name: 'Iskut R',             location: 'Below Johnson River, BC',      source: 'wsc',   site: '08CG001',  text_key: 'iskut',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08CG001',  low: null,  high: null },
-  { key: 'calor',         name: 'Clore (Zymoetz R)',  location: 'Above O.K. Creek, BC',         source: 'wsc',   site: '08EF005',  text_key: 'calor',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08EF005',  low: 100,   high: 150 },
+  // key stays 'calor' (misspelling) on purpose: it is the Supabase row id and renaming would orphan the gauge's history — text_key carries the correct public spelling.
+  { key: 'calor',         name: 'Clore (Zymoetz R)',  location: 'Above O.K. Creek, BC',         source: 'wsc',   site: '08EF005',  text_key: 'clore',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08EF005',  low: 100,   high: 150 },
   { key: 'clearwater',    name: 'Clearwater R',        location: 'Near Clearwater Station, BC',  source: 'wsc',   site: '08LA001',  text_key: 'clearwater',  gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08LA001',  low: 50,    high: 200 },
 
   // ── New Zealand (cms) ──────────────────────────────────────────────

@@ -132,7 +132,6 @@ live('tier 1 — exact alias', () => {
     ['copper',                   'Clore (Zymoetz R)'],
     ['copper river',             'Clore (Zymoetz R)'],
     ['zymoetz',                  'Clore (Zymoetz R)'],
-    ['calor',                    'Clore (Zymoetz R)'],
     ['clearwater',              'Clearwater R'],
     ['bc clearwater',           'Clearwater R'],
   ])('"%s" → reply contains "%s"', async (query, nameSubstring) => {
