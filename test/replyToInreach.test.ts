@@ -4,6 +4,7 @@ import {
   locateReplyAction,
   scrapeActionId,
   scrapeScriptUrls,
+  scrapeFlightChunkUrls,
   rscError,
   InreachReplyError,
 } from '../src/replyToInreach.js';
@@ -17,6 +18,19 @@ const PAGE = `
 <script src="/web/_next/static/chunks/main-app-7a8446b6733de863.js" async=""></script>
 <script async="" src="/web/_next/static/chunks/app/(public)/reply/%5BtinyUrlId%5D/page-bd52b15b7da15760.js"></script>
 </head><body><title>Garmin Messenger</title></body></html>`;
+// Mirrors the page after Garmin's ~2026-09-12 redeploy (verified live 2026-09-15):
+// the route chunk is no longer a <script src> tag — the inline Flight payload
+// (self.__next_f, with JSON-escaped quotes) is its only mention on the page.
+const PAGE_2026_09 = `
+<!DOCTYPE html><html><head>
+<script src="/web/_next/static/chunks/webpack-4e08a705c9b31855.js" async=""></script>
+<script src="/web/_next/static/chunks/main-app-7ccc9492240e78e0.js" async=""></script>
+</head><body>
+<script>self.__next_f.push([1,"6:I[87740,[\\"898\\",\\"static/chunks/898-1543fcbddf8d02fc.js\\",\\"532\\",\\"static/chunks/app/(reply)/reply/%5BtinyUrlId%5D/page-ba821f0f04e7181f.js\\"],\\"default\\"]\\n"])</script>
+</body></html>`;
+const FLIGHT_PAGE_CHUNK_URL =
+  'https://messenger.garmin.com/web/_next/static/chunks/app/(reply)/reply/%5BtinyUrlId%5D/page-ba821f0f04e7181f.js';
+
 const ACTION_ID = '60e0518dd113775ab471a769fddd3860d84bad10e6';
 // The compiled registration, verbatim shape from the live bundle.
 const ROUTE_CHUNK = `var m=r(70468);let g=(0,m.createServerReference)("${ACTION_ID}",m.callServer,void 0,m.findSourceMapURL,"sendReplyAction");function y({message:e}){}`;
@@ -58,6 +72,24 @@ describe('scrapeScriptUrls', () => {
 
   test('ignores inline scripts', () => {
     expect(scrapeScriptUrls('<script>self.__next_f=[]</script>', PAGE_URL)).toEqual([]);
+  });
+});
+
+describe('scrapeFlightChunkUrls', () => {
+  test('finds chunks only the Flight payload names, resolved against the asset prefix', () => {
+    const scripts = scrapeScriptUrls(PAGE_2026_09, PAGE_URL);
+    expect(scrapeFlightChunkUrls(PAGE_2026_09, scripts)).toEqual([
+      'https://messenger.garmin.com/web/_next/static/chunks/898-1543fcbddf8d02fc.js',
+      FLIGHT_PAGE_CHUNK_URL,
+    ]);
+  });
+
+  test('yields nothing when every mentioned chunk is already a <script src>', () => {
+    expect(scrapeFlightChunkUrls(PAGE, scrapeScriptUrls(PAGE, PAGE_URL))).toEqual([]);
+  });
+
+  test('yields nothing when no script tag establishes an asset prefix', () => {
+    expect(scrapeFlightChunkUrls('"static/chunks/page-abc.js"', [])).toEqual([]);
   });
 });
 
@@ -104,6 +136,14 @@ describe('locateReplyAction', () => {
     expect(String(fetchFn.mock.calls[0]![0])).toContain('/page-');
   });
 
+  test('finds the action when the route chunk lives only in the Flight payload (2026-09 page)', async () => {
+    const fetchFn = mock();
+    await expect(locateReplyAction(PAGE_2026_09, PAGE_URL, { fetchFn })).resolves.toBe(ACTION_ID);
+    // Still tried first: orderCandidates ranks page-*.js chunks wherever they came from.
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+    expect(String(fetchFn.mock.calls[0]![0])).toBe(FLIGHT_PAGE_CHUNK_URL);
+  });
+
   test('falls back to the other chunks when the route chunk moved', async () => {
     const fetchFn = mock({ route: { body: OTHER_CHUNK }, other: { body: ROUTE_CHUNK } });
     await expect(locateReplyAction(PAGE, PAGE_URL, { fetchFn })).resolves.toBe(ACTION_ID);
@@ -147,6 +187,15 @@ describe('replyToInreach', () => {
     expect(headers['accept']).toBe('text/x-component');
     expect(headers['content-type']).toBe('text/plain;charset=UTF-8');
     expect(headers['origin']).toBe('https://messenger.garmin.com');
+    expect(JSON.parse(postInit!.body as string)).toEqual(['tok', 'GAULEY 2800 cfs']);
+  });
+
+  test('delivers end to end on the 2026-09 page shape', async () => {
+    const fetchFn = mock({ page: { body: PAGE_2026_09 } });
+    await replyToInreach('tok', 'GAULEY 2800 cfs', { fetchFn });
+    const [postUrl, postInit] = fetchFn.mock.calls[2]!;
+    expect(postUrl).toBe(PAGE_URL);
+    expect((postInit!.headers as Record<string, string>)['next-action']).toBe(ACTION_ID);
     expect(JSON.parse(postInit!.body as string)).toEqual(['tok', 'GAULEY 2800 cfs']);
   });
 

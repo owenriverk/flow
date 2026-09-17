@@ -3,6 +3,9 @@
   // After `wrangler deploy`, bind it in the dashboard:
   //   Email → Email Routing → Routing rules → Catch-all → action "Send to a Worker" → flow.
   "name": "flow",
+  // Owen's Personal account — the OAuth login also sees OpenWFA, and without this
+  // wrangler refuses to pick one in non-interactive runs.
+  "account_id": "c368641bb3e52824fdafbccb7437b5bc",
   "main": "src/worker.ts",
   "compatibility_date": "2026-06-28",
   "compatibility_flags": ["nodejs_compat"],

@@ -8,10 +8,14 @@
  * classic HTML form (MessageId/Guid/ReplyAddress inputs, form-urlencoded POST to
  * /TextMessage/TxtMsg, {"Success":true}). Between 2026-08-23 and 2026-08-26 Garmin
  * moved it to messenger.garmin.com, a Next.js app whose Send button invokes a
- * Server Action. The request below was verified live on 2026-08-26: a bogus token
- * comes back HTTP 500 + an RSC error chunk (a thrown action), and a real token
- * comes back HTTP 200 + `1:"$undefined"` (the action returns void) with the text
- * landing on the device:
+ * Server Action. Around 2026-09-12 a Garmin redeploy moved the reply route to
+ * /reply/[tinyUrlId] and stopped emitting the route chunk as a <script src> tag —
+ * it is referenced only in the inline Flight payload (self.__next_f), so discovery
+ * scans that too (scrapeFlightChunkUrls; protocol otherwise unchanged, verified
+ * against the live bundle 2026-09-15). The request below was verified live on
+ * 2026-08-26: a bogus token comes back HTTP 500 + an RSC error chunk (a thrown
+ * action), and a real token comes back HTTP 200 + `1:"$undefined"` (the action
+ * returns void) with the text landing on the device:
  *
  *   token (from the inbound email body)
  *     │ GET https://inreachlink.com/<token>
@@ -102,6 +106,29 @@ export function scrapeActionId(js: string): string | null {
   return m ? m[1]! : null;
 }
 
+/** Chunk paths the inline Flight payload (self.__next_f) references beyond the
+ *  <script src> tags. Next.js only script-tags the chunks needed at first paint;
+ *  a lazily-loaded route chunk — the reply composer's home since Garmin's
+ *  2026-09 redeploy — is named only here. Paths are relative to the build's
+ *  asset prefix, which the script tags establish (…/web/_next/ on the live
+ *  page), so resolution anchors on any script URL that shares the layout. */
+export function scrapeFlightChunkUrls(html: string, scriptUrls: string[]): string[] {
+  const anchor = scriptUrls.find((u) => u.includes('static/chunks/'));
+  if (!anchor) return [];
+  const prefix = anchor.slice(0, anchor.indexOf('static/chunks/'));
+  const seen = new Set(scriptUrls);
+  const urls: string[] = [];
+  const re = /static\/chunks\/[^"'\\<>\s]+\.js/g;
+  for (let m = re.exec(html); m !== null; m = re.exec(html)) {
+    const url = prefix + m[0];
+    if (!seen.has(url)) {
+      seen.add(url);
+      urls.push(url);
+    }
+  }
+  return urls;
+}
+
 /** Route chunks (`…/page-<hash>.js`) carry the page's own code, so they are the
  *  likely home of the action; the framework/vendor chunks are the fallback. */
 function orderCandidates(urls: string[]): string[] {
@@ -128,7 +155,8 @@ export async function locateReplyAction(
   if (scripts.length === 0) {
     throw new InreachReplyError('reply page has no script chunks (page format changed?)', 'format');
   }
-  for (const url of orderCandidates(scripts)) {
+  const candidates = [...scripts, ...scrapeFlightChunkUrls(html, scripts)];
+  for (const url of orderCandidates(candidates)) {
     const res = await withTimeout(timeoutMs, (signal) => fetchFn(url, { signal }));
     if (!res.ok) {
       throw new InreachReplyError(`reply page script returned HTTP ${res.status}`, 'transport');
@@ -137,7 +165,7 @@ export async function locateReplyAction(
     if (id) return id;
   }
   throw new InreachReplyError(
-    `could not find ${REPLY_ACTION_NAME} in ${scripts.length} page script(s) (page format changed?)`,
+    `could not find ${REPLY_ACTION_NAME} in ${candidates.length} page script(s) (page format changed?)`,
     'format',
   );
 }
