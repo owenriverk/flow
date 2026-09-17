@@ -54,7 +54,7 @@ export const onRequestPost = async (ctx: { request: Request; env: Env }): Promis
   }
 
   if (!env.BEEHIIV_API_KEY) {
-    return reply(503, false, 'Signups are almost live — email flow@lateboof.com and we will add you by hand.', wantsJson);
+    return reply(503, false, 'Signups are almost live — email owen@lateboof.com and we will add you by hand.', wantsJson);
   }
 
   const publication = env.BEEHIIV_PUBLICATION_ID ?? DEFAULT_PUBLICATION;

@@ -1,9 +1,9 @@
 # Flow
 
 A river-gauge bot for whitewater paddlers. Text a run name to **866-284-5181**
-from a Garmin inReach or any phone — or email `flow@lateboof.com` from an
-inReach — and the live gauge reading comes back in one message. Free, no app,
-no account.
+from a Garmin inReach or any phone and the live gauge reading comes back in one
+message. Free, no app, no account. (The email channel, `flow@lateboof.com`,
+still answers but is no longer advertised — SMS is the primary channel.)
 
 See [DESIGN.md](./DESIGN.md) for the original design (with dated addenda),
 [RUNS.md](./RUNS.md) for the run roster, [docs/SELF-CHECKING.md](./docs/SELF-CHECKING.md)
