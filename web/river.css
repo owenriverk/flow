@@ -1,0 +1,89 @@
+/* Per-river page. Mobile-first on purpose: almost everyone arriving here came
+   from a phone (a forum link, a QR at a put-in), and the page has to be useful
+   on a bad signal. The reading is the hero; the number to text is never more
+   than a thumb away. */
+
+.river-page { margin: 0 auto; max-width: 44rem; padding: 1.5rem 1rem 2.5rem; }
+
+.river-head { margin-bottom: 1.1rem; }
+.river-head h1 { font-size: 1.35rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.15rem; }
+.river-head .river-where { color: var(--muted); font-size: 0.8rem; }
+
+/* The reading. Big, and colored by the run's own range — never by another
+   run's, which is why runs sharing a gauge still get their own roster row. */
+.river-now {
+  border: 1px solid var(--border);
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.2rem;
+  background: #fafafa;
+}
+.river-flow {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+.river-flow .trend { font-size: 1.1rem; vertical-align: 0.28em; margin-left: 0.15rem; }
+[data-status="low"]  .river-flow { color: #b4231f; }
+[data-status="good"] .river-flow { color: #1b7f3b; }
+[data-status="high"] .river-flow { color: #1f4fb4; }
+
+.river-meta { color: var(--faint); font-size: 0.72rem; margin-top: 0.35rem; }
+.river-age.age-stale   { color: #a8620a; }
+.river-age.age-offline { color: #b4231f; font-weight: 700; }
+
+/* Shown only when the page cannot show a live number. It carries the page's
+   honesty: a saved reading says so, a dead gauge says so, and neither is ever
+   dressed up as current. */
+.river-note {
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border);
+  color: #a8620a;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* The ask. This is the whole point of the page, so it sits directly under the
+   reading and repeats the number as tappable text. */
+.river-cta { border: 2px solid #111; padding: 0.9rem 1rem; margin-bottom: 1.4rem; }
+.river-cta-line { font-size: 0.9rem; line-height: 1.6; }
+.river-cta code {
+  font-family: inherit;
+  background: #ececec;
+  padding: 0.1rem 0.35rem;
+  font-weight: 700;
+}
+.river-cta .num { white-space: nowrap; font-weight: 700; }
+.river-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+.river-btn {
+  display: inline-block;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.55rem 0.9rem;
+  letter-spacing: 0.02em;
+}
+.river-btn.ghost { background: #fff; color: #111; }
+
+.river-body h2 { font-size: 0.85rem; font-weight: 700; margin: 1.3rem 0 0.4rem; }
+.river-body p  { color: var(--muted); font-size: 0.82rem; line-height: 1.75; margin-bottom: 0.9rem; }
+.river-body ul { color: var(--muted); font-size: 0.82rem; line-height: 1.8; margin: 0.2rem 0 1rem 1.1rem; }
+.river-body a  { color: inherit; }
+
+.river-gauges { border-top: 1px solid var(--border); margin-top: 0.6rem; padding-top: 0.6rem; }
+.river-gauges dt { font-size: 0.78rem; font-weight: 700; margin-top: 0.5rem; }
+.river-gauges dd { color: var(--muted); font-size: 0.76rem; line-height: 1.6; margin-left: 0; }
+
+/* The QR is the desktop/print path only — a phone cannot scan a code it is
+   itself displaying, so on small screens the vCard tap link does that job. */
+.river-qr { display: none; }
+@media (min-width: 700px) {
+  .river-qr { display: block; margin-top: 1rem; }
+  .river-qr img { width: 150px; height: 150px; }
+  .river-qr .cap { color: var(--faint); font-size: 0.68rem; margin-top: 0.3rem; }
+}

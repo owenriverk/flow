@@ -213,3 +213,34 @@
 - **Where to start:** `parseInbound.ts` already sees the full email — check
   whether Garmin includes a location line/URL; map to nearest roster gauges.
 - **Effort:** L (human) → M with CC. **Priority:** P3.
+
+## Dead river-rail assets in web/ — wire up or archive
+
+- **What:** `web/river-side.js` (the generic scroll-map rail engine) and the four
+  generated Sierra datasets it was written for — `cherry-data.js`,
+  `fantasy-data.js`, `kings-data.js`, `postpile-data.js` (22.9 KB) plus their
+  topo sheets `cherry/fantasy/kings/postpile-topo.svg` (884 KB) — are committed
+  and deploying to production but referenced by **zero** HTML pages. Verified
+  2026-09-19: `data-river-side` appears only inside `river-side.js` itself, and
+  `forecast-kings.html` loads nothing but `/forecast.js`.
+- **Why:** ~907 KB ships to Cloudflare Pages for nothing, and worse, the files
+  make the next reader (including a future session) believe the rails are live
+  on the Sierra pages. That false belief already cost a plan-eng-review
+  recommendation: the rail was described as "proven on four pages" when the
+  generic engine has never actually run in a browser. The only live rail is
+  `forecast-stikine.html` via the older bespoke `stikine-river.js`.
+- **Where to start:** decide wire-up vs archive. Wire-up = add the rail markup
+  block + `data-river-side` attribute to the four `forecast-*.html` pages and
+  confirm `river-side.js:22` renders (its guard requires `topoSvg && topo`, so a
+  page without a topo sheet renders nothing — that guard needs to tolerate a
+  contour-less rail). Archive = move the data + topo files out of `web/` so they
+  stop deploying, keeping them in the repo for the rail pass.
+- **Context:** the rails were generated over commits `ea98048`, `f3ed92c`,
+  `1ed8c60` (2026-08-31) from real OSM+SRTM geometry via
+  `scripts/build-river-sides.mjs`, whose `RIVERS` array carries hand-entered
+  rapid kilometres per run. The generation work is real and good; only the
+  page wiring is missing.
+- **Blocked by:** nothing. Naturally bundles with the river-rail pass that was
+  split out of the per-river-pages batch (2026-09-19 eng review).
+- **Effort:** S (human: ~1h / CC: ~10min) to archive, M to wire up.
+  **Priority:** P2 — it is actively misleading, which is worse than the bytes.
