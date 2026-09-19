@@ -10,7 +10,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "noEmit": true
+    "noEmit": true,
+    // web/gauge-core.js is plain browser JS imported by test/gaugeCore.test.ts.
+    // allowJs lets TS infer its exported types; checkJs stays off (the default)
+    // so browser globals inside web/*.js are never type-checked against the
+    // Workers lib set above.
+    "allowJs": true
   },
-  "include": ["src", "test"]
+  "include": ["src", "test", "web/gauge-core.js"]
 }

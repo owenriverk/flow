@@ -1,90 +1,26 @@
-const SUPABASE_URL = 'https://vfkoegvzllxvshcnfbox.supabase.co';
-const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZma29lZ3Z6bGx4dnNoY25mYm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NzE1MTcsImV4cCI6MjA5ODI0NzUxN30.PdQ8fbjVE0s8LoTED5WHyb1zx8WU-X3QqO4td9XBHqo';
-const REFRESH_MS = 10 * 60 * 1000;
-const COLSPAN = 5;
+// Gauge logic (freshness, status, formatting, trend, cache, fetch) lives in
+// gauge-core.js so the per-river pages share exactly what the table uses —
+// this file stays the homepage table's controller and nothing else.
+import {
+  CMS_TO_CFS,
+  REFRESH_MS,
+  ageInfo,
+  escapeHtml,
+  fetchGauges,
+  flowText,
+  readCache,
+  rowClass,
+  trendInfo,
+  writeCache,
+} from './gauge-core.js';
 
-// Reading timestamps older than this are flagged visually.
-const STALE_WARN_HRS  = 2;   // muted warning style
-const OFFLINE_HRS     = 72;  // [OFFLINE] — clearly broken
+const COLSPAN = 5;
 
 let allRows = [];
 let sortCol = 'name';
 let sortDir = 'asc';
 let filterText = '';
 let filterStatus = 'all';
-
-/**
- * Returns { label, cls } for a gauge's freshness.
- * cls is '' (fresh), 'age-stale' (> 2 hr), or 'age-offline' (> 72 hr, missing, or no reading).
- *
- * Backend fetchers stamp reading_time as "now" whenever a source returns no
- * value (see refresh-gauges), so a null discharge/stage can carry a fresh-looking
- * timestamp — check for that first instead of trusting reading_time alone.
- */
-function ageInfo(g) {
-  if (g.discharge == null && g.stage == null) return { label: '[OFFLINE]', cls: 'age-offline' };
-  const isoString = g.reading_time;
-  if (!isoString) return { label: '—', cls: 'age-offline' };
-  const mins = (Date.now() - new Date(isoString).getTime()) / 60000;
-  if (mins < 1)  return { label: 'just now', cls: '' };
-  if (mins < 60) return { label: `${Math.floor(mins)} min ago`, cls: '' };
-  const h = Math.floor(mins / 60);
-  if (h >= OFFLINE_HRS) return { label: '[OFFLINE]', cls: 'age-offline' };
-  if (h >= STALE_WARN_HRS) return { label: `${h} hr ago`, cls: 'age-stale' };
-  return { label: '1 hr ago', cls: '' };
-}
-
-// 'grey' covers both "no reading" and "no low/high range configured" — either
-// way there's no status to color-code, so both belong in the same filter bucket
-// instead of vanishing from every status filter (including "No data").
-function rowClass(g) {
-  const d = g.discharge;
-  if (d == null && g.stage == null) return 'grey';
-  if (g.low == null || g.high == null || d == null) return 'grey';
-  if (d < g.low) return 'low';
-  if (d > g.high) return 'high';
-  return 'good';
-}
-
-function flowText(g) {
-  if (g.discharge != null) {
-    const n = g.discharge_unit === 'cms'
-      ? Number(g.discharge).toLocaleString('en-US', { maximumFractionDigits: 1 })
-      : Math.round(g.discharge).toLocaleString('en-US');
-    const stg = g.stage != null
-      ? ` / ${Number(g.stage).toFixed(2)} ${g.stage_unit}`
-      : '';
-    return `${n} ${g.discharge_unit}${stg}`;
-  }
-  if (g.stage != null) return `${Number(g.stage).toFixed(2)} ${g.stage_unit}`;
-  return '—';
-}
-
-// Ignore swings under this so measurement jitter doesn't flip the arrow.
-// Tuned against the ~24h baseline window — see the v3 design doc assignment.
-const TREND_THRESHOLD = 0.02;
-
-/**
- * Returns { glyph, cls, title } for the discharge trend, or null if unknown/flat.
- *
- * Compares against baseline_* — a reading from ~24h ago picked by
- * refresh-gauges from flow_history. Same-time-of-day comparison cancels the
- * diurnal melt cycle, so the arrow reads day-over-day ("is it coming in"),
- * not this morning vs last night's peak. (prev_* is the bot's outage
- * fallback, a different contract — do not read it here.)
- */
-function trendInfo(g) {
-  if (g.discharge == null || g.baseline_discharge == null || g.baseline_discharge === 0) return null;
-  const pct = (g.discharge - g.baseline_discharge) / g.baseline_discharge;
-  if (Math.abs(pct) < TREND_THRESHOLD) return null;
-  const pctLabel = `${pct > 0 ? '+' : ''}${Math.round(pct * 100)}%`;
-  const sinceLabel = g.baseline_reading_time
-    ? ` vs yesterday (${new Date(g.baseline_reading_time).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })})`
-    : '';
-  return pct > 0
-    ? { glyph: '↑', cls: 'trend-up',   title: `${pctLabel}${sinceLabel}` }
-    : { glyph: '↓', cls: 'trend-down', title: `${pctLabel}${sinceLabel}` };
-}
 
 // --- Favorites: star a run to pin it to the top. localStorage only — no
 // accounts, ever. Keys are gauge `key` values (a stable contract; any future
@@ -120,14 +56,6 @@ function toggleFavorite(key) {
   writeFavorites([...favorites]);
   applyFiltersAndSort();
 }
-
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  })[char]);
-}
-
-const CMS_TO_CFS = 35.3147;
 
 function sortValue(g, col) {
   switch (col) {
@@ -230,40 +158,15 @@ function updateHeaders() {
   });
 }
 
-// Last-known-good fallback for when the browser can't reach Supabase (e.g. spotty
-// signal at a trailhead) — mirrors the cache fallback already used on the InReach side.
-const CACHE_KEY = 'lateboof:gauges-cache:v1';
-
-function readCache() {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeCache(rows) {
-  try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ rows, fetchedAt: new Date().toISOString() }));
-  } catch {
-    // localStorage unavailable (private mode, quota, etc.) — cache is best-effort.
-  }
-}
-
 async function load() {
   const refreshNote = document.getElementById('refresh-note');
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/gauges?select=*`, {
-      headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     // No client-side allowlist: refresh-gauges/index.ts already prunes any row
     // whose key isn't in the canonical GAUGES list, so the table itself is the
     // source of truth for "active." A duplicate list here only risks silently
     // hiding gauges the backend has already vetted (as happened with the SF
     // Flathead / Phantom Ranch / NZ additions).
-    allRows = await res.json();
+    allRows = await fetchGauges();
     writeCache(allRows);
     applyFiltersAndSort();
 
