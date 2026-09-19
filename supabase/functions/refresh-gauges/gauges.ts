@@ -36,7 +36,14 @@ export const GAUGES: GaugeConfig[] = [
   { key: 'grande ronde',        name: 'Grande Ronde R',          location: 'At Troy, OR',                      source: 'usgs',  site: '13333000',  text_key: 'grande ronde',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13333000/',  low: 1500,  high: 5000 },
   { key: 'selway',              name: 'Selway R',                location: 'Near Lowell, ID',                  source: 'usgs',  site: '13336500',  text_key: 'selway',        gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13336500/',  low: 2000,  high: 6000 },
   { key: 'hells canyon',        name: 'Hells Canyon (Snake R)',  location: 'At Hells Canyon Dam, OR-ID',       source: 'usgs',  site: '13290450',  text_key: 'hells canyon',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13290450/',  low: 3000,  high: 15000 },
+  // Main and Lower are two different trips (Main = Four Rivers lottery from Corn
+  // Creek; Lower = self-issue from Hammer Creek to the Snake) reading the same
+  // White Bird gauge — same shared-site pattern as tuolumne / tuolumne grand
+  // canyon above. They are separate rows so the bot's reply names the trip the
+  // paddler actually asked about, and so each carries its own runnable range.
+  // TODO(owen): confirm the Lower range — 3000/20000 is a beta estimate.
   { key: 'main salmon',         name: 'Main Salmon',         location: 'At White Bird, ID',                source: 'usgs',  site: '13317000',  text_key: 'main salmon',   gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13317000/',  low: 5000,  high: 20000 },
+  { key: 'lower salmon',        name: 'Lower Salmon',        location: 'At White Bird, ID',                source: 'usgs',  site: '13317000',  text_key: 'lower salmon',  gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13317000/',  low: 3000,  high: 20000 },
   { key: 'middle fork salmon',  name: 'Middle Fork Salmon',  location: 'At MF Lodge, ID',                  source: 'usgs',  site: '13309220',  text_key: 'mf salmon',     gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13309220/',  low: 2000,  high: 7000 },
   { key: 'south salmon',        name: 'South Fork Salmon',   location: 'Near Krassel Ranger Station, ID',  source: 'usgs',  site: '13310700',  text_key: 'sf salmon',     gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13310700/',  low: 1000,  high: 3500 },
   { key: 'owyhee',              name: 'Owyhee R',                location: 'Near Rome, OR',                    source: 'usgs',  site: '13181000',  text_key: 'owyhee',        gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13181000/',  low: 300,   high: 2500 },

@@ -58,7 +58,10 @@ describe('deterministic — must resolve without AI', () => {
     ['mf of the salmon',              'Middle Fork Salmon'],
     ['middle fork salmon river',      'Middle Fork Salmon'],
     ['gates lodore',                  'Gates of Lodore (Green R)'],   // "of" stripped from alias
-    ['lower salmon river id',         'Main Salmon'],
+    // Lower Salmon got its own roster row (2026-09-19): same White Bird gauge
+    // as the Main, but a different trip, so the reply names the one they asked
+    // for instead of answering "Main Salmon" to a Lower Salmon question.
+    ['lower salmon river id',         'Lower Salmon'],
     ['main salmon river',             'Main Salmon'],
     ['sf salmon river',               'South Fork Salmon'],
     ['south salmon river',            'South Fork Salmon'],
