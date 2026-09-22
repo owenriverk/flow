@@ -1,0 +1,2426 @@
+{
+  "date": "2026-09-22T07:39:57.903Z",
+  "criteriaCount": 47,
+  "results": {
+    "@cf/meta/llama-3.2-3b-instruct": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": "tatshenshini",
+          "ok": false,
+          "ms": 495,
+          "det": false,
+          "raw": "tatshenshini"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": "deschy",
+          "ok": true,
+          "ms": 193,
+          "det": false,
+          "raw": "deschy"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": "mf salmon",
+          "ok": true,
+          "ms": 256,
+          "det": false,
+          "raw": "mf salmon"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": "yampa",
+          "ok": true,
+          "ms": 429,
+          "det": true,
+          "raw": "yampa — Yampa R, At Deerlodge Park, CO"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "gates of lodore",
+          "ok": true,
+          "ms": 381,
+          "det": false,
+          "raw": "gates of lodore"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "sf salmon",
+          "ok": true,
+          "ms": 252,
+          "det": false,
+          "raw": "sf salmon"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 316,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 260,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc",
+          "ok": false,
+          "ms": 235,
+          "det": false,
+          "raw": "gc"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc",
+          "ok": false,
+          "ms": 211,
+          "det": false,
+          "raw": "gc"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": "hc",
+          "ok": true,
+          "ms": 222,
+          "det": true,
+          "raw": "hc"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "phantom",
+          "ok": true,
+          "ms": 260,
+          "det": true,
+          "raw": "phantom"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc at gc",
+          "ok": true,
+          "ms": 213,
+          "det": true,
+          "raw": "gc at gc"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc at gc",
+          "ok": true,
+          "ms": 244,
+          "det": true,
+          "raw": "gc at gc"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": null,
+          "ok": false,
+          "ms": 301,
+          "det": true,
+          "raw": "mf"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 239,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 235,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 226,
+          "det": false,
+          "raw": "westwater"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 340,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 233,
+          "det": false,
+          "raw": "NONE"
+        }
+      ],
+      "pass": 16,
+      "total": 20
+    },
+    "@cf/meta/llama-3.2-1b-instruct": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": null,
+          "ok": false,
+          "ms": 494,
+          "det": false,
+          "raw": "stikeen"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": "deschutes",
+          "ok": true,
+          "ms": 440,
+          "det": false,
+          "raw": "deschutes"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": "mf salmon",
+          "ok": true,
+          "ms": 711,
+          "det": false,
+          "raw": "mf salmon"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": "yampa",
+          "ok": true,
+          "ms": 546,
+          "det": true,
+          "raw": "yampa — Yampa R"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 384,
+          "det": false,
+          "raw": "mf green"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 454,
+          "det": false,
+          "raw": "salmon"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "stikine",
+          "ok": true,
+          "ms": 762,
+          "det": false,
+          "raw": "stikine — Stikine R"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "stikine",
+          "ok": true,
+          "ms": 402,
+          "det": false,
+          "raw": "stikine"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "zymoetz",
+          "ok": true,
+          "ms": 824,
+          "det": false,
+          "raw": "zymoetz — Grand Canyon"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc",
+          "ok": false,
+          "ms": 555,
+          "det": false,
+          "raw": "gc"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 636,
+          "det": true,
+          "raw": "mf r — Middle Fork Salmon, At MF Lodge, ID"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 500,
+          "det": true,
+          "raw": "phantom at 3 pm — Phantom at 3 pm"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc",
+          "ok": true,
+          "ms": 408,
+          "det": true,
+          "raw": "gc — Grand Canyon"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc at gc",
+          "ok": true,
+          "ms": 471,
+          "det": true,
+          "raw": "gc at gc"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": null,
+          "ok": false,
+          "ms": 477,
+          "det": true,
+          "raw": "mf"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 891,
+          "det": false,
+          "raw": "lochsa — Lochsa (Middle Fork), At Lochsa, MT"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 458,
+          "det": false,
+          "raw": "kern"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 467,
+          "det": false,
+          "raw": "westwater — Westwater"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 717,
+          "det": false,
+          "raw": "mf — Middle Fork Salmon, At MF Lodge, ID"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 652,
+          "det": false,
+          "raw": "mf — Middle Fork Salmon, At MF Lodge, ID"
+        }
+      ],
+      "pass": 13,
+      "total": 20
+    },
+    "@cf/meta/llama-3.1-8b-instruct-fp8": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": "stikine",
+          "ok": true,
+          "ms": 982,
+          "det": false,
+          "raw": "stikine"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": "deschutes",
+          "ok": true,
+          "ms": 939,
+          "det": false,
+          "raw": "deschutes"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 1052,
+          "det": false,
+          "raw": "mfs"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": "yampa",
+          "ok": true,
+          "ms": 886,
+          "det": true,
+          "raw": "yampa"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "lodore",
+          "ok": true,
+          "ms": 814,
+          "det": false,
+          "raw": "lodore"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "sf salmon",
+          "ok": true,
+          "ms": 794,
+          "det": false,
+          "raw": "sf salmon"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 1087,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 1023,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc clore",
+          "ok": true,
+          "ms": 1038,
+          "det": false,
+          "raw": "gc clore"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "clore",
+          "ok": true,
+          "ms": 971,
+          "det": false,
+          "raw": "clore"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": "hc",
+          "ok": true,
+          "ms": 918,
+          "det": true,
+          "raw": "hc"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc at gc",
+          "ok": true,
+          "ms": 1592,
+          "det": true,
+          "raw": "gc at gc"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "colorado river near grand canyon",
+          "ok": true,
+          "ms": 1875,
+          "det": true,
+          "raw": "colorado river near grand canyon"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc at gc",
+          "ok": true,
+          "ms": 936,
+          "det": true,
+          "raw": "gc at gc"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 1040,
+          "det": true,
+          "raw": "mfs"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 867,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 805,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 1058,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 817,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 1324,
+          "det": false,
+          "raw": "NONE"
+        }
+      ],
+      "pass": 20,
+      "total": 20
+    },
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 2225,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": "deschutes",
+          "ok": true,
+          "ms": 950,
+          "det": false,
+          "raw": "deschutes"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": "mf salmon",
+          "ok": true,
+          "ms": 1222,
+          "det": false,
+          "raw": "mf salmon"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": "yampa",
+          "ok": true,
+          "ms": 1050,
+          "det": true,
+          "raw": "yampa"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 1487,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "main salmon",
+          "ok": true,
+          "ms": 500,
+          "det": false,
+          "raw": "main salmon"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 1732,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 913,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc clore",
+          "ok": true,
+          "ms": 1614,
+          "det": false,
+          "raw": "gc clore"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc clore",
+          "ok": true,
+          "ms": 10771,
+          "det": false,
+          "raw": "gc clore"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": "snake",
+          "ok": true,
+          "ms": 1071,
+          "det": true,
+          "raw": "snake"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "phantom",
+          "ok": true,
+          "ms": 1320,
+          "det": true,
+          "raw": "phantom"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "phantom",
+          "ok": true,
+          "ms": 805,
+          "det": true,
+          "raw": "phantom"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "phantom",
+          "ok": true,
+          "ms": 1110,
+          "det": true,
+          "raw": "phantom"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 967,
+          "det": true,
+          "raw": "mfs"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 1013,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 481,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 965,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 1962,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 1390,
+          "det": false,
+          "raw": "NONE"
+        }
+      ],
+      "pass": 19,
+      "total": 20
+    },
+    "@cf/meta/llama-4-scout-17b-16e-instruct": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": "stikine",
+          "ok": true,
+          "ms": 603,
+          "det": false,
+          "raw": "stikine"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": "deschutes",
+          "ok": true,
+          "ms": 518,
+          "det": false,
+          "raw": "deschutes"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 348,
+          "det": false,
+          "raw": "mfs"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": "yampa",
+          "ok": true,
+          "ms": 386,
+          "det": true,
+          "raw": "yampa"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 369,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 358,
+          "det": false,
+          "raw": "mfs"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 427,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "stikine",
+          "ok": true,
+          "ms": 430,
+          "det": false,
+          "raw": "stikine"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc clore",
+          "ok": true,
+          "ms": 530,
+          "det": false,
+          "raw": "gc clore"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "copper",
+          "ok": true,
+          "ms": 372,
+          "det": false,
+          "raw": "copper"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": "hells",
+          "ok": true,
+          "ms": 355,
+          "det": true,
+          "raw": "hells"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "grand canyon phantom",
+          "ok": true,
+          "ms": 384,
+          "det": true,
+          "raw": "grand canyon phantom"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "grand canyon phantom",
+          "ok": true,
+          "ms": 422,
+          "det": true,
+          "raw": "grand canyon phantom"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "grand canyon phantom",
+          "ok": true,
+          "ms": 387,
+          "det": true,
+          "raw": "grand canyon phantom"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 399,
+          "det": true,
+          "raw": "mfs"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 348,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 353,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 466,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 339,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 360,
+          "det": false,
+          "raw": "NONE"
+        }
+      ],
+      "pass": 19,
+      "total": 20
+    },
+    "@cf/google/gemma-4-26b-a4b-it": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": null,
+          "ok": false,
+          "ms": 543,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": null,
+          "ok": false,
+          "ms": 1181,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": null,
+          "ok": false,
+          "ms": 5658,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": null,
+          "ok": false,
+          "ms": 1050,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 2009,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 629,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 3302,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 884,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 902,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 924,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 1517,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 776,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 1075,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 1848,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": null,
+          "ok": false,
+          "ms": 1153,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 1539,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 1380,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 903,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 1325,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 1388,
+          "det": false,
+          "raw": "[]"
+        }
+      ],
+      "pass": 5,
+      "total": 20
+    },
+    "@cf/mistralai/mistral-small-3.1-24b-instruct": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": "stikine",
+          "ok": true,
+          "ms": 1797,
+          "det": false,
+          "raw": "stikine"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": "deschutes",
+          "ok": true,
+          "ms": 759,
+          "det": false,
+          "raw": "deschutes"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": "mf salmon",
+          "ok": true,
+          "ms": 619,
+          "det": false,
+          "raw": "mf salmon"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": "yampa",
+          "ok": true,
+          "ms": 224,
+          "det": true,
+          "raw": "yampa"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "deso",
+          "ok": true,
+          "ms": 550,
+          "det": false,
+          "raw": "deso"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "main salmon",
+          "ok": true,
+          "ms": 636,
+          "det": false,
+          "raw": "main salmon"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 760,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 424,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "zymoetz",
+          "ok": true,
+          "ms": 651,
+          "det": false,
+          "raw": "zymoetz"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "zymoetz",
+          "ok": true,
+          "ms": 869,
+          "det": false,
+          "raw": "zymoetz"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": "snake",
+          "ok": true,
+          "ms": 389,
+          "det": true,
+          "raw": "snake"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "phantom ranch",
+          "ok": true,
+          "ms": 363,
+          "det": true,
+          "raw": "phantom ranch"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "grand canyon phantom",
+          "ok": true,
+          "ms": 533,
+          "det": true,
+          "raw": "grand canyon phantom"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "grand canyon phantom",
+          "ok": true,
+          "ms": 558,
+          "det": true,
+          "raw": "grand canyon phantom"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 384,
+          "det": true,
+          "raw": "mfs"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 489,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 661,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 278,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 986,
+          "det": false,
+          "raw": "NONE\n\nMessage: \"I'm going to run the moke this weekend\"\nRun key:\nnf mokelum"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 656,
+          "det": false,
+          "raw": "NONE\n\nMessage: \"I'm going to run the middle kings this weekend\"\nRun key:\nmiddle kings\n\nMessage"
+        }
+      ],
+      "pass": 20,
+      "total": 20
+    },
+    "@cf/openai/gpt-oss-20b": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": null,
+          "ok": false,
+          "ms": 465,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": null,
+          "ok": false,
+          "ms": 578,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": null,
+          "ok": false,
+          "ms": 348,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": null,
+          "ok": false,
+          "ms": 613,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 705,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 498,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 484,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 488,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 586,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 470,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 525,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 455,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 441,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 480,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": null,
+          "ok": false,
+          "ms": 340,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 472,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 385,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 536,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 504,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 475,
+          "det": false,
+          "raw": "[]"
+        }
+      ],
+      "pass": 5,
+      "total": 20
+    },
+    "@cf/zai-org/glm-4.7-flash": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": null,
+          "ok": false,
+          "ms": 993,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": null,
+          "ok": false,
+          "ms": 841,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": null,
+          "ok": false,
+          "ms": 896,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": null,
+          "ok": false,
+          "ms": 999,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 4517,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": null,
+          "ok": false,
+          "ms": 704,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 945,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 804,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 602,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": null,
+          "ok": false,
+          "ms": 662,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 822,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 755,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 970,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": null,
+          "ok": false,
+          "ms": 770,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": null,
+          "ok": false,
+          "ms": 1132,
+          "det": true,
+          "raw": "[]"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 794,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 5494,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 703,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 682,
+          "det": false,
+          "raw": "[]"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 29451,
+          "det": false,
+          "raw": "[]"
+        }
+      ],
+      "pass": 5,
+      "total": 20
+    },
+    "@cf/ibm-granite/granite-4.0-h-micro": {
+      "rows": [
+        {
+          "q": "stikeen",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "audit/typo",
+          "pred": "iskut",
+          "ok": false,
+          "ms": 1683,
+          "det": false,
+          "raw": "iskut"
+        },
+        {
+          "q": "deschuttes",
+          "expect": [
+            "Deschutes R"
+          ],
+          "src": "audit/typo",
+          "pred": "deschutes",
+          "ok": true,
+          "ms": 598,
+          "det": false,
+          "raw": "deschutes"
+        },
+        {
+          "q": "midle fork salmon",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "typo",
+          "pred": "mf salmon",
+          "ok": true,
+          "ms": 690,
+          "det": false,
+          "raw": "mf salmon"
+        },
+        {
+          "q": "yampa colo",
+          "expect": [
+            "Yampa R"
+          ],
+          "src": "audit/extra-word",
+          "pred": "yampa",
+          "ok": true,
+          "ms": 826,
+          "det": true,
+          "raw": "yampa"
+        },
+        {
+          "q": "green river",
+          "expect": [
+            "Desolation (Green R)",
+            "Gates of Lodore (Green R)"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "deso",
+          "ok": true,
+          "ms": 1400,
+          "det": false,
+          "raw": "deso"
+        },
+        {
+          "q": "salmon",
+          "expect": [
+            "Middle Fork Salmon",
+            "Main Salmon",
+            "Lower Salmon",
+            "South Fork Salmon"
+          ],
+          "src": "audit/ambiguous",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 933,
+          "det": false,
+          "raw": "mfs"
+        },
+        {
+          "q": "stikine grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 630,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "stikine rivr grand canyon",
+          "expect": [
+            "Stikine (Grand Canyon)"
+          ],
+          "src": "incident",
+          "pred": "gc stikine",
+          "ok": true,
+          "ms": 611,
+          "det": false,
+          "raw": "gc stikine"
+        },
+        {
+          "q": "zymoetz grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "clore",
+          "ok": true,
+          "ms": 579,
+          "det": false,
+          "raw": "clore"
+        },
+        {
+          "q": "copper river grand canyon",
+          "expect": [
+            "Clore (Zymoetz R)"
+          ],
+          "src": "incident",
+          "pred": "gc",
+          "ok": false,
+          "ms": 673,
+          "det": false,
+          "raw": "gc"
+        },
+        {
+          "q": "snake river",
+          "expect": [
+            "Hells Canyon (Snake R)"
+          ],
+          "src": "query_log",
+          "pred": "snake",
+          "ok": true,
+          "ms": 880,
+          "det": true,
+          "raw": "snake"
+        },
+        {
+          "q": "phantom at 3 pm",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "phantom ranch",
+          "ok": true,
+          "ms": 1594,
+          "det": true,
+          "raw": "phantom ranch"
+        },
+        {
+          "q": "grand canyon near grand canyon",
+          "expect": [
+            "Grand Canyon (Colorado R)",
+            "Grand Canyon — Phantom (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc",
+          "ok": true,
+          "ms": 658,
+          "det": true,
+          "raw": "gc"
+        },
+        {
+          "q": "i want the flow of the grand canyon near phantom ranch please",
+          "expect": [
+            "Grand Canyon — Phantom (Colorado R)",
+            "Grand Canyon (Colorado R)"
+          ],
+          "src": "query_log",
+          "pred": "gc",
+          "ok": true,
+          "ms": 554,
+          "det": true,
+          "raw": "gc"
+        },
+        {
+          "q": "flows for the mfs?",
+          "expect": [
+            "Middle Fork Salmon"
+          ],
+          "src": "slang",
+          "pred": "mfs",
+          "ok": true,
+          "ms": 696,
+          "det": true,
+          "raw": "mfs"
+        },
+        {
+          "q": "lochsa",
+          "expect": "NONE",
+          "src": "off-roster",
+          "pred": null,
+          "ok": true,
+          "ms": 598,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "kern river",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": null,
+          "ok": true,
+          "ms": 607,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "westwater",
+          "expect": "NONE",
+          "src": "off-roster (pulled)",
+          "pred": "west cherry creek",
+          "ok": false,
+          "ms": 731,
+          "det": false,
+          "raw": "west cherry creek"
+        },
+        {
+          "q": "pizza delivery to my house",
+          "expect": "NONE",
+          "src": "unrelated",
+          "pred": null,
+          "ok": true,
+          "ms": 604,
+          "det": false,
+          "raw": "NONE"
+        },
+        {
+          "q": "we are a professional web design company based in india",
+          "expect": "NONE",
+          "src": "spam (real)",
+          "pred": null,
+          "ok": true,
+          "ms": 661,
+          "det": false,
+          "raw": "NONE"
+        }
+      ],
+      "pass": 17,
+      "total": 20
+    }
+  }
+}

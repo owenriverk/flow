@@ -10,13 +10,19 @@
  * that isn't ours. The call also never throws; on any error it returns null and the
  * caller falls through to "not found".
  *
- * Model: cheapest one capable of the river-knowledge bridging this needs. ~2 neurons
- * per call, so the 10k-neuron/day free tier covers thousands of calls.
+ * Model: picked by measurement, not vibes — scripts/benchmark-jev.mjs races
+ * candidates on fuzzy-audit cases, real query_log misses, the 2026-06-30
+ * incident class, and off-roster traps that must refuse. 2026-09-22 run
+ * (scripts/data/benchmark-jev-2026-09-22T07-41-36.json): mistral-small-3.1-24b
+ * went 28/28 where the previous llama-3.2-3b scored 22/28 — the 3b's misses
+ * were the dangerous kind (gore canyon → the Grand Canyon gauge, futaleufu →
+ * MF Feather, stikeen → Tatshenshini). Still free-tier Workers AI at our
+ * volume; the fallback tier fires a handful of times a month.
  */
 
 import type { GaugeAlias } from './lookupGauge.js';
 
-const MODEL = '@cf/meta/llama-3.2-3b-instruct';
+const MODEL = '@cf/mistralai/mistral-small-3.1-24b-instruct';
 
 export interface AiBinding {
   run(

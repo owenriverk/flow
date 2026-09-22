@@ -100,6 +100,15 @@ const CASES = [
   { q: 'westwater', expect: 'NONE', src: 'off-roster (pulled)' },
   { q: 'pizza delivery to my house', expect: 'NONE', src: 'unrelated' },
   { q: 'we are a professional web design company based in india', expect: 'NONE', src: 'spam (real)' },
+  // tiebreak round — harder slang, typos, and off-roster traps
+  { q: 'tuolomne', expect: ['Tuolumne (Main)', 'Grand Canyon of the Tuolumne'], src: 'typo' },
+  { q: 'cherry bomb gorge', expect: ['Upper Cherry Creek'], src: 'slang (rapid name)' },
+  { q: 'the box montana', expect: ['Clarks Fork (the Box)'], src: 'slang+state' },
+  { q: 'is the ditch running yet?', expect: ['Grand Canyon (Colorado R)'], src: 'slang in sentence' },
+  { q: 'nf payete', expect: ['North Fork Payette'], src: 'typo' },
+  { q: 'gore canyon', expect: 'NONE', src: 'off-roster (CO classic)' },
+  { q: 'illinois river oregon', expect: 'NONE', src: 'off-roster (OR classic)' },
+  { q: 'futaleufu', expect: 'NONE', src: 'off-roster (Chile)' },
 ];
 
 // ── arms ─────────────────────────────────────────────────────────────────────
@@ -114,8 +123,12 @@ async function cf(path, body) {
   return { json, ms: Math.round(performance.now() - t0) };
 }
 
-// Verbatim replica of src/aiResolve.ts — prompt, params, and validation.
-async function llamaArm(text) {
+// Verbatim replica of src/aiResolve.ts — prompt, params, and validation —
+// parameterized over the model so any @cf chat model can audition for the
+// fallback slot. The only liberty taken: reasoning models wrap output in
+// <think> tags, which aiResolve would strip too if we adopted one.
+const chatArm = (model) => (text) => llamaArm(text, model);
+async function llamaArm(text, model = LLAMA) {
   const keys = Object.keys(aliases);
   const menu = keys.map((k) => `${k} — ${aliases[k].name}, ${aliases[k].location}`).join('\n');
   const system =
@@ -126,7 +139,7 @@ async function llamaArm(text) {
     'Reply NONE only if the message is completely unrelated to any listed river. ' +
     'Reply with ONLY the exact run key (text before the dash), or NONE. No explanation.';
   const user = `Runs:\n${menu}\n\nMessage: "${text}"\nRun key:`;
-  const { json, ms } = await cf(`/ai/run/${LLAMA}`, {
+  const { json, ms } = await cf(`/ai/run/${model}`, {
     messages: [
       { role: 'system', content: system },
       { role: 'user', content: user },
@@ -134,8 +147,11 @@ async function llamaArm(text) {
     max_tokens: 24,
     temperature: 0,
   });
-  const raw = json?.result?.response ?? json?.result?.choices?.[0]?.message?.content;
-  if (!raw) return { pred: null, ms, raw: JSON.stringify(json?.errors ?? json).slice(0, 120) };
+  let raw = json?.result?.response ?? json?.result?.choices?.[0]?.message?.content;
+  if (typeof raw !== 'string' || !raw.trim()) {
+    return { pred: null, ms, raw: JSON.stringify(json?.errors ?? json?.result ?? json).slice(0, 120), err: !json?.success };
+  }
+  raw = raw.replace(/<think>[\s\S]*?(<\/think>|$)/, '');
   const norm = raw.replace(/["'`]/g, '').trim().toLowerCase().replace(/\s+/g, ' ');
   if (keys.includes(norm)) return { pred: norm, ms, raw };
   const beforeDash = norm.split(/\s[—-]\s/)[0].trim();
@@ -170,9 +186,18 @@ async function jevArm(text) {
 const armFlag = process.argv.includes('--arm')
   ? process.argv[process.argv.indexOf('--arm') + 1]
   : 'both';
+const modelsFlag = process.argv.includes('--models')
+  ? process.argv[process.argv.indexOf('--models') + 1].split(',')
+  : null;
 const verbose = process.argv.includes('--verbose');
-const arms = { llama: llamaArm, jev: jevArm };
-const chosen = armFlag === 'both' ? ['llama', 'jev'] : [armFlag];
+const arms = { llama: (t) => llamaArm(t), jev: jevArm };
+let chosen;
+if (modelsFlag) {
+  chosen = modelsFlag.map((m) => m.trim());
+  for (const m of chosen) arms[m] = chatArm(m);
+} else {
+  chosen = armFlag === 'both' ? ['llama', 'jev'] : [armFlag];
+}
 
 const results = {};
 for (const armName of chosen) {
@@ -189,6 +214,7 @@ for (const armName of chosen) {
     rows.push({ ...c, pred: out.pred, ok, ms: out.ms, det, confidence: out.confidence, raw: out.raw });
     const mark = ok ? '✓' : '✗';
     const conf = out.confidence != null ? ` conf=${out.confidence.toFixed(2)}` : '';
+    if (chosen.length > 2 && ok && !verbose) continue; // races: failures only
     console.log(
       `${armName.padEnd(5)} ${mark} ${String(out.ms).padStart(5)}ms  "${c.q}" → ${out.pred ?? 'NONE'}${conf}` +
         (ok ? '' : `   [wanted: ${c.expect === 'NONE' ? 'NONE' : c.expect.join(' | ')}]`) +
@@ -205,6 +231,20 @@ for (const armName of chosen) {
       (aiOnly.length ? ` | ${aiPass}/${aiOnly.length} on true AI-tier cases (det misses)` : '') +
       ` | latency p50 ${lat[Math.floor(lat.length / 2)]}ms max ${lat[lat.length - 1]}ms\n`,
   );
+}
+
+if (chosen.length > 1) {
+  console.log('RANKING (overall | AI-tier | negatives kept | p50):');
+  const ranked = Object.entries(results).sort((a, b) => b[1].pass - a[1].pass);
+  for (const [name, r] of ranked) {
+    const ai = r.rows.filter((x) => x.det === false);
+    const neg = r.rows.filter((x) => x.expect === 'NONE');
+    const lat = r.rows.map((x) => x.ms).sort((x, y) => x - y);
+    console.log(
+      `  ${String(r.pass).padStart(2)}/${r.total} | ${ai.filter((x) => x.ok).length}/${ai.length} | ` +
+        `${neg.filter((x) => x.ok).length}/${neg.length} | ${String(lat[Math.floor(lat.length / 2)]).padStart(5)}ms | ${name}`,
+    );
+  }
 }
 
 const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
