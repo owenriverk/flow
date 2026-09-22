@@ -24,7 +24,8 @@ answer on a satellite link is worse than none.
 | Text this | Run / AKA | Gauge | Source | Location |
 |---|---|---|---|---|
 | `middle fork salmon` / `mf salmon` | Middle Fork Salmon — "the Middle Fork" (AKA: `mfs`, `the middle fork`) | 13309220 | USGS | At MF Lodge, ID |
-| `main salmon` / `lower salmon` | Main Salmon — "River of No Return" (AKA: `river of no return`, `rnr`, `lower salmon`) | 13317000 | USGS | At White Bird, ID |
+| `main salmon` | Main Salmon — "River of No Return" (AKA: `river of no return`, `rnr`, `salmon at white bird`) | 13317000 | USGS | At White Bird, ID |
+| `lower salmon` | Lower Salmon — the Gorge run, own roster row since 2026-09-19 so the reply names the right trip (AKA: `lower salmon river`, `salmon lower`; shares the White Bird gauge with the Main) | 13317000 | USGS | At White Bird, ID |
 | `selway` | Selway | 13336500 | USGS | Near Lowell, ID |
 | `hells canyon` | Hells Canyon (Snake R) (AKA: `snake`, `hells`, `hc`) | 13290450 | USGS | At Hells Canyon Dam, OR-ID |
 | `grande ronde` | Grande Ronde (AKA: `ronde`, `the ronde`) | 13333000 | USGS | At Troy, OR |
