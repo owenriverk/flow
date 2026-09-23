@@ -6,7 +6,7 @@
   <title>LateBoof — Status</title>
   <meta name="robots" content="noindex">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=2026092201">
+  <link rel="stylesheet" href="style.css?v=2026092202">
   <style>
     .status-page { margin: 0 auto; max-width: 44rem; padding: 1.5rem 1rem; }
     .status-page h2 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
@@ -21,8 +21,13 @@
     <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
     <span class="header-sub">Text a run name to <strong>866-284-5181</strong> from an InReach or phone</span>
     <span class="header-actions">
-      <a class="help-btn" href="/forecast">Oracle</a>
-      <a class="help-btn" href="/rivers">Guide</a>
+      <details class="nav-menu">
+        <summary class="help-btn">Resources <span aria-hidden="true">&#9662;</span></summary>
+        <div class="nav-menu__list">
+          <a href="/forecast">Oracle <small>come-in forecasts</small></a>
+          <a href="/rivers">Guide <small>river guide pages</small></a>
+        </div>
+      </details>
       <a class="help-btn" href="/help">HowTo</a>
       <a class="help-btn" href="/support">Support</a>
       <a class="contact-btn" href="/#contact">+ Contact</a>

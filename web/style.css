@@ -79,6 +79,46 @@ a:hover { text-decoration-color: currentColor; }
 .contact-btn:hover,
 .help-btn:hover { background: #333; }
 
+/* ── Header menu ──
+   "Resources" holds the Oracle and the river guides. A native <details> so it
+   needs no script, opens on tap, and closes on Escape/re-tap; the summary is
+   styled as one more header button. */
+.nav-menu { position: relative; }
+.nav-menu > summary { list-style: none; cursor: pointer; user-select: none; }
+.nav-menu > summary::-webkit-details-marker { display: none; }
+.nav-menu[open] > summary { background: #333; }
+.nav-menu__list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  min-width: 13rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  box-shadow: 3px 3px 0 var(--border);
+}
+.nav-menu__list a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-light);
+}
+.nav-menu__list a:last-child { border-bottom: 0; }
+.nav-menu__list a:hover { background: #f2f2f2; }
+.nav-menu__list small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 400;
+  margin-top: 0.1rem;
+}
+@media (max-width: 640px) {
+  .nav-menu__list { right: auto; left: 0; }
+}
+
 /* ── Contact dialog ── */
 .contact-dialog {
   border: 2px solid var(--border);

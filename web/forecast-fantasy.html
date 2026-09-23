@@ -93,8 +93,13 @@ table.rc th { position: static; background: none; z-index: auto; }
   <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
   <span class="header-sub"><strong>The Oracle</strong> — know when it comes in, before you book the flights</span>
   <span class="header-actions">
-    <a class="help-btn" href="/forecast">Oracle</a>
-    <a class="help-btn" href="/rivers">Guide</a>
+    <details class="nav-menu">
+        <summary class="help-btn">Resources <span aria-hidden="true">&#9662;</span></summary>
+        <div class="nav-menu__list">
+          <a href="/forecast">Oracle <small>come-in forecasts</small></a>
+          <a href="/rivers">Guide <small>river guide pages</small></a>
+        </div>
+      </details>
     <a class="help-btn" href="/help">HowTo</a>
     <a class="contact-btn" href="/#contact">+ Contact</a>
   </span>
