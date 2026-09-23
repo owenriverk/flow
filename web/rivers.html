@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>River Guides — Live Flow, Shuttle, Permits &amp; Camps | LateBoof</title>
+  <meta name="description" content="Guidebook pages for the Middle Fork Salmon, Main Salmon, Lower Salmon, and the Grand Canyon: live flow, what the number means, shuttle drivers, permits, camps, and the number to text from an inReach when there is no signal.">
+  <link rel="canonical" href="https://lateboof.com/rivers">
+  <meta property="og:title" content="River Guides — LateBoof">
+  <meta property="og:description" content="Live flow, logistics, permits, and camps for the Salmon runs and the Grand Canyon, plus the number to text from the river.">
+  <meta property="og:url" content="https://lateboof.com/rivers">
+  <meta property="og:site_name" content="LateBoof">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://lateboof.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=2026092201">
+  <link rel="stylesheet" href="river.css?v=2026092202">
+  <style>
+    /* The guide index: one card per run, its live number on the card, so the
+       page is a glanceable "which one is in" before it is a table of contents. */
+    .guides { margin: 0 auto; max-width: 44rem; padding: 1.5rem 1rem 2.5rem; }
+    .guides-head h1 { font-size: 1.35rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.3rem; }
+    .guides-head p { color: var(--muted); font-size: 0.82rem; line-height: 1.7; margin-bottom: 1.2rem; }
+    .guide-list { display: grid; gap: 0.8rem; }
+    .guide {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 132px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      min-height: 132px;
+    }
+    .guide:hover { background: #fafafa; }
+    .guide-text { padding: 0.8rem 0.9rem; min-width: 0; }
+    .guide-kicker { color: var(--faint); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .guide-text h2 { font-size: 0.95rem; font-weight: 700; margin: 0.15rem 0 0.25rem; }
+    .guide-text p { color: var(--muted); font-size: 0.76rem; line-height: 1.55; margin: 0; }
+    .guide-now { border-top: 1px dashed var(--border-light); margin-top: 0.55rem; padding-top: 0.45rem; }
+    .guide-flow { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.3px; }
+    .guide-flow .trend { font-size: 0.8rem; vertical-align: 0.2em; margin-left: 0.1rem; }
+    .guide[data-status="low"]  .guide-flow { color: #b4231f; }
+    .guide[data-status="good"] .guide-flow { color: #1b7f3b; }
+    .guide[data-status="high"] .guide-flow { color: #1f4fb4; }
+    .guide-meta { color: var(--faint); font-size: 0.66rem; margin-top: 0.1rem; }
+    .guide-meta .age-stale { color: #a8620a; }
+    .guide-meta .age-offline { color: #b4231f; font-weight: 700; }
+    .guide img { display: block; width: 100%; height: 100%; object-fit: cover; border-left: 1px solid var(--border); background: #eee; }
+    .guides-foot { color: var(--muted); font-size: 0.78rem; line-height: 1.7; margin-top: 1.4rem; }
+    .guides-foot a { color: inherit; }
+    @media (max-width: 480px) {
+      .guide { grid-template-columns: minmax(0, 1fr) 96px; min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="text-decoration:none">LateBoof</a>
+    <span class="header-sub">Text a run name to <strong>866-284-5181</strong> from an InReach or phone</span>
+    <span class="header-actions">
+      <a class="help-btn" href="/forecast">Oracle</a>
+      <a class="help-btn" href="/rivers">Rivers</a>
+      <a class="help-btn" href="/">GaugeDirectory</a>
+      <a class="help-btn" href="/help">HowTo</a>
+      <a class="contact-btn" href="/#contact">+ Contact</a>
+    </span>
+  </header>
+
+  <main class="guides">
+    <div class="guides-head">
+      <h1>River guides</h1>
+      <p>
+        One page per run: the live number and what it means for that river,
+        how to get there, who drives the shuttle, how the permit and the camps
+        work, and the number to text from your inReach once the signal is
+        gone. The reading on each card is live.
+      </p>
+    </div>
+
+    <div class="guide-list">
+      <a class="guide" href="/mf-salmon" data-river="middle fork salmon">
+        <div class="guide-text">
+          <span class="guide-kicker">Idaho · Four Rivers lottery · 5–7 days</span>
+          <h2>Middle Fork of the Salmon</h2>
+          <p>Boundary Creek to Cache Bar. Class III–IV snowmelt through the Frank Church, hot springs every day or two.</p>
+          <div class="guide-now">
+            <div class="guide-flow"><span data-flow>…</span><span class="trend" data-trend></span></div>
+            <div class="guide-meta">at Middle Fork Lodge · <span data-age></span></div>
+          </div>
+        </div>
+        <img src="img/rivers/mf-hero-720.webp" width="720" height="480" alt="" loading="lazy" decoding="async">
+      </a>
+
+      <a class="guide" href="/main-salmon" data-river="main salmon">
+        <div class="guide-text">
+          <span class="guide-kicker">Idaho · Four Rivers lottery · 5–7 days</span>
+          <h2>Main Salmon — River of No Return</h2>
+          <p>Corn Creek to Carey Creek. Big warm water, white sand beaches, the 400-mile shuttle, camps assigned at the 9 AM meeting.</p>
+          <div class="guide-now">
+            <div class="guide-flow"><span data-flow>…</span><span class="trend" data-trend></span></div>
+            <div class="guide-meta">at White Bird · <span data-age></span></div>
+          </div>
+        </div>
+        <img src="img/rivers/main-hero-720.webp" width="720" height="540" alt="" loading="lazy" decoding="async">
+      </a>
+
+      <a class="guide" href="/lower-salmon" data-river="lower salmon">
+        <div class="guide-text">
+          <span class="guide-kicker">Idaho · self-issue permit · 4–5 days</span>
+          <h2>Lower Salmon Gorge</h2>
+          <p>Hammer Creek to Heller Bar. No lottery, four canyons, the biggest sand camps in the West, and Slide Rapid above 20,000 cfs.</p>
+          <div class="guide-now">
+            <div class="guide-flow"><span data-flow>…</span><span class="trend" data-trend></span></div>
+            <div class="guide-meta">at White Bird, the put-in · <span data-age></span></div>
+          </div>
+        </div>
+        <img src="img/rivers/lower-hero-720.webp" width="720" height="540" alt="" loading="lazy" decoding="async">
+      </a>
+
+      <a class="guide" href="/grand-canyon" data-river="grand canyon">
+        <div class="guide-text">
+          <span class="guide-kicker">Arizona · NPS weighted lottery · 12–25 days</span>
+          <h2>Grand Canyon of the Colorado</h2>
+          <p>Lees Ferry to Diamond Creek. Dam releases that cycle daily, Lava Falls at mile 179, the Hualapai take-out.</p>
+          <div class="guide-now">
+            <div class="guide-flow"><span data-flow>…</span><span class="trend" data-trend></span></div>
+            <div class="guide-meta">Lees Ferry release · <span data-age></span></div>
+          </div>
+        </div>
+        <img src="img/rivers/gc-hero-720.webp" width="720" height="480" alt="" loading="lazy" decoding="async">
+      </a>
+    </div>
+
+    <p class="guides-foot">
+      Every other run LateBoof answers for is in the
+      <a href="/">gauge directory</a>. Come-in forecasts for the Stikine and
+      the Sierra runs live on <a href="/forecast">the Oracle</a>. Save
+      <strong>866-284-5181</strong> before you drive in; see
+      <a href="/help">how it works</a>.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <span><a href="/">← Back to gauge directory</a></span>
+    <span class="footer-links">
+      <a class="footer-status" href="/forecast">The Oracle</a>
+      <a class="footer-status" href="/help">Help</a>
+      <a class="footer-status" href="/support">☕ Keep the line open</a>
+    </span>
+  </footer>
+
+  <script type="module" src="rivers.js"></script>
+</body>
+</html>
