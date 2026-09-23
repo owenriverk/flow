@@ -1,0 +1,10 @@
+# Guessable paths for the river guides. The guides are top-level pages
+# (/grand-canyon); /forecast/<run> and /river/<run> are what people type.
+/forecast/grand-canyon   /grand-canyon   301
+/forecast/mf-salmon      /mf-salmon      301
+/forecast/main-salmon    /main-salmon    301
+/forecast/lower-salmon   /lower-salmon   301
+/river/grand-canyon      /grand-canyon   301
+/river/mf-salmon         /mf-salmon      301
+/river/main-salmon       /main-salmon    301
+/river/lower-salmon      /lower-salmon   301
