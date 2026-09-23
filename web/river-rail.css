@@ -1,0 +1,50 @@
+/* The run's real map beside the guide: a sticky rail on wide screens, the blue
+   line drawing itself as you read and an orange boat riding its tip. Lifted
+   from the Stikine forecast page's inline styles (2026-09-22) so every river
+   page — and, later, the Sierra forecast pages — shares one sheet. Engine:
+   /river-side.js; data per run: /<slug>-data.js + /<slug>-topo.svg from
+   scripts/build-river-sides.mjs. Hidden below 1180px: on a phone the number
+   and the text box are the page, and the rail would only push them down. */
+
+.river-wrap { display: block; }
+@media (min-width: 1180px) {
+  .river-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 44rem) 250px;
+    gap: 1.6rem;
+    align-items: start;
+    justify-content: center;
+    max-width: calc(44rem + 250px + 1.6rem + 2rem);
+    margin: 0 auto;
+  }
+}
+
+.river-side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 1.5rem 0 0.8rem; }
+.river-side__head { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--border); padding-bottom: 0.3rem; }
+.river-side__head span { display: block; text-transform: none; letter-spacing: 0; color: var(--muted); }
+.river-map { position: relative; flex: 1; min-height: 0; margin: 0.55rem 0; }
+.river-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.river-map__topo {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.river-map__topo path { fill: none; stroke: #cbbfa6; stroke-width: 0.75; stroke-linejoin: round; stroke-linecap: round; }
+.river-map__topo .i path { stroke: #ab9b7a; stroke-width: 1.1; }
+.river-map__river { overflow: visible; }
+.river-map__trib { fill: none; stroke: var(--high); stroke-width: 1.3; opacity: 0.45; stroke-linecap: round; stroke-linejoin: round; }
+.river-map__bed { fill: none; stroke: #d9e0f3; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.river-map__flow { fill: none; stroke: var(--high); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.river-map__marks text { font-size: 9.5px; fill: #444; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; }
+.river-map__marks circle { fill: #fff; stroke: #111; stroke-width: 1.1; }
+.river-map__marks .camp { fill: #ff5a00; stroke: #111; stroke-width: 1.1; stroke-linejoin: round; }
+.river-map__north path { fill: none; stroke: #555; stroke-width: 1.1; stroke-linecap: round; }
+.river-map__north text { font-size: 9px; fill: #555; }
+.river-map__boat path { fill: #ff5a00; stroke: #111; stroke-width: 1.4; }
+.river-map__boat { transition: opacity 0.3s ease; }
+.river-side__foot { color: var(--faint); font-size: 0.7rem; }
+
+/* Last so it wins the cascade over the base rule above. */
+@media (max-width: 1179.98px) {
+  .river-side { display: none; }
+}

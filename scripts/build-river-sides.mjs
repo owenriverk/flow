@@ -16,7 +16,14 @@
  *    marks tagged `km:` are paddler-beta estimates measured from the put-in —
  *    correct those as better numbers turn up.
  *
- * Run: node scripts/build-river-sides.mjs   (HGT tiles cached in node_modules/.cache)
+ * Run: node scripts/build-river-sides.mjs [slug ...]   (HGT tiles cached in node_modules/.cache)
+ *
+ * The 2026-09-22 additions for the big permit rivers (Salmon system, Grand
+ * Canyon), which are 5–10× the Sierra runs: a run can `extend` into a second
+ * named river (the Middle Fork ends on the Main at Cache Bar, the Lower Salmon
+ * on the Snake at Heller Bar); contours are traced only inside `corridorKm`
+ * of the line, on a DEM thinned by `demStep` arc-seconds, at `levelStep`
+ * metres; and a slug list on the command line builds only those rivers.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
@@ -123,6 +130,147 @@ const RIVERS = [
     tribs: [
       { osm: "sj-marks.json", names: ["Fish Creek"] },
       { osm: "sj-marks.json", names: ["North Fork San Joaquin River"] },
+    ],
+  },
+  // ---- the permit rivers behind the /mf-salmon, /main-salmon, /lower-salmon,
+  // /grand-canyon guide pages (2026-09-22). River miles from the standard
+  // mile-by-mile guides (Forest Service, BLM, and the canonical Grand Canyon
+  // mileage from Lees Ferry), converted to km; `at:` marks snap to OSM stream mouths.
+  {
+    slug: "mf-salmon",
+    osm: "mfsalmon-osm.json",
+    names: ["Middle Fork Salmon River"],
+    extend: { osm: "mfsalmon-osm.json", names: ["Salmon River"] },
+    putIn: { at: "mfsalmon-osm.json:way:Boundary Creek" },
+    takeOut: { at: "mfsalmon-osm.json:way:Middle Fork Salmon River", plusKm: 6 }, // Cache Bar, ~4 mi down the Main
+    span: "Boundary Creek → Cache Bar",
+    levelStep: 100, indexEvery: 500, simplifyEps: 0.04, minLength: 0.4, demStep: 3, corridorKm: 5, padX: 3, padY: 1.5,
+    marks: [
+      { name: "Velvet Falls", kind: "rapid", km: 8.2 },
+      { name: "Powerhouse", kind: "rapid", km: 23.7 },
+      { name: "Pistol Creek", kind: "rapid", at: "mfsalmon-osm.json:way:Pistol Creek" },
+      { name: "Indian Creek", kind: "camp", km: 40.9 },
+      { name: "Sunflower Flat", kind: "camp", km: 53.8 },
+      { name: "Loon Creek", kind: "camp", at: "mfsalmon-osm.json:way:Loon Creek" },
+      { name: "Tappan Falls", kind: "rapid", km: 82.9 },
+      { name: "Camas Creek", kind: "rapid", at: "mfsalmon-osm.json:way:Camas Creek" },
+      { name: "Haystack", kind: "rapid", km: 107.2 },
+      { name: "Big Creek", kind: "camp", at: "mfsalmon-osm.json:way:Big Creek" },
+      { name: "Redside", kind: "rapid", km: 132.6 },
+      { name: "Weber", kind: "rapid", km: 136.0 },
+      { name: "Rubber", kind: "rapid", km: 147.3 },
+      { name: "Devils Tooth", kind: "rapid", km: 149.0 },
+      { name: "House Rocks", kind: "rapid", km: 150.3 },
+      { name: "Main Salmon confluence", kind: "rapid", at: "mfsalmon-osm.json:way:Middle Fork Salmon River" },
+    ],
+    tribs: [
+      { osm: "mfsalmon-osm.json", names: ["Loon Creek"] },
+      { osm: "mfsalmon-osm.json", names: ["Camas Creek"] },
+      { osm: "mfsalmon-osm.json", names: ["Big Creek"] },
+      { osm: "mfsalmon-osm.json", names: ["Marble Creek"] },
+      { osm: "mfsalmon-osm.json", names: ["Pistol Creek"] },
+    ],
+  },
+  {
+    slug: "main-salmon",
+    osm: "mainsalmon-osm.json",
+    names: ["Salmon River"],
+    putIn: { at: "mainsalmon-osm.json:way:Corn Creek" },
+    takeOut: { at: "mainsalmon-osm.json:way:Carey Creek" },
+    span: "Corn Creek → Carey Creek",
+    levelStep: 100, indexEvery: 500, simplifyEps: 0.04, minLength: 0.4, demStep: 3, corridorKm: 5, padX: 3, padY: 1.5,
+    marks: [
+      // Whitewater Guidebook mile chart (checked 2026-09-22): Rainier 8, Devils
+      // Teeth 13, Salmon Falls 20.5, Barth 22.5, Big Mallard 37, Elkhorn 40.5,
+      // Mackay Bar / South Fork 56, Chittam 78.5, Vinegar 79. OSM stream mouths
+      // agree with it to within a mile, so the surveyed anchors stay.
+      { name: "Killum", kind: "rapid", km: 5.6 },
+      { name: "Rainier", kind: "rapid", km: 12.9 },
+      { name: "Lantz Bar", kind: "camp", km: 15.3 },
+      { name: "Devils Teeth", kind: "rapid", km: 20.9 },
+      { name: "Salmon Falls", kind: "rapid", km: 33.0 },
+      { name: "Barth Hot Springs", kind: "camp", km: 36.2 },
+      { name: "Bargamin Creek", kind: "camp", at: "mainsalmon-osm.json:way:Bargamin Creek" },
+      { name: "Bailey", kind: "rapid", km: 57.1 },
+      { name: "Big Mallard", kind: "rapid", at: "mainsalmon-osm.json:way:Big Mallard Creek" },
+      { name: "Elkhorn", kind: "rapid", km: 65.2 },
+      { name: "Whiplash", kind: "rapid", km: 69.2 },
+      { name: "Campbell's Ferry", kind: "camp", km: 81.3 },
+      { name: "South Fork confluence", kind: "rapid", at: "mainsalmon-osm.json:way:South Fork Salmon River" },
+      { name: "Five Mile Bar", kind: "camp", km: 96.6 },
+      { name: "Chittam", kind: "rapid", km: 126.3 },
+      { name: "Vinegar Creek", kind: "rapid", at: "mainsalmon-osm.json:way:Vinegar Creek" },
+    ],
+    tribs: [
+      { osm: "mainsalmon-osm.json", names: ["South Fork Salmon River"] },
+      { osm: "mainsalmon-osm.json", names: ["Chamberlain Creek"] },
+      { osm: "mainsalmon-osm.json", names: ["Bargamin Creek"] },
+      { osm: "mainsalmon-osm.json", names: ["Middle Fork Salmon River"] },
+    ],
+  },
+  {
+    slug: "lower-salmon",
+    osm: "lowersalmon-osm.json",
+    names: ["Salmon River"],
+    extend: { osm: "lowersalmon-osm.json", names: ["Snake River"] },
+    putIn: { at: "lowersalmon-osm.json:way:Hammer Creek" },
+    takeOut: { at: "lowersalmon-osm.json:way:Grande Ronde River", plusKm: 0.8 }, // Heller Bar, just below the Grande Ronde
+    span: "Hammer Creek → Heller Bar",
+    levelStep: 100, indexEvery: 500, simplifyEps: 0.04, minLength: 0.4, demStep: 3, corridorKm: 5, padX: 3, padY: 1.5,
+    marks: [
+      { name: "Pine Bar", kind: "camp", km: 13.8 },
+      { name: "Demons Drop", kind: "rapid", km: 36.2 },
+      { name: "Snowhole", kind: "rapid", km: 50.7 },
+      { name: "Bodacious Bounce", kind: "rapid", km: 54.7 },
+      { name: "China", kind: "rapid", km: 66.0 },
+      { name: "Slide", kind: "rapid", km: 74.8 },
+      { name: "Eagle Creek", kind: "camp", at: "lowersalmon-osm.json:way:Eagle Creek" },
+      { name: "Snake River confluence", kind: "rapid", at: "lowersalmon-osm.json:way:Salmon River" },
+      { name: "Grande Ronde joins", kind: "rapid", at: "lowersalmon-osm.json:way:Grande Ronde River" },
+    ],
+    tribs: [
+      { osm: "lowersalmon-osm.json", names: ["Snake River"] },
+      { osm: "lowersalmon-osm.json", names: ["Grande Ronde River"] },
+      { osm: "lowersalmon-osm.json", names: ["Eagle Creek"] },
+      { osm: "lowersalmon-osm.json", names: ["Deer Creek"] },
+    ],
+  },
+  {
+    slug: "grand-canyon",
+    osm: "colorado-osm.json",
+    names: ["Colorado River"],
+    putIn: { at: [36.8654, -111.5877] }, // Lees Ferry ramp
+    takeOut: { at: "colorado-osm.json:way:Diamond Creek" },
+    span: "Lees Ferry → Diamond Creek",
+    levelStep: 200, indexEvery: 1000, simplifyEps: 0.06, minLength: 0.6, demStep: 3, corridorKm: 6, padX: 3, padY: 2,
+    marks: [
+      { name: "Badger Creek", kind: "rapid", km: 12.9 },
+      { name: "House Rock", kind: "rapid", km: 27.4 },
+      { name: "Roaring Twenties", kind: "rapid", km: 38.6 },
+      { name: "Nankoweap", kind: "camp", at: "colorado-osm.json:way:Nankoweap Creek" },
+      { name: "Little Colorado", kind: "rapid", at: "colorado-osm.json:way:Little Colorado River" },
+      { name: "Unkar", kind: "rapid", km: 116.7 },
+      { name: "Hance", kind: "rapid", km: 123.1 },
+      { name: "Phantom Ranch", kind: "camp", at: "colorado-osm.json:way:Bright Angel Creek" },
+      { name: "Granite", kind: "rapid", km: 150.5 },
+      { name: "Hermit", kind: "rapid", km: 152.9 },
+      { name: "Crystal", kind: "rapid", at: "colorado-osm.json:way:Crystal Creek" },
+      { name: "Bedrock", kind: "rapid", km: 210.0 },
+      { name: "Deer Creek", kind: "camp", at: "colorado-osm.json:way:Deer Creek" },
+      { name: "Kanab Creek", kind: "camp", at: "colorado-osm.json:way:Kanab Creek" },
+      { name: "Upset", kind: "rapid", km: 240.9 },
+      { name: "Havasu", kind: "camp", at: "colorado-osm.json:way:Havasu Creek" },
+      { name: "Lava Falls", kind: "rapid", km: 288.7 },
+      { name: "Whitmore", kind: "camp", at: "colorado-osm.json:way:Whitmore Wash" },
+      { name: "205 Mile", kind: "rapid", km: 329.9 },
+    ],
+    tribs: [
+      { osm: "colorado-osm.json", names: ["Paria River"] },
+      { osm: "colorado-osm.json", names: ["Little Colorado River"] },
+      { osm: "colorado-osm.json", names: ["Bright Angel Creek"] },
+      { osm: "colorado-osm.json", names: ["Kanab Creek"] },
+      { osm: "colorado-osm.json", names: ["Havasu Creek"] },
+      { osm: "colorado-osm.json", names: ["Diamond Creek"] },
     ],
   },
 ];
@@ -270,8 +418,8 @@ async function hgtTile(latF, lonF) {
 }
 
 // elevation grid over a lat/lon window at 1-arcsecond steps
-async function demGrid(bbox) {
-  const step = 1 / 3600;
+async function demGrid(bbox, mult = 1) {
+  const step = mult / 3600;
   const rows = Math.ceil((bbox.latMax - bbox.latMin) / step) + 2;
   const cols = Math.ceil((bbox.lonMax - bbox.lonMin) / step) + 2;
   const lat0 = bbox.latMax;
@@ -303,7 +451,29 @@ const MS = {
 // ---- per-river build --------------------------------------------------------
 
 async function build(cfg) {
-  const raw = chainWays(loadJson(cfg.osm), cfg.names);
+  let raw = chainWays(loadJson(cfg.osm), cfg.names);
+  if (cfg.extend) {
+    // continue down the receiving river from the point nearest our mouth
+    const ext = chainWays(loadJson(cfg.extend.osm), cfg.extend.names);
+    const mouth = raw[raw.length - 1];
+    let bi = 0;
+    let bd = Infinity;
+    for (let i = 0; i < ext.length; i += 1) {
+      const d = Math.hypot((ext[i][0] - mouth[0]) * KM_DEG, (ext[i][1] - mouth[1]) * KM_DEG * Math.cos((mouth[0] * Math.PI) / 180));
+      if (d < bd) {
+        bd = d;
+        bi = i;
+      }
+    }
+    console.log(`  extends into ${cfg.extend.names.join("/")} (join ${bd.toFixed(2)} km off the mouth, ${ext.length - bi - 1} pts on)`);
+    raw = raw.concat(ext.slice(bi + 1));
+  }
+  const levelStep = cfg.levelStep ?? LEVEL_STEP;
+  const indexEvery = cfg.indexEvery ?? INDEX_EVERY;
+  const simplifyEps = cfg.simplifyEps ?? SIMPLIFY_EPS;
+  const minLength = cfg.minLength ?? MIN_LENGTH;
+  const padX = cfg.padX ?? PAD_X;
+  const padY = cfg.padY ?? PAD_Y;
   const lat0 = raw.reduce((a, p) => a + p[0], 0) / raw.length;
   const lon0 = raw.reduce((a, p) => a + p[1], 0) / raw.length;
   const cos0 = Math.cos((lat0 * Math.PI) / 180);
@@ -351,7 +521,7 @@ async function build(cfg) {
 
   let putKm;
   if (cfg.putIn.at) {
-    const r = kmNearest(cfg.putIn.at);
+    const r = kmNearest(resolveAt(cfg.putIn.at));
     putKm = r.km;
     console.log(`  put-in snaps ${r.off.toFixed(2)} km off the line at river-km ${r.km.toFixed(1)}`);
   } else putKm = outKm - cfg.putIn.kmAboveTakeOut;
@@ -411,7 +581,7 @@ async function build(cfg) {
   }
 
   // tribs: chain each, keep the part inside the padded frame (walk up from the mouth)
-  const inWin = ([x, y]) => x >= -PAD_X && x <= W + PAD_X && y >= -PAD_Y && y <= H + PAD_Y;
+  const inWin = ([x, y]) => x >= -padX && x <= W + padX && y >= -padY && y <= H + padY;
   const tribs = [];
   for (const t of cfg.tribs) {
     const pts = chainWays(loadJson(t.osm), t.names).map((ll) => local(toFrame(toEN(ll))));
@@ -425,10 +595,10 @@ async function build(cfg) {
 
   // DEM window and contours
   const cornersLL = [
-    [-PAD_X, -PAD_Y],
-    [W + PAD_X, -PAD_Y],
-    [-PAD_X, H + PAD_Y],
-    [W + PAD_X, H + PAD_Y]
+    [-padX, -padY],
+    [W + padX, -padY],
+    [-padX, H + padY],
+    [W + padX, H + padY]
   ].map(([x, y]) => fromEN(fromFrame([x + x0, y + y0])));
   const bbox = {
     latMin: Math.min(...cornersLL.map((p) => p[0])),
@@ -436,20 +606,49 @@ async function build(cfg) {
     lonMin: Math.min(...cornersLL.map((p) => p[1])),
     lonMax: Math.max(...cornersLL.map((p) => p[1]))
   };
-  const dem = await demGrid(bbox);
+  const dem = await demGrid(bbox, cfg.demStep ?? 1);
   const cellToFrame = (c, r) => local(toFrame(toEN([dem.lat0 - r * dem.step, dem.lon0 + c * dem.step])));
+  console.log(`  dem ${dem.cols}×${dem.rows} cells at ${cfg.demStep ?? 1} arc-sec`);
+
+  // Corridor mask: only cells within corridorKm of the river count. A long
+  // river's bounding frame is mostly country the rail never shows.
+  const masked = new Uint8Array(dem.rows * dem.cols);
+  if (cfg.corridorKm) {
+    const cell = cfg.corridorKm;
+    const buckets = new Map();
+    for (const p of river) {
+      const k = `${Math.floor(p[0] / cell)},${Math.floor(p[1] / cell)}`;
+      (buckets.get(k) ?? buckets.set(k, []).get(k)).push(p);
+    }
+    const near = (p) => {
+      const bx = Math.floor(p[0] / cell);
+      const by = Math.floor(p[1] / cell);
+      for (let i = -1; i <= 1; i += 1)
+        for (let j = -1; j <= 1; j += 1)
+          for (const q of buckets.get(`${bx + i},${by + j}`) ?? []) if (dist(p, q) <= cell) return true;
+      return false;
+    };
+    let kept = 0;
+    for (let r = 0; r < dem.rows; r += 1)
+      for (let c = 0; c < dem.cols; c += 1) {
+        const ok = near(cellToFrame(c, r));
+        masked[r * dem.cols + c] = ok ? 0 : 1;
+        if (ok) kept += 1;
+      }
+    console.log(`  corridor ±${cell} km keeps ${((100 * kept) / masked.length).toFixed(0)}% of cells`);
+  }
 
   let emin = Infinity;
   let emax = -Infinity;
   for (let r = 0; r < dem.rows; r += 1)
     for (let c = 0; c < dem.cols; c += 1) {
-      if (!inWin(cellToFrame(c, r))) continue;
+      if (masked[r * dem.cols + c] || !inWin(cellToFrame(c, r))) continue;
       const e = dem.grid[r * dem.cols + c];
       emin = Math.min(emin, e);
       emax = Math.max(emax, e);
     }
   const levels = [];
-  for (let e = Math.ceil(emin / LEVEL_STEP) * LEVEL_STEP; e < emax; e += LEVEL_STEP) levels.push(e);
+  for (let e = Math.ceil(emin / levelStep) * levelStep; e < emax; e += levelStep) levels.push(e);
   console.log(`  elevation ${Math.round(emin)}–${Math.round(emax)} m, ${levels.length} levels`);
 
   function contour(level) {
@@ -457,6 +656,8 @@ async function build(cfg) {
     const lerp = (a, b) => (level - a) / (b - a);
     for (let r = 0; r < dem.rows - 1; r += 1) {
       for (let c = 0; c < dem.cols - 1; c += 1) {
+        const i0 = r * dem.cols + c;
+        if (masked[i0] || masked[i0 + 1] || masked[i0 + dem.cols] || masked[i0 + dem.cols + 1]) continue;
         const tl = dem.grid[r * dem.cols + c];
         const tr = dem.grid[r * dem.cols + c + 1];
         const br = dem.grid[(r + 1) * dem.cols + c + 1];
@@ -525,16 +726,16 @@ async function build(cfg) {
   const plain = [];
   const index = [];
   for (const level of levels) {
-    const bucket = level % INDEX_EVERY === 0 ? index : plain;
+    const bucket = level % indexEvery === 0 ? index : plain;
     for (const line of contour(level)) {
       const mapped = line.map(([c, r]) => cellToFrame(c, r));
       let run = [];
       const flush = () => {
         if (run.length >= MIN_POINTS) {
-          const simp = dpSimplify(run, SIMPLIFY_EPS);
+          const simp = dpSimplify(run, simplifyEps);
           let len = 0;
           for (let i = 1; i < simp.length; i += 1) len += dist(simp[i - 1], simp[i]);
-          if (simp.length >= 2 && len >= MIN_LENGTH) bucket.push(pathData(simp));
+          if (simp.length >= 2 && len >= minLength) bucket.push(pathData(simp));
         }
         run = [];
       };
@@ -547,10 +748,10 @@ async function build(cfg) {
   }
   console.log(`  contours: ${plain.length + index.length} polylines (${index.length} index)`);
 
-  const vb = [q(-PAD_X), q(-PAD_Y), q(W + 2 * PAD_X), q(H + 2 * PAD_Y)];
+  const vb = [q(-padX), q(-padY), q(W + 2 * padX), q(H + 2 * padY)];
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(" ")}" fill="none" stroke-linejoin="round" stroke-linecap="round">\n` +
-    `<!-- ${LEVEL_STEP} m contours (index every ${INDEX_EVERY} m) around the ${cfg.slug} run. Units 1/${QUANT} km. ` +
+    `<!-- ${levelStep} m contours (index every ${indexEvery} m) around the ${cfg.slug} run. Units 1/${QUANT} km. ` +
     `Source: AWS terrain tiles (skadi/SRTM 1-arcsec). Regenerate: node scripts/build-river-sides.mjs -->\n` +
     `<g class="c">\n${plain.map((d) => `<path d="${d}"/>`).join("\n")}\n</g>\n` +
     `<g class="i">\n${index.map((d) => `<path d="${d}"/>`).join("\n")}\n</g>\n</svg>\n`;
@@ -573,7 +774,9 @@ export const MARKS = ${JSON.stringify(marks)};
   return { slug: cfg.slug, span: cfg.span, runLen };
 }
 
+const only = process.argv.slice(2);
 for (const cfg of RIVERS) {
+  if (only.length && !only.includes(cfg.slug)) continue;
   console.log(`${cfg.slug}:`);
   await build(cfg);
 }

@@ -19,7 +19,14 @@ const north = host?.querySelector("[data-north]");
 const boat = host?.querySelector("[data-boat]");
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-if (host && box && svg && topoSvg && topo && flow && bed && trib && marks && north && boat) {
+// A hidden rail (phones, narrow windows) never imports its data: the guide
+// pages are mobile-first and the dataset is up to 36 KB the reader would not see.
+// The check waits for `load` because a module can run before the rail's
+// stylesheet has applied, and an unstyled aside reads as visible.
+if (document.readyState !== "complete") await new Promise((r) => window.addEventListener("load", r, { once: true }));
+const shown = host && getComputedStyle(host).display !== "none";
+
+if (shown && box && svg && topoSvg && topo && flow && bed && trib && marks && north && boat) {
   const { FRAME, MARKS, NORTH, RIVER, TRIBS, TOPO } = await import(host.dataset.riverSide);
   let length = 0;
   let topoLoad = null;
