@@ -87,3 +87,134 @@
   .river-qr img { width: 150px; height: 150px; }
   .river-qr .cap { color: var(--faint); font-size: 0.68rem; margin-top: 0.3rem; }
 }
+
+/* ---- Guidebook layer (2026-09-22) -----------------------------------------
+   The pages grew from "a gauge with a phone number" into a guidebook entry:
+   a fact strip up top, a jump list, then the river, the logistics, the
+   permits, the camps. Same monospace, same black rules — the guidebook feel
+   comes from structure, not decoration. */
+
+.river-head .river-kicker {
+  display: block;
+  color: var(--faint);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.35rem;
+}
+
+/* The fact strip — the box every printed guidebook opens with. Two columns
+   on a phone, four on a desk. */
+.river-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--border);
+  margin: 0 0 1.2rem;
+}
+.river-facts > div {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+  min-width: 0;
+}
+.river-facts > div:nth-child(2n) { border-right: 0; }
+.river-facts > div:nth-last-child(-n+2) { border-bottom: 0; }
+.river-facts dt {
+  color: var(--faint);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.15rem;
+}
+.river-facts dd { font-size: 0.78rem; line-height: 1.45; margin: 0; overflow-wrap: anywhere; }
+.river-facts dd a { color: inherit; }
+@media (min-width: 700px) {
+  .river-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .river-facts > div:nth-child(2n) { border-right: 1px solid var(--border-light); }
+  .river-facts > div:nth-child(4n) { border-right: 0; }
+  .river-facts > div:nth-last-child(-n+2) { border-bottom: 1px solid var(--border-light); }
+  .river-facts > div:nth-last-child(-n+4) { border-bottom: 0; }
+}
+
+/* Jump list. On a phone this page is long; the list is the table of contents. */
+.river-toc {
+  color: var(--faint);
+  font-size: 0.7rem;
+  line-height: 1.9;
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.river-toc a { color: var(--muted); }
+
+.river-body h3 { font-size: 0.78rem; font-weight: 700; margin: 0.9rem 0 0.3rem; }
+.river-body h2[id] { scroll-margin-top: 1rem; }
+
+/* Operator / place lists (shuttle drivers, access points). Reuses the gauge
+   list look so the page reads as one voice. */
+.river-list { margin: 0.2rem 0 1rem; }
+.river-list dt { font-size: 0.78rem; font-weight: 700; margin-top: 0.55rem; }
+.river-list dd { color: var(--muted); font-size: 0.76rem; line-height: 1.6; margin-left: 0; }
+.river-list dd a { color: inherit; }
+
+/* The guide's aside — the margin note in a paper guidebook. Amber rule so it
+   reads as advice, not as a warning state (those are red). */
+.river-tip {
+  border-left: 3px solid #a8620a;
+  padding: 0.5rem 0.8rem;
+  margin: 0.8rem 0 1rem;
+  background: #fafafa;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+.river-tip strong { color: var(--text); }
+
+/* Example reply, same card as /help so the two pages agree on what a reply
+   looks like. */
+.river-reply {
+  border: 1px solid var(--border);
+  background: #fafafa;
+  padding: 0.6rem 0.9rem;
+  margin: 0.4rem 0 1rem;
+  font-size: 0.76rem;
+  line-height: 1.7;
+  white-space: pre-line;
+  color: var(--text);
+}
+.river-reply .lbl {
+  display: block;
+  color: var(--faint);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.9rem;
+}
+
+/* Sibling runs at the foot of the body — the "see also" line. */
+.river-related { border-top: 1px solid var(--border); margin-top: 1.4rem; padding-top: 0.8rem; }
+.river-related h2 { margin-top: 0; }
+
+/* ---- Photos ---------------------------------------------------------------
+   Guidebook plates. One opener after the ask (the reading and the number stay
+   above the fold on a phone), then a plate or two inside the sections they
+   illustrate. Every image carries width/height so the page never jumps while
+   a slow link fills it in, and everything below the opener lazy-loads. All
+   sources are public-domain agency photos or CC BY, credited in the caption. */
+.river-photo { margin: 0 0 1.3rem; }
+.river-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  background: #eee;
+}
+.river-photo figcaption {
+  color: var(--faint);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  margin-top: 0.35rem;
+}
+.river-photo figcaption a { color: inherit; }
+.river-photo.opener { margin-bottom: 1.5rem; }
+.river-body .river-photo { margin: 0.9rem 0 1.2rem; }

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Grand Canyon River Flow — Text It From the River | LateBoof</title>
-  <meta name="description" content="Live Colorado River flow at Lees Ferry, plus Phantom Ranch and Diamond Creek. Text &quot;grand canyon&quot; to 866-284-5181 from a Garmin inReach and get the reading back on the water, no cell service needed.">
+  <title>Grand Canyon — River Guide, Live Flow, Shuttle &amp; Permits | LateBoof</title>
+  <meta name="description" content="Grand Canyon of the Colorado guide: live release at Lees Ferry plus the Phantom and Diamond gauges, why the number cycles daily, Lees Ferry to Diamond Creek logistics, the Hualapai take-out fee, shuttle and support companies, the weighted lottery, and first-come beach camps. Text &quot;grand canyon&quot; to 866-284-5181 from an inReach and the reading comes back over satellite.">
   <link rel="canonical" href="https://lateboof.com/grand-canyon">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"LateBoof","item":"https://lateboof.com/"},{"@type":"ListItem","position":2,"name":"Grand Canyon","item":"https://lateboof.com/grand-canyon"}]}</script>
-  <meta property="og:title" content="Grand Canyon River Flow — Text It From the River">
-  <meta property="og:description" content="Live Colorado River flow at Lees Ferry, Phantom Ranch and Diamond Creek — and a number you can text from an inReach mid-trip.">
+  <meta property="og:title" content="Grand Canyon — River Guide &amp; Live Flow">
+  <meta property="og:description" content="Live Lees Ferry release, the Phantom and Diamond gauges, Lees Ferry to Diamond Creek logistics, permits, camps — and a number you can text from an inReach at the bottom of the canyon.">
   <meta property="og:url" content="https://lateboof.com/grand-canyon">
   <meta property="og:site_name" content="LateBoof">
   <meta property="og:type" content="website">
@@ -18,7 +18,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css?v=2026070103">
-  <link rel="stylesheet" href="river.css">
+  <link rel="stylesheet" href="river.css?v=2026092202">
+  <link rel="stylesheet" href="river-rail.css?v=2026092202">
 </head>
 <body>
   <header class="site-header">
@@ -32,11 +33,24 @@
     </span>
   </header>
 
+  <div class="river-wrap">
   <div class="river-page" data-river="grand canyon">
     <div class="river-head">
+      <span class="river-kicker">River guide · Grand Canyon National Park, Arizona</span>
       <h1>Grand Canyon of the Colorado</h1>
-      <span class="river-where">Colorado River · Lees Ferry to Diamond Creek, Arizona</span>
+      <span class="river-where">Lees Ferry to Diamond Creek · 226 river miles</span>
     </div>
+
+    <dl class="river-facts">
+      <div><dt>Put-in</dt><dd>Lees Ferry, mile 0, off US 89A at Marble Canyon</dd></div>
+      <div><dt>Take-out</dt><dd>Diamond Creek, mile 226 (Pearce Ferry, mile 280, for the full canyon)</dd></div>
+      <div><dt>Length</dt><dd>226 miles · 12–25 days noncommercial</dd></div>
+      <div><dt>Difficulty</dt><dd>Big-water Class IV; Grand Canyon 1–10 scale, Lava Falls and Crystal at the top</dd></div>
+      <div><dt>Season</dt><dd>Year round; summer is hot, winter is quiet</dd></div>
+      <div><dt>Permit</dt><dd>NPS weighted lottery, drawn a year ahead</dd></div>
+      <div><dt>Camps</dt><dd>First-come beaches, no assignments</dd></div>
+      <div><dt>Gauges</dt><dd><a href="https://waterdata.usgs.gov/monitoring-location/09380000/">Lees Ferry</a> · text <code>grand canyon</code>, <code>phantom</code>, or <code>diamond</code></dd></div>
+    </dl>
 
     <div class="river-now">
       <div class="river-flow"><span data-flow>…</span><span class="trend" data-trend></span></div>
@@ -46,9 +60,10 @@
 
     <div class="river-cta">
       <div class="river-cta-line">
-        On the water? Text <code>grand canyon</code> to
-        <span class="num">866-284-5181</span> from your inReach and this reading
-        comes back over satellite. No app, no account, no cell service.
+        Already in the canyon? Text <code>grand canyon</code> to
+        <span class="num">866-284-5181</span> from your inReach and the Lees
+        Ferry release comes back over satellite. No app, no account, no cell
+        service.
       </div>
       <div class="river-actions">
         <a class="river-btn" href="sms:+18662845181?&body=grand%20canyon">Text it now</a>
@@ -56,19 +71,67 @@
       </div>
       <div class="river-qr">
         <img src="contact-qr.svg" alt="QR code — scan to save the LateBoof contact" width="150" height="150">
-        <div class="cap">Scan with your phone to save the contact before you launch</div>
+        <div class="cap">Scan with your phone to save the contact before you drive in</div>
       </div>
     </div>
 
+    <figure class="river-photo opener">
+      <img src="img/rivers/gc-hero-720.webp" srcset="img/rivers/gc-hero-720.webp 720w, img/rivers/gc-hero-1200.webp 1200w" sizes="(min-width: 736px) 704px, calc(100vw - 2rem)" width="720" height="480" alt="A raft on the Colorado River far below tall red canyon walls in the Grand Canyon">
+      <figcaption>The Colorado below Havasu Creek. The walls are a mile high and the river is a thread between them. <span class="credit">Photo: National Park Service, Grand Canyon (Mark Lellouch), public domain.</span></figcaption>
+    </figure>
+
+    <nav class="river-toc" aria-label="On this page">
+      On this page:
+      <a href="#river">The river</a> ·
+      <a href="#gauge">The gauges</a> ·
+      <a href="#number">Reading the number</a> ·
+      <a href="#logistics">Getting there &amp; shuttle</a> ·
+      <a href="#permits">Permits &amp; season</a> ·
+      <a href="#camps">Camps</a> ·
+      <a href="#tool">The text line</a>
+    </nav>
+
     <div class="river-body">
-      <h2>Which gauge people actually quote</h2>
+      <h2 id="river">The river</h2>
+      <p>
+        There is nothing else like it, and everyone who has done it will tell
+        you so at length. From the ramp at Lees Ferry, the only place a road
+        touches the river between Glen Canyon Dam and Diamond Creek, the
+        Colorado drops into Marble Canyon and then into the Grand Canyon
+        proper, past the Little Colorado, through the Inner Gorge of black
+        schist below Phantom Ranch, out into the wider western canyon, and over
+        Lava Falls at mile 179. You are in it for two to three weeks. Mail does
+        not come. The rim is a mile up.
+      </p>
+      <p>
+        The whitewater is big-volume and, by count, mostly flat: long
+        stretches of green water between rapids you can hear before you see
+        them. The named ones people plan the trip around are House Rock,
+        Hance, Sockdolager and Grapevine in the gorge, Horn Creek, Granite,
+        Hermit, Crystal, the Gems, Bedrock, Upset, and Lava Falls. On the
+        canyon's own 1-to-10 scale most are 5s to 8s and Lava and Crystal are
+        the 10s, but the scale moves with the flow: a rapid that is a clean
+        wave train at 15,000 cfs can be a rock-strewn puzzle at 8,000.
+      </p>
+      <p>
+        The side canyons are as much the trip as the river: the Little
+        Colorado's blue water, Nankoweap's granaries, Elves Chasm, Deer Creek,
+        Havasu, Matkatamiba. A 21-day itinerary exists mostly so you can stop.
+        The water is cold at any time of year (it comes off the bottom of Lake
+        Powell at around 48 degrees), the summer air is not, and the wind blows
+        upstream in the afternoon.
+      </p>
+
+      <h2 id="gauge">Which gauge people actually quote</h2>
       <p>
         Lees Ferry (USGS 09380000) is the number everyone means by "the flow."
         It sits just below Glen Canyon Dam at the launch ramp, so it reads the
-        dam release rather than a natural river — which is why it rises and
+        dam release rather than a natural river, which is why it rises and
         falls on a daily cycle with power demand instead of with weather. A
         reading taken at noon can differ by thousands of cfs from the same day
-        at midnight, and that wave travels downstream with you.
+        at midnight, and that wave travels downstream with you, reaching
+        Phantom the better part of a day later and Diamond Creek a day or two
+        after that.
       </p>
       <p>
         Two more gauges matter once you are moving. Text either name the same
@@ -80,43 +143,176 @@
           Inner Gorge. It also picks up the Little Colorado, so a brown spike
           here after a storm is the LCR, not the dam.</dd>
         <dt><code>diamond</code> — Diamond Creek, river mile 226</dt>
-        <dd>USGS 09404200. The takeout gauge, and the one that tells you what
+        <dd>USGS 09404200. The take-out gauge, and the one that tells you what
           the last stretch and the shuttle road are doing.</dd>
       </dl>
 
-      <h2>Reading the number</h2>
+      <h2 id="number">Reading the number</h2>
       <p>
         Dam releases through a typical season run in the neighborhood of
         8,000&ndash;16,000 cfs, with higher experimental flows some years. Low
         water is slower and more technical through the rock gardens; high water
         moves fast and washes out some holes while making others much worse.
         Neither end is a go or no-go on its own, which is the point of checking
-        it against the trip you actually planned.
+        it against the trip you actually planned. What the number tells you
+        most usefully in the canyon is timing: whether you will hit Lava on the
+        morning low or the afternoon high, and whether the beach you tied up on
+        tonight will still be a beach at 3 AM.
       </p>
+      <figure class="river-photo">
+      <img src="img/rivers/gc-lava-720.webp" srcset="img/rivers/gc-lava-720.webp 720w, img/rivers/gc-lava-1200.webp 1200w" sizes="(min-width: 736px) 704px, calc(100vw - 2rem)" width="720" height="473" alt="A raft crashing through the huge brown waves of Lava Falls" loading="lazy" decoding="async">
+      <figcaption>Lava Falls, mile 179. Which line exists depends on what the dam released the night before. <span class="credit">Photo: National Park Service, Grand Canyon (Mark Lellouch), public domain.</span></figcaption>
+    </figure>
       <p>
         <strong>The gauge is information, not permission.</strong> It cannot see
         a flash flood coming out of a side canyon, what the wind is doing, or
         what your group can handle. Scout, and make the call on the water.
       </p>
 
-      <h2>Permits</h2>
+      <h2 id="logistics">Getting there and the shuttle</h2>
+      <h3>To the put-in</h3>
+      <p>
+        Lees Ferry is at the end of a paved spur off US 89A at Marble Canyon,
+        about two and a half hours north of Flagstaff and forty minutes south
+        of Page. Flagstaff is where private trips stage: the outfitters, the
+        rental fleets, the grocery runs, and the last night in a bed. Marble
+        Canyon and Lees Ferry Lodge have rooms and food at the river end, and
+        there is an NPS campground at Lees Ferry. Most groups rig the afternoon
+        before their launch date, get the ranger's orientation in the morning,
+        and push off by midday.
+      </p>
+      <figure class="river-photo">
+      <img src="img/rivers/gc-lees-ferry-720.webp" srcset="img/rivers/gc-lees-ferry-720.webp 720w, img/rivers/gc-lees-ferry-1200.webp 1200w" sizes="(min-width: 736px) 704px, calc(100vw - 2rem)" width="720" height="540" alt="Fully rigged rafts tied up along the sandy shore at the Lees Ferry launch ramp" loading="lazy" decoding="async">
+      <figcaption>Rig day at Lees Ferry. Everything for three weeks is on the boats before the ranger check. <span class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Grand_Canyon_National_Park_Lees_Ferry_Launch_Ramp_2062_(6176485963).jpg">National Park Service, Grand Canyon</a>, CC BY 2.0.</span></figcaption>
+    </figure>
+      <h3>The take-out</h3>
+      <p>
+        Diamond Creek is on the Hualapai Reservation, at the bottom of a
+        roughly 19-mile dirt road from Peach Springs on Route 66. The road
+        follows the creek and crosses it repeatedly; a summer thunderstorm can
+        close it for a day, which is worth knowing when you are choosing a
+        take-out date in August. The Hualapai Tribe charges an access fee per
+        person and per vehicle, on the order of sixty dollars each plus tax,
+        payable in Peach Springs, and does not allow overnight parking at the
+        creek, so vehicles come in the morning of your take-out and leave the
+        same day. Pearce Ferry, 54 miles further at the head of Lake Mead, is
+        the alternative for groups doing the full canyon; the miles below
+        Diamond are flat, the wind is real, and Pearce Ferry Rapid at the very
+        end is not runnable.
+      </p>
+      <h3>The shuttle</h3>
+      <p>
+        Lees Ferry to Peach Springs is about five hours by road through
+        Flagstaff, and nobody on a 21-day trip wants a vehicle sitting at the
+        ferry that long. The standard arrangement is a support company that
+        stores your vehicles in Flagstaff (or Meadview) and delivers them to
+        the Hualapai Lodge in Peach Springs a day or two before your take-out.
+        Most of them also rent boats, rig your kitchen, and drive your people;
+        the Park Service keeps a list of noncommercial trip support companies.
+      </p>
+      <dl class="river-list">
+        <dt><a href="https://www.rrshuttleservice.com/info">River Runners Shuttle Service</a></dt>
+        <dd>Vehicle shuttle from Lees Ferry to storage in Meadview, delivered to Peach Springs on take-out morning.</dd>
+        <dt><a href="https://canyonreo.com/shuttles/">Canyon REO</a></dt>
+        <dd>Flagstaff outfitter; rentals and the full shuttle with vehicles stored in Flagstaff between put-in and take-out.</dd>
+        <dt><a href="https://www.ceibaadventures.com/transportation-shuttles">Ceiba Adventures</a></dt>
+        <dd>Flagstaff; rentals, food packs, and Flagstaff-to-Lees-Ferry and Flagstaff-to-Diamond-Creek transport.</dd>
+        <dt><a href="https://www.moenkopiriverworks.com/transportation">Moenkopi Riverworks</a></dt>
+        <dd>Flagstaff; rentals, rigging, and people-and-gear transport to and from the river.</dd>
+        <dt><a href="https://www.proriver.com/diamond-creek-info">Professional River Outfitters</a></dt>
+        <dd>Flagstaff; rentals and logistics, with a useful page on the Diamond Creek take-out.</dd>
+      </dl>
+      <aside class="river-tip">
+        <strong>Guide's note.</strong> The Diamond Creek fee, the parking rule,
+        and the road condition change; call the Hualapai Lodge in Peach Springs
+        the week you drive in, and ask your support company what they know.
+        Confirm everything directly with the operator. This page tracks water,
+        not their calendars.
+      </aside>
+
+      <h2 id="permits">Permits and season</h2>
       <p>
         Private trips launch from Lees Ferry on a weighted lottery run by
-        Grand Canyon National Park, with the main lottery drawn in February for
-        the following year's launches. Commercial trips go through the park's
-        concessioners. Confirm dates and rules with the park directly — this
-        page tracks water, not paperwork.
+        Grand Canyon National Park. The main lottery for a given year runs in
+        February of the year before: the 2027 launches were drawn from
+        applications taken in February 2026, with a few hundred permits for
+        12-to-25-day trips. Points accumulate for every year you apply and do
+        not go, which is the "weighted" part. Follow-up lotteries through the
+        year re-offer cancelled and unclaimed dates and are the realistic way
+        onto the river on short notice. Commercial trips go through the park's
+        concessioners on a separate allocation.
+      </p>
+      <p>
+        There is no off-season. Summer launches are hot and busy and the
+        monsoon brings flash floods in the side canyons; winter launches are
+        cold, empty, and easier to draw, with short days and long nights.
+        Confirm dates and rules with the park's river permits office. This page
+        tracks water, not paperwork.
+      </p>
+
+      <h2 id="camps">Camps</h2>
+      <p>
+        No assignments, no reservations. Camps in the canyon are first-come
+        sand beaches, and the etiquette is that the trip ahead of you has the
+        beach it is on. With a dozen trips spread through 226 miles that
+        usually sorts itself out, but the popular camps near the big side
+        canyons and above Lava fill early in the afternoon in summer, and the
+        park's camp list marks which beaches are small, which are large, and
+        which are closed for restoration. Because the release cycles daily, a
+        camp set up at the afternoon high will have more beach by morning, and
+        one set up at the low can lose its kitchen overnight; tie the boats
+        long.
+      </p>
+
+      <h2 id="tool">How the text line works out there</h2>
+      <p>
+        There is no cell service anywhere between Lees Ferry and Diamond
+        Creek, and the rim is a day's hike away. Save
+        <span class="num">866-284-5181</span> as a contact on your inReach (or
+        your phone, if it does satellite texting) while you still have signal
+        in Flagstaff, and text the run name. One reply comes back over the
+        satellite, the same way a message from home would:
+      </p>
+      <div class="river-reply"><span class="lbl">Example reply</span>Grand Canyon (Colorado R), At Lees Ferry, AZ
+USGS 09380000
+12,600 cfs / 8.94 ft
+16:45 Jun 27</div>
+      <p>
+        That is the whole product. It costs nothing beyond whatever your device
+        charges for a message, there is no account, and you get exactly one
+        reply per text. Down in the canyon it is the difference between knowing
+        the release and guessing at it: text <code>grand canyon</code> to see
+        what the dam did today, <code>phantom</code> to see it arriving
+        mid-canyon, and <code>diamond</code> the night before take-out.
+        Details and the failure modes are on the
+        <a href="/help">how it works</a> page.
       </p>
 
       <h2>Before you launch</h2>
       <p>
-        Save <span class="num">866-284-5181</span> to your phone and to your
-        inReach while you still have signal, and send yourself a test message.
-        Down in the canyon it is the difference between knowing the release and
-        guessing at it. See <a href="/help">how it works</a>, or browse
+        Save the number to your phone and to your inReach while you still have
+        signal, and send yourself a test message from Flagstaff. See
+        <a href="/help">how it works</a>, or browse
         <a href="/">every run LateBoof knows</a>.
       </p>
     </div>
+  </div>
+
+    <aside class="river-side" aria-hidden="true" data-river-side="/grand-canyon-data.js">
+      <div class="river-side__head">The canyon<span>Lees Ferry → Diamond Creek, 363 km</span></div>
+      <div class="river-map" data-river-map>
+        <svg class="river-map__topo" data-topo-svg><g data-topo></g></svg>
+        <svg class="river-map__river" data-river-svg>
+          <path class="river-map__trib" data-trib d=""/>
+          <path class="river-map__bed" data-bed d=""/>
+          <path class="river-map__flow" data-flow d=""/>
+          <g class="river-map__marks" data-marks></g>
+          <g class="river-map__north" data-north><path data-north-arrow d="M0 9 L0 -8 M-3.5 -3.5 L0 -8 L3.5 -3.5"/><text data-north-n text-anchor="middle">N</text></g>
+          <g class="river-map__boat" data-boat><path d="M-9 0 L-3 -3 L9 0 L-3 3 Z"/></g>
+        </svg>
+      </div>
+      <div class="river-side__foot">○ rapid · ▲ camp · 200 m contours · scroll and the boat runs the river</div>
+    </aside>
   </div>
 
   <footer class="site-footer">
@@ -129,5 +325,6 @@
   </footer>
 
   <script type="module" src="river.js"></script>
+  <script type="module" src="river-side.js?v=2026092201"></script>
 </body>
 </html>

@@ -216,6 +216,17 @@
 
 ## Dead river-rail assets in web/ — wire up or archive
 
+- **UPDATE 2026-09-22:** the generic engine now runs for real — `river-side.js`
+  is wired to the four river guide pages (`/mf-salmon`, `/main-salmon`,
+  `/lower-salmon`, `/grand-canyon`) with new datasets built by the same script
+  (`extend` into a receiving river, `corridorKm` contour mask, `demStep`,
+  per-river `levelStep`; run `node scripts/build-river-sides.mjs <slug>`).
+  Rail CSS moved to `web/river-rail.css`. The FOUR SIERRA datasets below are
+  still unwired; wiring them is now a markup-only job (copy the aside from a
+  river page, point `data-river-side` at the Sierra data file, add
+  `river-rail.css` + the `.river-wrap` grid), and the topo-less guard concern
+  is moot since every dataset has a topo sheet.
+
 - **What:** `web/river-side.js` (the generic scroll-map rail engine) and the four
   generated Sierra datasets it was written for — `cherry-data.js`,
   `fantasy-data.js`, `kings-data.js`, `postpile-data.js` (22.9 KB) plus their
@@ -244,3 +255,25 @@
   split out of the per-river-pages batch (2026-09-19 eng review).
 - **Effort:** S (human: ~1h / CC: ~10min) to archive, M to wire up.
   **Priority:** P2 — it is actively misleading, which is worse than the bytes.
+
+## Campsite guide for the Middle Fork and Main Salmon (reserved sites)
+
+- **What:** A camp-by-camp section on `/mf-salmon` and `/main-salmon`: every
+  reservable camp with mile, size class (Main: small ≤20 / large ≥21), what it
+  is good for (hot spring, shade, big kitchen, layover-friendly), and the
+  practical notes a permit holder wants when filling in the camp request form
+  (Middle Fork, emailed ~14 days out) or lining up at the 9 AM Corn Creek
+  meeting (Main).
+- **Why:** Owen's ask 2026-09-22 when the four river pages went guidebook-style.
+  Camps are the single decision a permit holder makes that this site can help
+  with beyond the number, and both pages already carry a "Coming to this page"
+  aside pointing at it.
+- **Where to start:** the Forest Service reservable-camp lists for each river
+  (Salmon-Challis NF; the Main's list is on Recreation.gov's permit page) are
+  the spine. Markup: an `<h3>` per camp under the existing `#camps` section, or
+  a per-river data file once there are >2 pages that need it. Keep the guide
+  static — no live data, so it survives offline like the rest of the page.
+- **Later:** Lower Salmon and Grand Canyon are first-come, so a lighter
+  "beaches by mile" list rather than a reservation guide.
+- **Effort:** M (content-heavy; needs trip notes or a source to cite per camp).
+  **Priority:** P2.
