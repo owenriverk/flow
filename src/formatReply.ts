@@ -65,8 +65,18 @@ function timeLine(r: Reading, offline: boolean): string {
   return `${hh}:${mm} ${MONTHS[local.getUTCMonth()]} ${local.getUTCDate()}`;
 }
 
+/**
+ * Curated names read "American / North Fork — Royal Gorge" on the website; a
+ * reply must not carry that dash. It is outside SMS's GSM-7 alphabet, and one
+ * such character re-encodes the whole message as UCS-2, where a segment holds 70
+ * chars instead of 160 — a one-segment reply silently becomes two.
+ */
+export function replySafe(text: string): string {
+  return text.replace(/\s*[—–]\s*/g, ' - ');
+}
+
 function displayName(ref: GaugeRef, r: Reading): string {
-  if ('name' in ref) return `${ref.name}, ${ref.location}`;
+  if ('name' in ref) return replySafe(`${ref.name}, ${ref.location}`);
   return r.usgsName ?? '';
 }
 

@@ -13,13 +13,13 @@ const aliases: Record<string, GaugeAlias> = {
   'middle kings': { site: '100', name: 'Kings R', location: 'Rodgers Crossing, CA', source: 'dreamflows' },
   wairaurahiri: {
     site: 'Wairaurahiri at Lake Hauroko',
-    name: 'Wairaurahiri R',
+    name: 'Wairaurahiri',
     location: 'At Lake Hauroko outlet, Southland, NZ',
     source: 'envdata',
   },
   'roaring billy': {
     site: '61',
-    name: 'Landsborough R',
+    name: 'Landsborough',
     location: 'Via Haast R gauge at Roaring Billy, West Coast, NZ',
     source: 'flowrate',
   },

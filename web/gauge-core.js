@@ -69,6 +69,21 @@ export function rowClass(g) {
   return 'good';
 }
 
+// Search matches word by word, in any order. Names read "River / Section"
+// (Salmon / Middle Fork) so the list groups by river, but people type a run the
+// way they say it — "middle fork salmon" has to find it. NF/MF/SF/EF expand to
+// the full fork name on both sides, so "nf american" finds "American / North
+// Fork — Royal Gorge" and "mf salmon" still matches its own text code.
+const FORKS = { nf: 'north fork', mf: 'middle fork', sf: 'south fork', ef: 'east fork' };
+const searchable = (s) => String(s).toLowerCase().replace(/\b(nf|mf|sf|ef)\b/g, (m) => FORKS[m]);
+
+export function matchesSearch(g, query) {
+  const words = searchable(query).split(/[^a-z0-9]+/).filter(Boolean);
+  if (words.length === 0) return true;
+  const haystack = searchable(`${g.name} ${g.location} ${g.text_key}`);
+  return words.every((w) => haystack.includes(w));
+}
+
 export function flowText(g) {
   if (g.discharge != null) {
     const n = g.discharge_unit === 'cms'

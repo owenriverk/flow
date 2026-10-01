@@ -74,7 +74,7 @@ describe('parseGaugeRequest', () => {
 
 describe('rosterNote', () => {
   it('says when the run is already on the roster, and under what name', () => {
-    expect(rosterNote('homathko', aliases)).toContain('Already resolves to: Homathko R (wsc 08GD004)');
+    expect(rosterNote('homathko', aliases)).toContain('Already resolves to: Homathko (wsc 08GD004)');
   });
 
   it('says when the bot would answer "not found"', () => {

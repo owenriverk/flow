@@ -17,69 +17,69 @@ function resolve(text: string) {
 describe('deterministic — must resolve without AI', () => {
   test.each([
     // ── Exact alias ────────────────────────────────────────────────
-    ['mf salmon',                     'Middle Fork Salmon'],
-    ['grand canyon',                  'Grand Canyon (Colorado R)'],
-    ['stikine',                       'Stikine (Grand Canyon)'],
-    ['desolation',                    'Desolation (Green R)'],
-    ['deso grey',                     'Desolation (Green R)'],
-    ['deso',                          'Desolation (Green R)'],
-    ['gates of lodore',               'Gates of Lodore (Green R)'],
-    ['west cherry',                   'West Cherry Creek'],
-    ['west cherry creek',             'West Cherry Creek'],
-    ['west cherry creek flow',        'West Cherry Creek'],
+    ['mf salmon',                     'Salmon / Middle Fork'],
+    ['grand canyon',                  'Colorado / Grand Canyon'],
+    ['stikine',                       'Stikine / Grand Canyon'],
+    ['desolation',                    'Green / Desolation'],
+    ['deso grey',                     'Green / Desolation'],
+    ['deso',                          'Green / Desolation'],
+    ['gates of lodore',               'Green / Gates of Lodore'],
+    ['west cherry',                   'Cherry Creek / West'],
+    ['west cherry creek',             'Cherry Creek / West'],
+    ['west cherry creek flow',        'Cherry Creek / West'],
 
     // ── Tier 3: alias verbatim inside longer message ───────────────
     // "river" suffix
-    ['stikine river',                 'Stikine (Grand Canyon)'],
-    ['yampa river',                   'Yampa R'],
-    ['rogue river',                   'Rogue R'],
-    ['selway river',                  'Selway R'],
-    ['deschutes river',               'Deschutes R'],
-    ['san juan river',                'San Juan R'],
-    ['salt river levels',             'Salt R'],
+    ['stikine river',                 'Stikine / Grand Canyon'],
+    ['yampa river',                   'Yampa'],
+    ['rogue river',                   'Rogue'],
+    ['selway river',                  'Selway'],
+    ['deschutes river',               'Deschutes'],
+    ['san juan river',                'San Juan'],
+    ['salt river levels',             'Salt'],
     // location context appended
-    ['grand canyon colorado',         'Grand Canyon (Colorado R)'],
-    ['lees ferry az',                 'Grand Canyon (Colorado R)'],
-    ['mf salmon at the lodge',        'Middle Fork Salmon'],
-    ['main salmon white bird',        'Main Salmon'],
-    ['tuolumne grand canyon flows',   'Grand Canyon of the Tuolumne'],
+    ['grand canyon colorado',         'Colorado / Grand Canyon'],
+    ['lees ferry az',                 'Colorado / Grand Canyon'],
+    ['mf salmon at the lodge',        'Salmon / Middle Fork'],
+    ['main salmon white bird',        'Salmon / Main'],
+    ['tuolumne grand canyon flows',   'Tuolumne / Grand Canyon'],
     // canyon / lake / falls suffixes
-    ['cataract canyon',               'Cataract Canyon (Colorado R)'],
-    ['desolation canyon',             'Desolation (Green R)'],
-    ['fantasy falls ca',              'Fantasy Falls (NF Mokelumne)'],
+    ['cataract canyon',               'Colorado / Cataract Canyon'],
+    ['desolation canyon',             'Green / Desolation'],
+    ['fantasy falls ca',              'Mokelumne / North Fork — Fantasy Falls'],
     // Caps + whitespace normalisation
-    ['MF SALMON',                     'Middle Fork Salmon'],
-    ['GRAND CANYON',                  'Grand Canyon (Colorado R)'],
-    ['  stikine  ',                   'Stikine (Grand Canyon)'],
-    ['mf  salmon',                    'Middle Fork Salmon'],
+    ['MF SALMON',                     'Salmon / Middle Fork'],
+    ['GRAND CANYON',                  'Colorado / Grand Canyon'],
+    ['  stikine  ',                   'Stikine / Grand Canyon'],
+    ['mf  salmon',                    'Salmon / Middle Fork'],
 
     // ── Tier 4: word-set (prepositions / filler in between) ────────
-    ['middle fork of the salmon',     'Middle Fork Salmon'],
-    ['mf of the salmon',              'Middle Fork Salmon'],
-    ['middle fork salmon river',      'Middle Fork Salmon'],
-    ['gates lodore',                  'Gates of Lodore (Green R)'],   // "of" stripped from alias
+    ['middle fork of the salmon',     'Salmon / Middle Fork'],
+    ['mf of the salmon',              'Salmon / Middle Fork'],
+    ['middle fork salmon river',      'Salmon / Middle Fork'],
+    ['gates lodore',                  'Green / Gates of Lodore'],   // "of" stripped from alias
     // Lower Salmon got its own roster row (2026-09-19): same White Bird gauge
     // as the Main, but a different trip, so the reply names the one they asked
-    // for instead of answering "Main Salmon" to a Lower Salmon question.
-    ['lower salmon river id',         'Lower Salmon'],
-    ['main salmon river',             'Main Salmon'],
-    ['sf salmon river',               'South Fork Salmon'],
-    ['south salmon river',            'South Fork Salmon'],
-    ['hells canyon snake river',      'Hells Canyon (Snake R)'],
-    ['grande ronde river',            'Grande Ronde R'],
-    ['john day river',                'John Day R'],
-    ['clarks fork box canyon',        'Clarks Fork (the Box)'],
-    ['upper cherry creek',            'Upper Cherry Creek'],
-    ['tuolumne grand canyon section', 'Grand Canyon of the Tuolumne'],
-    ['san joaquin river',             'Devils Postpile (San Joaquin)'],
-    ['copper river bc',               'Clore (Zymoetz R)'],          // zymoetz word-set
+    // for instead of answering "Salmon / Main" to a Lower Salmon question.
+    ['lower salmon river id',         'Salmon / Lower'],
+    ['main salmon river',             'Salmon / Main'],
+    ['sf salmon river',               'Salmon / South Fork'],
+    ['south salmon river',            'Salmon / South Fork'],
+    ['hells canyon snake river',      'Snake / Hells Canyon'],
+    ['grande ronde river',            'Grande Ronde'],
+    ['john day river',                'John Day'],
+    ['clarks fork box canyon',        'Clarks Fork / the Box'],
+    ['upper cherry creek',            'Cherry Creek / Upper'],
+    ['tuolumne grand canyon section', 'Tuolumne / Grand Canyon'],
+    ['san joaquin river',             'San Joaquin / Devils Postpile'],
+    ['copper river bc',               'Zymoetz / Clore'],          // zymoetz word-set
 
     // ── Tier 5: fork contraction ("north fork X" → "nf X") ────────
-    ['north fork flathead',           'North Fork Flathead'],
-    ['north fork american river',     'Royal Gorge (NF American)'],
-    ['south fork salmon river',       'South Fork Salmon'],
-    ['middle fork feather',           'Bald Rock (MF Feather)'],
-    ['middle fork of the flathead',   'Middle Fork Flathead'],
+    ['north fork flathead',           'Flathead / North Fork'],
+    ['north fork american river',     'American / North Fork — Royal Gorge'],
+    ['south fork salmon river',       'Salmon / South Fork'],
+    ['middle fork feather',           'Feather / Middle Fork — Bald Rock'],
+    ['middle fork of the flathead',   'Flathead / Middle Fork'],
   ])('"%s" → %s', (input, name) => {
     expect(resolve(input)).toBe(name);
   });
@@ -121,10 +121,10 @@ describe('ambiguous queries — must refuse to guess, never return the wrong gau
   });
 
   test('sanity: "grand canyon" alone is unaffected and still resolves to Colorado', () => {
-    expect(resolve('grand canyon')).toBe('Grand Canyon (Colorado R)');
+    expect(resolve('grand canyon')).toBe('Colorado / Grand Canyon');
   });
 
   test('sanity: a nested match ("grand canyon" inside a longer known alias) still resolves', () => {
-    expect(resolve('tuolumne grand canyon flows')).toBe('Grand Canyon of the Tuolumne');
+    expect(resolve('tuolumne grand canyon flows')).toBe('Tuolumne / Grand Canyon');
   });
 });

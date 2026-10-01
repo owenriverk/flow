@@ -87,6 +87,12 @@ signal, no login. It turns a $400 satellite messenger into a river-flow oracle.
   - `handleQuery(text)` → `replyText` — channel-agnostic core (string in, string
     out) so v2 SMS is just a new adapter. No email objects leak into it.
 - **Aliases as data:** one `aliases.json`, loaded once. Adding a run is a data edit.
+- **Display names are `River / Section`, parent river first** (since 2026-09-30,
+  replacing the run-first names): `Salmon / Middle Fork`, `Colorado / Grand
+  Canyon`, `American / North Fork — Royal Gorge`, plain `Rogue` when the river is
+  the run. No nicknames in the name — those are alias keys. One name serves the
+  website and the text reply; sorting by it groups a river's sections. The em dash
+  is website-only: `formatReply` swaps it for a hyphen so a reply stays GSM-7.
 
 ```
 InReach ──sat──▶ Garmin relay ──email──▶ Cloudflare Email Routing

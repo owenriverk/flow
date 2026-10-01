@@ -184,7 +184,7 @@
 ## Searchable AKAs on the web gauge table
 
 - **What:** Let the directory search match alias phrases, not just name/location/
-  text_key — searching "the box" should find Clarks Fork (the Box).
+  text_key — searching "the box" should find Clarks Fork / the Box.
 - **Why:** The bot accepts ~150 phrases but the website only searches 45 display
   names; paddlers who know a run by slang can't find its row.
 - **Where to start:** add an `aliases text[]` column to the `gauges` table,

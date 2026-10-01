@@ -11,7 +11,7 @@ const NOW = Date.parse('2026-09-19T12:00:00Z');
 
 const row = (over: Record<string, unknown> = {}) => ({
   key: 'mf salmon',
-  name: 'Middle Fork Salmon',
+  name: 'Salmon / Middle Fork',
   location: 'At MF Lodge, ID',
   text_key: 'mf salmon',
   gauge_url: 'https://waterdata.usgs.gov/monitoring-location/13309220/',
@@ -29,7 +29,7 @@ const row = (over: Record<string, unknown> = {}) => ({
 
 describe('pickRiver', () => {
   test('finds the run by key', () => {
-    expect(pickRiver([row({ key: 'other' }), row()], 'mf salmon')?.name).toBe('Middle Fork Salmon');
+    expect(pickRiver([row({ key: 'other' }), row()], 'mf salmon')?.name).toBe('Salmon / Middle Fork');
   });
 
   test('a missing key is null, not a throw', () => {
@@ -55,7 +55,7 @@ describe('buildView — state (live)', () => {
     expect(v.flow).toBe('2,800 cfs / 4.21 ft');
     expect(v.status).toBe('good');
     expect(v.age?.label).toBe('30 min ago');
-    expect(v.name).toBe('Middle Fork Salmon');
+    expect(v.name).toBe('Salmon / Middle Fork');
   });
 
   test('a low reading carries the low status through', () => {
@@ -156,17 +156,17 @@ describe('the two Salmon pages that share one gauge', () => {
 
   test('each page shows its own name for the same reading', () => {
     const rows = [
-      white({ key: 'main salmon', name: 'Main Salmon', low: 5000, high: 20000 }),
-      white({ key: 'lower salmon', name: 'Lower Salmon', low: 3000, high: 20000 }),
+      white({ key: 'main salmon', name: 'Salmon / Main', low: 5000, high: 20000 }),
+      white({ key: 'lower salmon', name: 'Salmon / Lower', low: 3000, high: 20000 }),
     ];
-    expect(buildView({ rows, cached: null, key: 'main salmon', now: NOW }).name).toBe('Main Salmon');
-    expect(buildView({ rows, cached: null, key: 'lower salmon', now: NOW }).name).toBe('Lower Salmon');
+    expect(buildView({ rows, cached: null, key: 'main salmon', now: NOW }).name).toBe('Salmon / Main');
+    expect(buildView({ rows, cached: null, key: 'lower salmon', now: NOW }).name).toBe('Salmon / Lower');
   });
 
   test('and its own status, which is the whole reason for the split', () => {
     const rows = [
-      white({ key: 'main salmon', name: 'Main Salmon', low: 5000, high: 20000 }),
-      white({ key: 'lower salmon', name: 'Lower Salmon', low: 3000, high: 20000 }),
+      white({ key: 'main salmon', name: 'Salmon / Main', low: 5000, high: 20000 }),
+      white({ key: 'lower salmon', name: 'Salmon / Lower', low: 3000, high: 20000 }),
     ];
     // 4,000 cfs is below the Main's range but inside the Lower's.
     expect(buildView({ rows, cached: null, key: 'main salmon', now: NOW }).status).toBe('low');

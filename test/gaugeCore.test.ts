@@ -8,6 +8,7 @@ import {
   escapeHtml,
   fetchGauges,
   flowText,
+  matchesSearch,
   readCache,
   rowClass,
   trendInfo,
@@ -24,7 +25,7 @@ import {
 // A fresh, healthy cfs gauge. Each test overrides only what it is about.
 const gauge = (over: Record<string, unknown> = {}) => ({
   key: 'mf-salmon',
-  name: 'Middle Fork Salmon',
+  name: 'Salmon / Middle Fork',
   location: 'At MF Lodge, ID',
   text_key: 'mf salmon',
   discharge: 2800,
@@ -232,5 +233,38 @@ describe('fetchGauges', () => {
       json: async () => ({}),
     }));
     await expect(fetchGauges(fetchFn as unknown as typeof fetch)).rejects.toThrow('HTTP 503');
+  });
+});
+
+// Names read "River / Section" since 2026-09-30, but people search the way they
+// say a run. Every query here found its row under the old run-first names.
+describe('matchesSearch', () => {
+  const mf = gauge();
+  const royal = gauge({ name: 'American / North Fork — Royal Gorge', location: 'Above Lake Clementine, CA', text_key: 'royal gorge' });
+  const kings = gauge({ name: 'Kings / Middle Fork', location: 'At Rodgers Crossing, CA', text_key: 'kings' });
+
+  test('words match in any order, so the spoken run name finds the river-first name', () => {
+    expect(matchesSearch(mf, 'middle fork salmon')).toBe(true);
+    expect(matchesSearch(kings, 'middle kings')).toBe(true);
+    expect(matchesSearch(royal, 'royal gorge')).toBe(true);
+  });
+
+  test('fork shorthand matches the spelled-out fork, and the other way round', () => {
+    expect(matchesSearch(royal, 'nf american')).toBe(true);
+    expect(matchesSearch(mf, 'mf salmon')).toBe(true);
+    expect(matchesSearch(mf, 'MF')).toBe(true);
+    expect(matchesSearch(mf, 'sf salmon')).toBe(false);
+  });
+
+  test('still matches while typing, on location, and ignores punctuation', () => {
+    expect(matchesSearch(mf, 'salm')).toBe(true);
+    expect(matchesSearch(mf, 'lodge')).toBe(true);
+    expect(matchesSearch(mf, 'salmon / middle')).toBe(true);
+    expect(matchesSearch(mf, '   ')).toBe(true);
+  });
+
+  test('every word has to be there', () => {
+    expect(matchesSearch(mf, 'salmon payette')).toBe(false);
+    expect(matchesSearch(kings, 'dean river')).toBe(false);
   });
 });

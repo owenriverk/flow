@@ -9,7 +9,7 @@ const aliases: Record<string, GaugeAlias> = {
   'fantasy falls': {
     site: 'NSS', name: 'NF Mokelumne', location: 'Salt Springs, CA', source: 'cdec', sensor: 76,
   },
-  salt: { site: '09498500', name: 'Salt R', location: 'Roosevelt, AZ' },
+  salt: { site: '09498500', name: 'Salt', location: 'Roosevelt, AZ' },
   'salt river': { site: '09497500', name: 'Salt R upper', location: 'Chrysotile, AZ' },
   'grand canyon': { site: '09380000', name: 'Colorado R (Grand Canyon)', location: 'Lees Ferry, AZ' },
 };

@@ -8,6 +8,7 @@ import {
   escapeHtml,
   fetchGauges,
   flowText,
+  matchesSearch,
   readCache,
   rowClass,
   trendInfo,
@@ -76,12 +77,7 @@ function applyFiltersAndSort() {
   let rows = allRows;
 
   if (filterText) {
-    const q = filterText.toLowerCase();
-    rows = rows.filter(g =>
-      g.name.toLowerCase().includes(q) ||
-      g.location.toLowerCase().includes(q) ||
-      g.text_key.toLowerCase().includes(q)
-    );
+    rows = rows.filter(g => matchesSearch(g, filterText));
   }
 
   if (filterStatus !== 'all') {

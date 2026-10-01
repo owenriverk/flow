@@ -6,12 +6,15 @@ every phrase the bot will currently resolve to a gauge. It is **not** a live-API
 verification pass — it reflects what's configured, not a fresh check that every
 upstream station is reporting data right now. The 47-gauge set here matches
 `supabase/functions/refresh-gauges/gauges.ts` (the website's source list).
+Display names read **River / Section**, parent river first (`Salmon / Middle
+Fork`, `American / North Fork — Royal Gorge`, plain `Rogue` when the river is
+the run), so the website's default sort groups every section of a river together.
 Units are native: US runs **cfs / ft**, Canadian runs **cms / m**, New Zealand
 runs **cms** (discharge only, no stage).
 
 The bot also accepts **raw gauge IDs** (USGS `13317000`, WSC `08CE001` — any
 station in either network, not just this roster), matches a run name embedded in
-a longer message (`middle kings at rodger's` → Middle Kings), knows the **place
+a longer message (`middle kings at rodger's` → Kings / Middle Fork), knows the **place
 names** off the official station names (`white bird`, `banks`, `lowman`,
 `greendale`, `agness`, …), and tolerates punctuation (`kings?` works). A gauge
 can be named alongside its run (`grand canyon at phantom`, `san juan, four
@@ -23,33 +26,33 @@ answer on a satellite link is worse than none.
 
 | Text this | Run / AKA | Gauge | Source | Location |
 |---|---|---|---|---|
-| `middle fork salmon` / `mf salmon` | Middle Fork Salmon — "the Middle Fork" (AKA: `mfs`, `the middle fork`) | 13309220 | USGS | At MF Lodge, ID |
-| `main salmon` | Main Salmon — "River of No Return" (AKA: `river of no return`, `rnr`, `salmon at white bird`) | 13317000 | USGS | At White Bird, ID |
-| `lower salmon` | Lower Salmon — the Gorge run, own roster row since 2026-09-19 so the reply names the right trip (AKA: `lower salmon river`, `salmon lower`; shares the White Bird gauge with the Main) | 13317000 | USGS | At White Bird, ID |
+| `middle fork salmon` / `mf salmon` | Salmon / Middle Fork — "the Middle Fork" (AKA: `mfs`, `the middle fork`) | 13309220 | USGS | At MF Lodge, ID |
+| `main salmon` | Salmon / Main — "River of No Return" (AKA: `river of no return`, `rnr`, `salmon at white bird`) | 13317000 | USGS | At White Bird, ID |
+| `lower salmon` | Salmon / Lower — the Gorge run, own roster row since 2026-09-19 so the reply names the right trip (AKA: `lower salmon river`, `salmon lower`; shares the White Bird gauge with the Main) | 13317000 | USGS | At White Bird, ID |
 | `selway` | Selway | 13336500 | USGS | Near Lowell, ID |
-| `hells canyon` | Hells Canyon (Snake R) (AKA: `snake`, `hells`, `hc`) | 13290450 | USGS | At Hells Canyon Dam, OR-ID |
+| `hells canyon` | Snake / Hells Canyon (AKA: `snake`, `hells`, `hc`) | 13290450 | USGS | At Hells Canyon Dam, OR-ID |
 | `grande ronde` | Grande Ronde (AKA: `ronde`, `the ronde`) | 13333000 | USGS | At Troy, OR |
 | `rogue` | Wild Rogue | 14372300 | USGS | Near Agness, OR |
 | `deschutes` | Lower Deschutes (AKA: `deschy`) | 14103000 | USGS | At Moody, OR |
 | `john day` | John Day (AKA: `jd`) | 14046500 | USGS | At Service Creek, OR |
 | `owyhee` | Owyhee | 13181000 | USGS | Near Rome, OR |
-| `flathead` / `mf flathead` | Middle Fork Flathead (AKA: `middle flathead`) | 12358500 | USGS | Near West Glacier, MT |
-| `nf flathead` | North Fork Flathead (AKA: `north flathead`) | 12355500 | USGS | Near Columbia Falls, MT |
-| `sf flathead` / `south fork flathead` | South Fork Flathead (AKA: `south flathead`) | 12359800 | USGS | Above Twin Cr, MT |
+| `flathead` / `mf flathead` | Flathead / Middle Fork (AKA: `middle flathead`) | 12358500 | USGS | Near West Glacier, MT |
+| `nf flathead` | Flathead / North Fork (AKA: `north flathead`) | 12355500 | USGS | Near Columbia Falls, MT |
+| `sf flathead` / `south fork flathead` | Flathead / South Fork (AKA: `south flathead`) | 12359800 | USGS | Above Twin Cr, MT |
 
 ## Desert / Colorado Plateau
 
 | Text this | Run / AKA | Gauge | Source | Location |
 |---|---|---|---|---|
-| `grand canyon` / `lees ferry` | Grand Canyon (Colorado R) (AKA: `gc`, `the ditch`) | 09380000 | USGS | At Lees Ferry, AZ |
-| `phantom` / `phantom ranch` | Grand Canyon — Phantom (Colorado R) — mid-canyon reading (AKA: `grand canyon phantom`; same trip as `grand canyon`, see caveats) | 09402500 | USGS | Near Phantom Ranch, AZ |
-| `diamond` / `diamond creek` | Grand Canyon — Diamond (Colorado R) — takeout gauge, river mile 226 (AKA: `grand canyon diamond`) | 09404200 | USGS | Above Diamond Creek, AZ |
-| `cataract` | Cataract Canyon (Colorado R) (AKA: `cat`) | 09328960 | USGS | Near Hite, UT |
+| `grand canyon` / `lees ferry` | Colorado / Grand Canyon (AKA: `gc`, `the ditch`) | 09380000 | USGS | At Lees Ferry, AZ |
+| `phantom` / `phantom ranch` | Colorado / Grand Canyon — Phantom — mid-canyon reading (AKA: `grand canyon phantom`; same trip as `grand canyon`, see caveats) | 09402500 | USGS | Near Phantom Ranch, AZ |
+| `diamond` / `diamond creek` | Colorado / Grand Canyon — Diamond — takeout gauge, river mile 226 (AKA: `grand canyon diamond`) | 09404200 | USGS | Above Diamond Creek, AZ |
+| `cataract` | Colorado / Cataract Canyon (AKA: `cat`) | 09328960 | USGS | Near Hite, UT |
 | `yampa` | Yampa | 09260050 | USGS | At Deerlodge Park, CO |
-| `gates of lodore` / `lodore` | Gates of Lodore (Green R) (AKA: `gates`) | 09234500 | USGS | Near Greendale, UT |
-| `desolation` / `deso` | Desolation (Green R) — Deso/Gray Canyon (AKA: `deso grey`) | 09315000 | USGS | At Green River, UT |
+| `gates of lodore` / `lodore` | Green / Gates of Lodore (AKA: `gates`) | 09234500 | USGS | Near Greendale, UT |
+| `desolation` / `deso` | Green / Desolation — Deso/Gray Canyon (AKA: `deso grey`) | 09315000 | USGS | At Green River, UT |
 | `san juan` | San Juan (AKA: `the juan`) | 09379500 | USGS | Near Bluff, UT |
-| `four corners` / `4 corners` | San Juan — Four Corners — upstream indicator, ~1 day above Bluff (AKA: `san juan four corners`) | 09371010 | USGS | At Four Corners, CO |
+| `four corners` / `4 corners` | San Juan / Four Corners — upstream indicator, ~1 day above Bluff (AKA: `san juan four corners`) | 09371010 | USGS | At Four Corners, CO |
 | `salt` / `salt river` | Salt River Canyon | 09497500 | USGS | Near Chrysotile, AZ |
 
 ## Far North
@@ -58,10 +61,10 @@ answer on a satellite link is worse than none.
 |---|---|---|---|---|
 | `tatshenshini` / `tat` | Tatshenshini | 08AC002 | WSC | Near Dalton Post, YT |
 | `alsek` | Alsek | 08AB001 | WSC | Above Bates River, YT |
-| `susitna` | Susitna (Devils Canyon) (AKA: `the su`) | 15292000 | USGS | At Gold Creek, AK |
-| `stikine` | Stikine (Grand Canyon) — "Grand Canyon of the Stikine" (AKA: `gc stikine`) | 08CE001 | WSC | At Telegraph Creek, BC |
+| `susitna` | Susitna / Devils Canyon (AKA: `the su`) | 15292000 | USGS | At Gold Creek, AK |
+| `stikine` | Stikine / Grand Canyon — "Grand Canyon of the Stikine" (AKA: `gc stikine`) | 08CE001 | WSC | At Telegraph Creek, BC |
 | `iskut` | Iskut | 08CG001 | WSC | Below Johnson River, BC |
-| `copper` / `zymoetz` | Clore (Zymoetz R) — the Copper (AKA: `clore`, `gc clore`, `grand canyon clore`, `copper river`) | 08EF005 | WSC | Above O.K. Creek, BC |
+| `copper` / `zymoetz` | Zymoetz / Clore — the Copper (AKA: `clore`, `gc clore`, `grand canyon clore`, `copper river`) | 08EF005 | WSC | Above O.K. Creek, BC |
 | `clearwater` | Clearwater, BC (AKA: `bc clearwater`) | 08LA001 | WSC | Near Clearwater Station, BC |
 | `homathko` | Homathko — Tatlayoko Lake to Bute Inlet | 08GD004 | WSC | At the mouth, BC |
 
@@ -69,27 +72,27 @@ answer on a satellite link is worse than none.
 
 | Text this | Run / AKA | Gauge | Source | Location |
 |---|---|---|---|---|
-| `wairaurahiri` | Wairaurahiri R | `Wairaurahiri at Lake Hauroko` | Environment Southland (`envdata`) | At Lake Hauroko outlet, Southland, NZ |
-| `landsborough` / `roaring billy` / `haast` | Landsborough R — proxy gauge on the Haast (see caveats) | 61 | flowrate.co.nz (`flowrate`) | Via Haast R gauge at Roaring Billy, West Coast, NZ |
+| `wairaurahiri` | Wairaurahiri | `Wairaurahiri at Lake Hauroko` | Environment Southland (`envdata`) | At Lake Hauroko outlet, Southland, NZ |
+| `landsborough` / `roaring billy` / `haast` | Landsborough — proxy gauge on the Haast (see caveats) | 61 | flowrate.co.nz (`flowrate`) | Via Haast R gauge at Roaring Billy, West Coast, NZ |
 
 ## Class V+ overnighters & classics
 
 | Text this | Run / AKA | Gauge | Source | Location |
 |---|---|---|---|---|
-| `south salmon` / `sf salmon` | South Fork Salmon (AKA: `sfs`) | 13310700 | USGS | Near Krassel Ranger Station, ID |
-| `kings` / `middle kings` | Middle Kings — proxy gauge (AKA: `mk`) | 100 | Dreamflows | At Rodgers Crossing, CA |
-| `fantasy falls` / `fantasy` | Fantasy Falls (NF Mokelumne) (AKA: `nf mokelumne`, `nf moke`, `the moke`, `ff`) | 111 | Dreamflows | Above Salt Springs, CA |
-| `upper cherry` | Upper Cherry Creek (AKA: `uc`) | 665 | Dreamflows | Above Cherry Lake, CA |
-| `west cherry` / `west cherry creek` | West Cherry Creek — proxy gauge (shares 665 with `upper cherry`, see caveats) | 665 | Dreamflows | Via Upper Cherry gauge above Cherry Lake, CA |
-| `mf feather` / `bald rock` | Bald Rock (MF Feather) (AKA: `devils canyon feather`, `devils`, `the feather`) | 54 | Dreamflows | At Milsap Bar, CA |
-| `royal gorge` | Royal Gorge (NF American) (AKA: `royal`, `nf american` — see caveats) | 69 | Dreamflows | Above Lake Clementine, CA |
-| `postpile` | Devils Postpile (San Joaquin) (AKA: `devils postpile`, `sj`, `san joaquin`) | 494 | Dreamflows | At Devils Postpile, CA |
-| `south merced` | South Fork Merced (AKA: `s merced`, `sf merced`) | 181 | Dreamflows | At Wawona, CA |
-| `tuolumne grand canyon` / `tgc` | Grand Canyon of the Tuolumne (AKA: `gc t`, `tuolumne gc`; shares gauge 531 with `tuolumne`) | 531 | Dreamflows | Above Hetch Hetchy Reservoir, CA |
-| `tuolumne` / `the t` | Tuolumne (Main) — "the T" (AKA: `main t`; shares gauge 531 with `tuolumne grand canyon`) | 531 | Dreamflows | Above Hetch Hetchy Reservoir, CA |
-| `clarks fork` | Clarks Fork (the Box) (AKA: `clarks fork box`, `the box`, `clarks`) | 06207500 | USGS | Near Belfry, MT |
-| `nf payette` | North Fork Payette — Smiths Ferry to Banks (AKA: `north fork payette`) | 13246000 | USGS | Near Banks, ID |
-| `sf payette` | South Fork Payette (AKA: `south fork payette`) | 13235000 | USGS | At Lowman, ID |
+| `south salmon` / `sf salmon` | Salmon / South Fork (AKA: `sfs`) | 13310700 | USGS | Near Krassel Ranger Station, ID |
+| `kings` / `middle kings` | Kings / Middle Fork — proxy gauge (AKA: `mk`) | 100 | Dreamflows | At Rodgers Crossing, CA |
+| `fantasy falls` / `fantasy` | Mokelumne / North Fork — Fantasy Falls (AKA: `nf mokelumne`, `nf moke`, `the moke`, `ff`) | 111 | Dreamflows | Above Salt Springs, CA |
+| `upper cherry` | Cherry Creek / Upper (AKA: `uc`) | 665 | Dreamflows | Above Cherry Lake, CA |
+| `west cherry` / `west cherry creek` | Cherry Creek / West — proxy gauge (shares 665 with `upper cherry`, see caveats) | 665 | Dreamflows | Via Upper Cherry gauge above Cherry Lake, CA |
+| `mf feather` / `bald rock` | Feather / Middle Fork — Bald Rock (AKA: `devils canyon feather`, `devils`, `the feather`) | 54 | Dreamflows | At Milsap Bar, CA |
+| `royal gorge` | American / North Fork — Royal Gorge (AKA: `royal`, `nf american` — see caveats) | 69 | Dreamflows | Above Lake Clementine, CA |
+| `postpile` | San Joaquin / Devils Postpile (AKA: `devils postpile`, `sj`, `san joaquin`) | 494 | Dreamflows | At Devils Postpile, CA |
+| `south merced` | Merced / South Fork (AKA: `s merced`, `sf merced`) | 181 | Dreamflows | At Wawona, CA |
+| `tuolumne grand canyon` / `tgc` | Tuolumne / Grand Canyon (AKA: `gc t`, `tuolumne gc`; shares gauge 531 with `tuolumne`) | 531 | Dreamflows | Above Hetch Hetchy Reservoir, CA |
+| `tuolumne` / `the t` | Tuolumne / Main — "the T" (AKA: `main t`; shares gauge 531 with `tuolumne grand canyon`) | 531 | Dreamflows | Above Hetch Hetchy Reservoir, CA |
+| `clarks fork` | Clarks Fork / the Box (AKA: `clarks fork box`, `the box`, `clarks`) | 06207500 | USGS | Near Belfry, MT |
+| `nf payette` | Payette / North Fork — Smiths Ferry to Banks (AKA: `north fork payette`) | 13246000 | USGS | Near Banks, ID |
+| `sf payette` | Payette / South Fork (AKA: `south fork payette`) | 13235000 | USGS | At Lowman, ID |
 
 ## Removed / deferred (no usable live gauge)
 
@@ -143,7 +146,7 @@ gauge (`494`).
   band carried over. It's a same-basin proxy, not a West Cherry station; and
   because two runs share the site, a 665 outage shows up twice in canary
   findings (once per run), same as the Tuolumne pair on 531.
-- **Tuolumne (Main) — "the T" vs. Grand Canyon of the Tuolumne** → `tuolumne` and
+- **Tuolumne / Main — "the T" vs. Tuolumne / Grand Canyon** → `tuolumne` and
   `tuolumne grand canyon` are different named runs that both read the
   identical Dreamflows gauge (site `531`, above Hetch Hetchy). Either phrase
   returns the same number.
@@ -162,7 +165,7 @@ gauge (`494`).
   same flowrate.co.nz station (site `61`), which flowrate itself labels
   "Haast River — Roaring Billy." The gauge sits on the Haast mainstem a few
   km below the Haast/Landsborough confluence, but it's the reference gauge
-  paddlers actually use for the Landsborough R trip, not a distinct Haast R
+  paddlers actually use for the Landsborough trip, not a distinct Haast R
   run. Bands per packraftingtrips.nz/landsborough: 50-85 cumecs very low,
   85-100 low but good, 100-150 moderate (our low/high), 150-250 high/experts
   only — the combined Landsborough+Haast flow at that point, so treat it as

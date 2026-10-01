@@ -67,32 +67,32 @@ const nameToRun = (name) => {
 // expect: array of acceptable run NAMES, or 'NONE'. src: where the case came from.
 const CASES = [
   // typos — no deterministic path (fuzzy-audit "AI-only")
-  { q: 'stikeen', expect: ['Stikine (Grand Canyon)'], src: 'audit/typo' },
-  { q: 'deschuttes', expect: ['Deschutes R'], src: 'audit/typo' },
-  { q: 'midle fork salmon', expect: ['Middle Fork Salmon'], src: 'typo' },
-  { q: 'yampa colo', expect: ['Yampa R'], src: 'audit/extra-word' },
+  { q: 'stikeen', expect: ['Stikine / Grand Canyon'], src: 'audit/typo' },
+  { q: 'deschuttes', expect: ['Deschutes'], src: 'audit/typo' },
+  { q: 'midle fork salmon', expect: ['Salmon / Middle Fork'], src: 'typo' },
+  { q: 'yampa colo', expect: ['Yampa'], src: 'audit/extra-word' },
   // ambiguity — several plausible gauges; any of them is a win
-  { q: 'green river', expect: ['Desolation (Green R)', 'Gates of Lodore (Green R)'], src: 'audit/ambiguous' },
-  { q: 'salmon', expect: ['Middle Fork Salmon', 'Main Salmon', 'Lower Salmon', 'South Fork Salmon'], src: 'audit/ambiguous' },
+  { q: 'green river', expect: ['Green / Desolation', 'Green / Gates of Lodore'], src: 'audit/ambiguous' },
+  { q: 'salmon', expect: ['Salmon / Middle Fork', 'Salmon / Main', 'Salmon / Lower', 'Salmon / South Fork'], src: 'audit/ambiguous' },
   // the 2026-06-30 production incident class: det refuses, AI must not pick Colorado
-  { q: 'stikine grand canyon', expect: ['Stikine (Grand Canyon)'], src: 'incident' },
-  { q: 'stikine rivr grand canyon', expect: ['Stikine (Grand Canyon)'], src: 'incident' },
-  { q: 'zymoetz grand canyon', expect: ['Clore (Zymoetz R)'], src: 'incident' },
-  { q: 'copper river grand canyon', expect: ['Clore (Zymoetz R)'], src: 'incident' },
+  { q: 'stikine grand canyon', expect: ['Stikine / Grand Canyon'], src: 'incident' },
+  { q: 'stikine rivr grand canyon', expect: ['Stikine / Grand Canyon'], src: 'incident' },
+  { q: 'zymoetz grand canyon', expect: ['Zymoetz / Clore'], src: 'incident' },
+  { q: 'copper river grand canyon', expect: ['Zymoetz / Clore'], src: 'incident' },
   // real query_log misses / phrasings
-  { q: 'snake river', expect: ['Hells Canyon (Snake R)'], src: 'query_log' },
-  { q: 'phantom at 3 pm', expect: ['Grand Canyon — Phantom (Colorado R)'], src: 'query_log' },
+  { q: 'snake river', expect: ['Snake / Hells Canyon'], src: 'query_log' },
+  { q: 'phantom at 3 pm', expect: ['Colorado / Grand Canyon — Phantom'], src: 'query_log' },
   {
     q: 'grand canyon near grand canyon',
-    expect: ['Grand Canyon (Colorado R)', 'Grand Canyon — Phantom (Colorado R)'],
+    expect: ['Colorado / Grand Canyon', 'Colorado / Grand Canyon — Phantom'],
     src: 'query_log',
   },
   {
     q: 'i want the flow of the grand canyon near phantom ranch please',
-    expect: ['Grand Canyon — Phantom (Colorado R)', 'Grand Canyon (Colorado R)'],
+    expect: ['Colorado / Grand Canyon — Phantom', 'Colorado / Grand Canyon'],
     src: 'query_log',
   },
-  { q: 'flows for the mfs?', expect: ['Middle Fork Salmon'], src: 'slang' },
+  { q: 'flows for the mfs?', expect: ['Salmon / Middle Fork'], src: 'slang' },
   // negatives — a wrong gauge here is worse than NOT_FOUND. Real rivers we
   // deliberately do not carry must not be mapped to a neighbor.
   { q: 'lochsa', expect: 'NONE', src: 'off-roster' },
@@ -101,11 +101,11 @@ const CASES = [
   { q: 'pizza delivery to my house', expect: 'NONE', src: 'unrelated' },
   { q: 'we are a professional web design company based in india', expect: 'NONE', src: 'spam (real)' },
   // tiebreak round — harder slang, typos, and off-roster traps
-  { q: 'tuolomne', expect: ['Tuolumne (Main)', 'Grand Canyon of the Tuolumne'], src: 'typo' },
-  { q: 'cherry bomb gorge', expect: ['Upper Cherry Creek'], src: 'slang (rapid name)' },
-  { q: 'the box montana', expect: ['Clarks Fork (the Box)'], src: 'slang+state' },
-  { q: 'is the ditch running yet?', expect: ['Grand Canyon (Colorado R)'], src: 'slang in sentence' },
-  { q: 'nf payete', expect: ['North Fork Payette'], src: 'typo' },
+  { q: 'tuolomne', expect: ['Tuolumne / Main', 'Tuolumne / Grand Canyon'], src: 'typo' },
+  { q: 'cherry bomb gorge', expect: ['Cherry Creek / Upper'], src: 'slang (rapid name)' },
+  { q: 'the box montana', expect: ['Clarks Fork / the Box'], src: 'slang+state' },
+  { q: 'is the ditch running yet?', expect: ['Colorado / Grand Canyon'], src: 'slang in sentence' },
+  { q: 'nf payete', expect: ['Payette / North Fork'], src: 'typo' },
   { q: 'gore canyon', expect: 'NONE', src: 'off-roster (CO classic)' },
   { q: 'illinois river oregon', expect: 'NONE', src: 'off-roster (OR classic)' },
   { q: 'futaleufu', expect: 'NONE', src: 'off-roster (Chile)' },

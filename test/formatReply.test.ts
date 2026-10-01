@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { formatReply, type Reading } from '../src/formatReply.js';
-import type { GaugeRef } from '../src/lookupGauge.js';
+import { formatReply, replySafe, type Reading } from '../src/formatReply.js';
+import type { GaugeAlias, GaugeRef } from '../src/lookupGauge.js';
+import aliasesJson from '../src/aliases.json' with { type: 'json' };
 
 // 2026-06-27T16:45 local at UTC-4 (EDT)
 const observedAt = new Date('2026-06-27T20:45:00Z');
@@ -82,7 +83,7 @@ describe('formatReply', () => {
 
   test('offline replies warn about stale data with an hour-scale age', () => {
     const ref: GaugeRef = {
-      site: '54', source: 'dreamflows', name: 'Bald Rock (MF Feather)', location: 'At Milsap Bar, CA',
+      site: '54', source: 'dreamflows', name: 'Feather / Middle Fork — Bald Rock', location: 'At Milsap Bar, CA',
     };
     const reading: Reading = {
       discharge: 480,
@@ -96,7 +97,7 @@ describe('formatReply', () => {
 
   test('offline ages past 48 hours read in days, not hours', () => {
     const ref: GaugeRef = {
-      site: '111', source: 'dreamflows', name: 'Fantasy Falls (NF Mokelumne)', location: 'Above Salt Springs, CA',
+      site: '111', source: 'dreamflows', name: 'Mokelumne / North Fork — Fantasy Falls', location: 'Above Salt Springs, CA',
     };
     const reading: Reading = {
       discharge: 480,
@@ -118,5 +119,25 @@ describe('formatReply', () => {
     expect(out.length).toBeLessThanOrEqual(160);
     expect(out).toContain('2,800 cfs / 4.21 ft');
     expect(out).toContain('USGS 03189100');
+  });
+});
+
+describe('reply text stays single-segment SMS', () => {
+  test('the website em dash becomes a plain hyphen in the reply', () => {
+    const ref: GaugeRef = {
+      site: '69', source: 'dreamflows', name: 'American / North Fork — Royal Gorge', location: 'Above Lake Clementine, CA',
+    };
+    const out = formatReply(ref, { discharge: 480, observedAt, offsetMinutes });
+    expect(out.split('\n')[0]).toBe('American / North Fork - Royal Gorge, Above Lake Clementine, CA');
+  });
+
+  // One character outside GSM-7 re-encodes the whole SMS as UCS-2 (70-char
+  // segments). Guard the whole roster so a future name cannot reintroduce it.
+  test('every roster name and location is plain ASCII once reply-safe', () => {
+    const aliases = aliasesJson as Record<string, GaugeAlias>;
+    const offenders = Object.values(aliases)
+      .map((a) => replySafe(`${a.name}, ${a.location}`))
+      .filter((line) => /[^\x20-\x7e]/.test(line));
+    expect([...new Set(offenders)]).toEqual([]);
   });
 });
