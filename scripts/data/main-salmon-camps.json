@@ -24,7 +24,9 @@
     "",
     "landmarks = non-camp labels on the strip map (web/camp-rail.js): the put-in,",
     "the end of the Wild section (Forest Service list) and the two ramps (GoRafting",
-    "miles; Carey Creek is 81.0 there and sits at the end of the mapped line)."
+    "miles; Carey Creek is 81.0 there and sits at the end of the mapped line).",
+    "gauge = reference gauge for the aerial captions. anchors = creek mouths whose Forest",
+    "Service mile pins the map line and the aerials (see build-camp-aerials.mjs)."
   ],
   "river": "Main Salmon",
   "slug": "main-salmon",
@@ -39,6 +41,13 @@
     { "id": "black-canyon", "title": "Black Canyon to Big Mallard", "from": 20.2, "to": 37.2, "blurb": "Black Creek Rapid, the Barth hot springs camps, then a quieter stretch down to Bargamin Creek and the Yellowpine and Mallard camps." },
     { "id": "mallard", "title": "Big Mallard to the South Fork", "from": 37.2, "to": 57, "blurb": "Homestead country: Jim Moore's place, Campbell's Ferry, Buckskin Bill's at Five Mile Bar, and the airstrips and pack bridge around Mackay Bar." },
     { "id": "south-fork", "title": "South Fork to Long Tom Bar", "from": 57, "to": 78, "blurb": "Below the South Fork the river is bigger and the canyon hotter. Mostly sand beaches, most of them low-water camps, and the last reservable sites before the take-outs." }
+  ],
+  "gauge": { "site": "13317000", "name": "White Bird" },
+  "anchors": [
+    { "mile": 15.4, "at": "mainsalmon-osm.json:way:Chamberlain Creek" },
+    { "mile": 32.0, "mark": "Bargamin Creek", "at": "mainsalmon-osm.json:way:Bargamin Creek" },
+    { "mile": 36.9, "mark": "Big Mallard", "at": "mainsalmon-osm.json:way:Big Mallard Creek" },
+    { "mile": 56.5, "mark": "South Fork confluence", "at": "mainsalmon-osm.json:way:South Fork Salmon River" }
   ],
   "landmarks": [
     { "m": 0, "n": "Corn Creek put-in", "s": "R" },

@@ -5,28 +5,37 @@
  *
  * The page is static HTML on purpose (TODOS.md "Campsite guide"): every camp is
  * in the markup, so it reads without JavaScript, prints, and survives being
- * saved for a week with no signal. web/camps.js only adds the filters on top.
+ * saved for a week with no signal. web/camps.js only adds the filters on top,
+ * and web/camp-rail.js the strip map.
  *
- * The data file is the thing to edit — mile, side, capacities and reservable
- * status come from the Forest Service list and each camp records its sources
- * (see the _readme block at the top of the JSON). This script computes every
- * count on the page from that data, so the prose can never drift from the list.
+ * The data file is the thing to edit — mile, side, capacities and the river's
+ * own flags come from the Forest Service list and each camp records its
+ * sources (see the _readme block at the top of each JSON). This script
+ * computes every count on the page from that data, so the prose can never
+ * drift from the list.
+ *
+ * What differs between rivers lives in scripts/camp-guides/<slug>.mjs: the
+ * rules, the "picking camps for your group" lists, the badges and filters.
+ * Those are functions of the data rather than text in the JSON, because their
+ * numbers are counted from it. This file knows nothing river-specific: water
+ * levels come from `levels` in the data (default: low water / high water) and
+ * capacities from each camp's `cap` array (or the Main's original lo/hi).
  *
  * The site header and footer are lifted from the river's main guide page
  * (web/<slug>.html) at build time, because headers are still hand-authored per
  * page and a second copy here would be one more place to forget.
  *
- * The "requesting camps" and "picking camps for your group" prose in render()
- * is the Main Salmon's. When the Middle Fork guide arrives, move those two
- * blocks into the data file rather than branching on the slug here.
- *
- * Run: node scripts/build-camp-guide.mjs [slug ...]      (default: main-salmon)
+ * Run: node scripts/build-camp-guide.mjs [slug ...]      (default: every river with a profile)
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import mainSalmon from "./camp-guides/main-salmon.mjs";
+import mfSalmon from "./camp-guides/mf-salmon.mjs";
 
 const ROOT = new URL("../", import.meta.url);
-const CSS_VERSION = "2026093002";
+const CSS_VERSION = "2026093003";
+
+export const PROFILES = { "main-salmon": mainSalmon, "mf-salmon": mfSalmon };
 
 /** Attribute tags: the label on the chip, in the order chips are shown. */
 export const TAGS = {
@@ -37,29 +46,20 @@ export const TAGS = {
   "easy-landing": "Easy landing",
   "tricky-landing": "Tricky landing",
   carry: "Carry or climb",
-  "hot-springs": "Hot springs",
+  swimming: "Swimming hole",
+  "hot-springs": "Hot springs nearby",
   "rock-art": "Pictographs",
   history: "History",
   hiking: "Hiking",
   kids: "Good with kids",
   "poison-ivy": "Poison ivy",
   burned: "Burned",
-  traffic: "Planes, boats or road",
+  traffic: "Visitors, planes or road",
 };
 
-/** The "good for" filter chips: label -> tags that satisfy it (any of). */
-export const FILTERS = [
-  ["shade", "Shade", ["shade"]],
-  ["easy", "Easy landing", ["easy-landing"]],
-  ["sand", "Sand beach", ["sand"]],
-  ["springs", "Hot springs", ["hot-springs"]],
-  ["history", "History & pictographs", ["history", "rock-art"]],
-  ["hiking", "Hiking", ["hiking"]],
-];
+const DEFAULT_LEVELS = [{ label: "Low water" }, { label: "High water" }];
 
-const RES_LABEL = { L: "Large reservable", S: "Small-medium reservable" };
-
-const esc = (s) =>
+export const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 const slugify = (s) => s.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -74,22 +74,32 @@ export function campIds(camps) {
   });
 }
 
-const people = (n) => (n === 0 ? "No camp" : `${n} people`);
-const side = (s) => (s === "L" ? "river left" : "river right");
+/** Capacities in level order; null means the list gives no number at that level. */
+export const caps = (c) => c.cap ?? [c.lo, c.hi];
+
+const people = (n) => (n == null ? "Not listed" : n === 0 ? "No camp" : `${n} people`);
+const side = (s) => (s === "L" ? "river left" : s === "R" ? "river right" : "an island mid-river");
+const onSide = (s) => (s === "C" ? "on the island" : `on ${side(s)}`);
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export const day = (iso) => `${Number(iso.slice(8, 10))} ${MONTHS[Number(iso.slice(5, 7)) - 1]} ${iso.slice(0, 4)}`;
 
 /**
  * The low/high lines under a description. Capacities are in the strip above,
- * so a line appears only when the two levels differ or a note adds something.
+ * so a line appears only when the extreme levels differ or a note adds something.
  */
-function levelLines(c) {
-  const lines = [];
+function levelLines(c, levels, profile) {
+  const cs = caps(c);
+  const lo = cs[0];
+  const hi = cs[cs.length - 1];
   const low = [];
   const high = [];
-  if (c.lo === 0) low.push("No camp at low water.");
+  if (lo === 0) low.push(`No camp at ${levels[0].label.toLowerCase()}.`);
   if (c.lowNote) low.push(c.lowNote);
-  if (c.hi === 0) high.push("No camp. The Forest Service gives it no high-water capacity.");
-  else if (c.lo > 0 && c.hi < c.lo && !c.highNote) high.push(`Room for ${c.hi}, down from ${c.lo}.`);
+  if (hi === 0) high.push(`No camp. The Forest Service gives it no ${profile.noHighCapacity}.`);
+  else if (lo > 0 && hi != null && hi < lo && !c.highNote) high.push(`Room for ${hi}, down from ${lo}.`);
   if (c.highNote) high.push(c.highNote);
+  const lines = [];
   if (low.length) lines.push(`<p class="camp-level"><strong>Low water:</strong> ${esc(low.join(" "))}</p>`);
   if (high.length) lines.push(`<p class="camp-level"><strong>High water:</strong> ${esc(high.join(" "))}</p>`);
   return lines;
@@ -111,9 +121,6 @@ function photoFigure(slug, c) {
   return `      <div class="camp-photos">\n${figs.join("\n")}\n      </div>\n`;
 }
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const day = (iso) => `${Number(iso.slice(8, 10))} ${MONTHS[Number(iso.slice(5, 7)) - 1]} ${iso.slice(0, 4)}`;
-
 /**
  * The camp's aerial (scripts/build-camp-aerials.mjs), north up. Nothing is drawn
  * on it: a flow arrow was tried and removed at Owen's request (2026-09-30), and
@@ -124,38 +131,44 @@ function aerialFigure(slug, c, aerials) {
   const a = aerials?.camps?.[c.id];
   if (!a) return "";
   const [w, h] = aerials.size;
-  const flow = a.cfs != null && aerials.gauge ? `, ${aerials.gauge.name} at ${a.cfs.toLocaleString("en-US")} cfs` : "";
+  const g = aerials.gauge?.name;
+  const reading =
+    a.ft != null && g
+      ? `, ${g} gauge at ${a.ft.toFixed(1)} ft${a.cfs != null ? ` (${a.cfs.toLocaleString("en-US")} cfs)` : ""}`
+      : a.cfs != null && g
+        ? `, ${g} at ${a.cfs.toLocaleString("en-US")} cfs`
+        : "";
   return `      <figure class="camp-aerial">
-        <img src="img/camps/${slug}/${esc(a.file)}" width="${w}" height="${h}" alt="Aerial view of the river around mile ${c.m}, where ${esc(c.n)} is on ${side(c.s)}" loading="lazy" decoding="async">
-        <figcaption>From the air, ${day(a.date)}${flow}. North is up. The camp is on ${side(c.s)}, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
+        <img src="img/camps/${slug}/${esc(a.file)}" width="${w}" height="${h}" alt="Aerial view of the river around mile ${c.m}, where ${esc(c.n)} is ${onSide(c.s)}" loading="lazy" decoding="async">
+        <figcaption>From the air, ${day(a.date)}${reading}. North is up. The camp is ${onSide(c.s)}, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
 `;
 }
 
-function campArticle(slug, c, id, aerials) {
+function campArticle(ctx, c, id) {
+  const { slug, levels, profile, aerials } = ctx;
+  const cs = caps(c);
   const tags = c.t.map((t) => `<li>${esc(TAGS[t])}</li>`).join("");
-  const res = c.r
-    ? `<span class="camp-res camp-res-${c.r}">${RES_LABEL[c.r]}</span>`
-    : `<span class="camp-res">First-come</span>`;
+  const filterTags = [...c.t, ...(profile.derivedTags?.(c) ?? [])];
+  const badges = profile.badges(c).map((b) => `<span class="camp-badge ${b.cls}">${esc(b.label)}</span>`).join("");
   const conflict = c.conflict ? `\n      <p class="camp-conflict"><strong>Sources disagree:</strong> ${esc(c.conflict)}</p>` : "";
-  return `    <article class="camp" id="${id}" data-mile="${c.m}" data-side="${c.s}" data-lo="${c.lo}" data-hi="${c.hi}" data-res="${c.r ?? "F"}" data-tags="${c.t.join(" ")}">
-      <div class="camp-top"><span class="camp-mile">Mile ${c.m} · ${side(c.s)}</span>${res}</div>
+  const cells = cs
+    .map((v, i) => {
+      const cls = v === 0 ? " none" : v == null ? " unknown" : "";
+      return `        <div class="camp-cap-cell${cls}" data-i="${i}"><dt>${esc(levels[i].label)}</dt><dd>${people(v)}</dd></div>`;
+    })
+    .join("\n");
+  return `    <article class="camp" id="${id}" data-mile="${c.m}" data-side="${c.s}" data-cap="${cs.map((v) => (v == null ? "-" : v)).join(" ")}" data-types="${profile.types(c).join(" ")}" data-glyph="${profile.glyph(c)}" data-tags="${filterTags.join(" ")}">
+      <div class="camp-top"><span class="camp-mile">Mile ${c.m} · ${side(c.s)}</span><span class="camp-badges">${badges}</span></div>
       <h3>${esc(c.n)}</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo${c.lo === 0 ? " none" : ""}"><dt>Low water</dt><dd>${people(c.lo)}</dd></div>
-        <div class="camp-cap-hi${c.hi === 0 ? " none" : ""}"><dt>High water</dt><dd>${people(c.hi)}</dd></div>
+${cells}
       </dl>
       <p>${esc(c.d)}</p>
-${levelLines(c).map((l) => `      ${l}`).join("\n")}${conflict}
+${levelLines(c, levels, profile).map((l) => `      ${l}`).join("\n")}${conflict}
 ${aerialFigure(slug, { ...c, id }, aerials)}${photoFigure(slug, c)}      ${tags ? `<ul class="camp-tags">${tags}</ul>` : ""}
-      <p class="camp-fs">Forest Service note: &ldquo;${esc(c.fs)}&rdquo;</p>
+      <p class="camp-fs">${profile.fsLine(c, ctx)}</p>
     </article>`.replace(/\n\s*\n/g, "\n");
-}
-
-/** Linked, comma-separated camp names for the "picking camps" lists. */
-function linkList(camps, ids, pick) {
-  const out = camps.map((c, i) => [c, ids[i]]).filter(([c]) => pick(c));
-  return out.map(([c, id]) => `<a href="#${id}">${esc(c.n)}</a> <span class="camp-at">${c.m}</span>`).join(", ");
 }
 
 /** Pull one top-level block (the site header or footer) out of a sibling page. */
@@ -165,27 +178,51 @@ function shellBlock(html, tag) {
   return m[0];
 }
 
-export function render(data, shellHtml, aerials = null) {
-  const { camps, slug, river, sections, source, checked } = data;
+/** Everything a profile function may need, computed once from the data. */
+function context(data, aerials, profile) {
+  const { camps } = data;
   const ids = campIds(camps);
-  const n = camps.length;
+  const levels = data.levels ?? DEFAULT_LEVELS;
+  const cap = (c, i) => caps(c)[i];
   const count = (pick) => camps.filter(pick).length;
-  const large = count((c) => c.r === "L");
-  const small = count((c) => c.r === "S");
-  const lowOnly = count((c) => c.hi === 0);
-  const highOk = count((c) => c.hi > 0);
-  const shrink = count((c) => c.hi > 0 && c.hi < c.lo);
-  const highOnly = count((c) => c.lo === 0);
-  const tiny = count((c) => Math.max(c.lo, c.hi) <= 10);
-  const full = count((c) => c.lo >= 30);
-  const fullHigh = count((c) => c.hi >= 30);
-  const has = (t) => (c) => c.t.includes(t);
-  const flown = aerials ? [...new Set(Object.values(aerials.camps).map((a) => a.date))].sort() : [];
-  const cfs = aerials ? Object.values(aerials.camps).map((a) => a.cfs).filter((v) => v != null) : [];
-  const aerialNote =
-    flown.length && cfs.length && aerials.gauge
-      ? ` These were flown between ${day(flown[0])} and ${day(flown[flown.length - 1])}, with the river at ${Math.min(...cfs).toLocaleString("en-US")}&ndash;${Math.max(...cfs).toLocaleString("en-US")} cfs at ${aerials.gauge.name}: very low water, so they show the beaches at close to their largest.`
-      : "";
+  const links = (pick) =>
+    camps
+      .map((c, i) => [c, ids[i]])
+      .filter(([c]) => pick(c))
+      .map(([c, id]) => `<a href="#${id}">${esc(c.n)}</a> <span class="camp-at">${c.m}</span>`)
+      .join(", ");
+  const flights = Object.values(aerials?.camps ?? {});
+  return {
+    ...data,
+    data,
+    profile,
+    aerials,
+    ids,
+    levels,
+    lastLevel: levels.length - 1,
+    n: camps.length,
+    cap,
+    count,
+    links,
+    has: (tag) => (c) => c.t.includes(tag),
+    esc,
+    day,
+    flown: [...new Set(flights.map((a) => a.date))].sort(),
+    cfs: flights.map((a) => a.cfs).filter((v) => v != null),
+    ft: flights.map((a) => a.ft).filter((v) => v != null),
+    gaugeName: aerials?.gauge?.name ?? "",
+  };
+}
+
+export function render(data, shellHtml, aerials = null) {
+  const profile = PROFILES[data.slug];
+  if (!profile) throw new Error(`no profile for ${data.slug} in scripts/camp-guides/`);
+  const ctx = context(data, aerials, profile);
+  const { camps, slug, river, sections, source, checked, ids, n, levels, count } = ctx;
+  for (const c of camps) {
+    if (caps(c).length !== levels.length) throw new Error(`${c.n}: ${caps(c).length} capacities for ${levels.length} levels`);
+    for (const t of c.t) if (!TAGS[t]) throw new Error(`${c.n}: unknown tag ${t}`);
+  }
   const first = camps[0].m;
   const last = camps[n - 1].m;
 
@@ -195,7 +232,7 @@ export function render(data, shellHtml, aerials = null) {
       return `    <section class="camp-section" id="${s.id}">
     <h2>${esc(s.title)} <span class="camp-range">miles ${inSection[0][0].m}&ndash;${inSection[inSection.length - 1][0].m} · ${inSection.length} camps</span></h2>
     <p>${esc(s.blurb)}</p>
-${inSection.map(([c, id]) => campArticle(slug, c, id, aerials)).join("\n")}
+${inSection.map(([c, id]) => campArticle(ctx, c, id)).join("\n")}
     </section>`;
     })
     .join("\n\n");
@@ -204,7 +241,7 @@ ${inSection.map(([c, id]) => campArticle(slug, c, id, aerials)).join("\n")}
   if (placed !== n) throw new Error(`${n - placed} camps fall outside every section`);
 
   const title = `${river} Camps — All ${n} by Mile, Size &amp; Water Level | LateBoof`;
-  const description = `Every named camp on the ${river}, Corn Creek to Long Tom Bar: river mile, side, how many people it holds at low and at high water, which ${large + small} are reservable, and what each is like. Filter by group size and water level.`;
+  const description = profile.description(ctx);
   const url = `https://lateboof.com/${slug}-camps`;
   const breadcrumb = JSON.stringify({
     "@context": "https://schema.org",
@@ -215,6 +252,12 @@ ${inSection.map(([c, id]) => campArticle(slug, c, id, aerials)).join("\n")}
       { "@type": "ListItem", position: 3, name: "Camps", item: url },
     ],
   });
+  // A live "today's level" line, for rivers whose list is rated in gauge feet.
+  const liveLevels = data.gauge?.key && levels.every((l) => l.ft != null);
+  const live = liveLevels
+    ? `\n      <p class="camp-live" id="camp-live" data-gauge-key="${esc(data.gauge.key)}" data-gauge-name="${esc(data.gauge.name)}" data-levels-ft="${levels.map((l) => l.ft).join(",")}" hidden></p>`
+    : "";
+  const anchors = (data.anchors ?? []).filter((a) => a.mark).map((a) => ({ mile: a.mile, mark: a.mark }));
 
   return `<!DOCTYPE html>
 <!-- Generated by scripts/build-camp-guide.mjs from scripts/data/${slug}-camps.json — edit the data, not this file. -->
@@ -246,16 +289,16 @@ ${inSection.map(([c, id]) => campArticle(slug, c, id, aerials)).join("\n")}
   <div class="river-wrap camp-wrap">
   <div class="river-page camp-guide" data-level="any">
     <div class="river-head">
-      <span class="river-kicker">Camp guide · <a href="/${slug}">${river}</a>, Frank Church&ndash;River of No Return Wilderness</span>
+      <span class="river-kicker">Camp guide · <a href="/${slug}">${river}</a>, ${profile.wilderness}</span>
       <h1>${river} camps</h1>
-      <span class="river-where">${n} named camps, Corn Creek to Long Tom Bar · river miles ${first}&ndash;${last}</span>
+      <span class="river-where">${n} named camps, ${profile.span} · river miles ${first}&ndash;${last}</span>
     </div>
 
     <dl class="river-facts">
-      <div><dt>Camps</dt><dd>${n} named, ${large + small} reservable</dd></div>
-      <div><dt>Reservable</dt><dd>${large} large, ${small} small-medium</dd></div>
-      <div><dt>At high water</dt><dd>${highOk} usable, ${lowOnly} gone</dd></div>
-      <div><dt>Camp requests</dt><dd>Emailed form, 14 days before launch</dd></div>
+${profile
+  .facts(ctx)
+  .map(([dt, dd]) => `      <div><dt>${dt}</dt><dd>${dd}</dd></div>`)
+  .join("\n")}
     </dl>
 
     <div class="river-body">
@@ -271,81 +314,23 @@ ${sections.map((s) => `      <a href="#${s.id}">${esc(s.title)}</a> ·`).join("\
     </nav>
 
     <h2 id="read">How to read this</h2>
-    <p>
-      Every camp below carries two numbers from the Forest Service list: how
-      many people it holds at <strong>low water</strong> and how many at
-      <strong>high water</strong>. They are often different, and that
-      difference is the most useful thing on this page. ${lowOnly} of the
-      ${n} camps are beaches that do not exist at high water. ${shrink} more
-      shrink.${highOnly ? ` ${highOnly === 1 ? "One exists" : `${highOnly} exist`} only at high water.` : ""}
-    </p>
-    <p>
-      The capacities are limits, not suggestions. A group may not use a camp
-      that is rated for fewer people than it has, so a party of 12 cannot take
-      a 10-person beach, reserved or not.
-    </p>
-    <p>
-      The list does not say what flow separates low from high. Treat the June
-      runoff as high water and expect the low-water beaches to come out as the
-      river drops through July. If you launch early, or the year is a big one,
-      plan on the high-water numbers and check
-      <a href="/${slug}">today&rsquo;s flow</a> before you fill in a request.
-    </p>
+${profile.read(ctx)}
 
-    <h2 id="rules">Requesting reserved camps</h2>
-    <p>
-      The Forest Service now assigns reservable camps ahead of time, by
-      email, not at the Corn Creek launch. For launches from June 15 through
-      September 7 the River Office emails the permit holder a camp request
-      form 14 days before the launch date.
-    </p>
-    <ul>
-      <li>Submit the form at least 7 days before launch. It can be submitted once. Miss it and you get no reservable camps.</li>
-      <li>A permit can hold at most 5 reservable camps.</li>
-      <li>Groups of fewer than 21 on a 7- or 8-day trip may not reserve large camps. On a trip of 6 days or fewer they may ask, but groups of 21 or more are assigned large camps first.</li>
-      <li>No layovers in a reservable camp, and you must be in the camp on the date printed on the permit.</li>
-      <li>Be in a reserved camp by 7 PM Mountain time and out by noon. After 7 PM an empty reservable camp is open to anyone.</li>
-      <li>Reserved camps are final once the permit is issued, which happens by email 5 or 6 days before launch.</li>
-      <li>Everything not marked reservable is first-come.</li>
-    </ul>
-    <p>
-      Trip length follows group size during the control season: up to 8 days
-      for 1&ndash;10 people, 7 days for 11&ndash;20, and 6 days for
-      21&ndash;30. Rules change; the
-      <a href="${source.fsRules.url}">Salmon-Challis National Forest page</a>
-      is the authority, and this summary was checked against it on ${checked}.
-    </p>
+    <h2 id="rules">${profile.rulesTitle}</h2>
+${profile.rules(ctx)}
 
     <h2 id="groups">Picking camps for your group</h2>
     <dl class="river-list">
-      <dt>Groups of 21 to 30</dt>
-      <dd>Only the 30-person camps are open to you: ${full} at low water, ${fullHigh} at high. Large reservable camps that hold 30 at any level: ${linkList(camps, ids, (c) => c.r === "L" && c.hi >= 30)}.</dd>
-      <dt>Groups of 10 or fewer</dt>
-      <dd>${tiny} camps are capped at 10 people, so no larger group can take them. The reservable ones: ${linkList(camps, ids, (c) => c.r === "S" && c.lo <= 10)}.</dd>
-      <dt>Early-season and high-water trips</dt>
-      <dd>Plan around the ${highOk} camps with a high-water capacity. First-come camps that hold 30 at high water: ${linkList(camps, ids, (c) => !c.r && c.hi >= 30)}.</dd>
-      <dt>Hot-weather trips</dt>
-      <dd>Camps a source describes as shaded: ${linkList(camps, ids, has("shade"))}. Described as exposed or hot: ${linkList(camps, ids, has("no-shade"))}.</dd>
-      <dt>Kids, new boaters, tired crews</dt>
-      <dd>Easy landings: ${linkList(camps, ids, has("easy-landing"))}. ${linkList(camps, ids, has("kids"))} has a sand dune to jump from. Landings that need attention: ${linkList(camps, ids, has("tricky-landing"))}.</dd>
-      <dt>Hot springs</dt>
-      <dd>Camps at the Barth hot springs: ${linkList(camps, ids, has("hot-springs"))}.</dd>
-      <dt>History and rock art</dt>
-      <dd>Pictographs: ${linkList(camps, ids, has("rock-art"))}. Homesteads, graves and relics: ${linkList(camps, ids, has("history"))}.</dd>
-      <dt>Hikers</dt>
-      <dd>${linkList(camps, ids, has("hiking"))}.</dd>
-      <dt>If you want quiet</dt>
-      <dd>These have planes, jet boats, vehicles or day visitors nearby: ${linkList(camps, ids, has("traffic"))}.</dd>
+${profile.groups(ctx)}
     </dl>
 
     <h2 id="find">Find a camp</h2>
-    <div class="camp-filters" id="camp-filters" hidden>
+    <div class="camp-filters" id="camp-filters" hidden>${live}
       <div class="camp-filter">
         <span class="camp-filter-label" id="level-label">Water level</span>
         <div class="status-btns" role="group" aria-labelledby="level-label">
           <button type="button" class="status-btn active" data-level="any" aria-pressed="true">Any</button>
-          <button type="button" class="status-btn" data-level="low" aria-pressed="false">Low water</button>
-          <button type="button" class="status-btn" data-level="high" aria-pressed="false">High water</button>
+${levels.map((l, i) => `          <button type="button" class="status-btn" data-level="${i}" data-label="${esc(l.label.toLowerCase())}" aria-pressed="false">${esc(l.label)}</button>`).join("\n")}
         </div>
       </div>
       <div class="camp-filter">
@@ -353,18 +338,15 @@ ${sections.map((s) => `      <a href="#${s.id}">${esc(s.title)}</a> ·`).join("\
         <input type="number" id="camp-size" class="search-input camp-size" min="1" max="30" inputmode="numeric" placeholder="people">
       </div>
       <div class="camp-filter">
-        <span class="camp-filter-label" id="res-label">Type</span>
-        <div class="status-btns" role="group" aria-labelledby="res-label">
-          <button type="button" class="status-btn active" data-res="all" aria-pressed="true">All</button>
-          <button type="button" class="status-btn" data-res="L" aria-pressed="false">Large res.</button>
-          <button type="button" class="status-btn" data-res="S" aria-pressed="false">Small res.</button>
-          <button type="button" class="status-btn" data-res="F" aria-pressed="false">First-come</button>
+        <span class="camp-filter-label" id="type-label">Type</span>
+        <div class="status-btns" role="group" aria-labelledby="type-label">
+${profile.typeFilter.map(([v, label], i) => `          <button type="button" class="status-btn${i === 0 ? " active" : ""}" data-type="${v}" aria-pressed="${i === 0}">${esc(label)}</button>`).join("\n")}
         </div>
       </div>
       <div class="camp-filter camp-filter-wide">
         <span class="camp-filter-label" id="want-label">Must have</span>
         <div class="camp-chips" role="group" aria-labelledby="want-label">
-${FILTERS.map(([key, label, tags]) => `          <button type="button" class="camp-chip" data-want="${tags.join(" ")}" data-key="${key}" aria-pressed="false">${esc(label)}</button>`).join("\n")}
+${profile.chips.map(([key, label, tags]) => `          <button type="button" class="camp-chip" data-want="${tags.join(" ")}" data-key="${key}" aria-pressed="false">${esc(label)}</button>`).join("\n")}
         </div>
       </div>
       <p class="camp-count"><span id="camp-count" role="status" aria-live="polite">Showing all ${n} camps.</span> <button type="button" class="camp-reset" id="camp-reset" hidden>Clear filters</button></p>
@@ -377,7 +359,7 @@ ${sectionHtml}
     <h2 id="photos">The aerials, and the photos still missing</h2>
     <p>
       Every camp has an aerial from the USDA&rsquo;s National Agriculture
-      Imagery Program, which is public domain.${aerialNote} Each frame is
+      Imagery Program, which is public domain.${profile.aerialSummary(ctx)} Each frame is
       ${aerials ? aerials.frameKm[0] : "about a"} km across with north at the
       top. The Forest Service publishes river miles, not coordinates, so a
       frame is centred on the camp&rsquo;s mile along the river&rsquo;s mapped
@@ -400,12 +382,10 @@ ${sectionHtml}
 
     <h2 id="sources">Sources and what this is not</h2>
     <p>
-      Mile, river side, both capacities, reservable status and the quoted note
-      on every camp come from the
-      <a href="${source.fs.url}">${esc(source.fs.label)}</a>. Camp names are
+      ${profile.sourcesFs(ctx)} Camp names are
       spelled as that list spells them, because that is what the request form
       uses. The descriptions are LateBoof&rsquo;s own wording; details beyond
-      the Forest Service note were checked against
+      the Forest Service list were checked against
       <a href="${source.gr.url}">${esc(source.gr.label)}</a>, and where the two
       disagree the Forest Service figure is used and the camp says so.
     </p>
@@ -427,7 +407,7 @@ ${sectionHtml}
     </div>
   </div>
 
-    <aside class="river-side camp-rail" aria-hidden="true" data-camp-rail="/${slug}-data.js" data-landmarks="${esc(JSON.stringify(data.landmarks ?? []))}">
+    <aside class="river-side camp-rail" aria-hidden="true" data-camp-rail="/${slug}-data.js" data-landmarks="${esc(JSON.stringify(data.landmarks ?? []))}" data-anchors="${esc(JSON.stringify(anchors))}">
       <div class="river-side__head">Camps down the river<span data-rail-now>Mile 0</span></div>
       <div class="river-map camp-rail__map" data-rail-map>
         <svg class="camp-rail__svg" data-rail-svg>
@@ -440,7 +420,7 @@ ${sectionHtml}
           </g>
         </svg>
       </div>
-      <div class="river-side__foot">▲ large reservable · △ small-medium · ○ first-come. River left is on the right: the map looks downstream. Miles are true, bends are flattened.</div>
+      <div class="river-side__foot">${profile.legend} River left is on the right: the map looks downstream. Miles are true, bends are flattened.</div>
     </aside>
   </div>
 
@@ -475,7 +455,7 @@ export function onDisk(slug) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const slugs = process.argv.slice(2);
-  for (const slug of slugs.length ? slugs : ["main-salmon"]) {
+  for (const slug of slugs.length ? slugs : Object.keys(PROFILES)) {
     const { data, html } = build(slug);
     writeFileSync(new URL(`web/${slug}-camps.html`, ROOT), html);
     console.log(`web/${slug}-camps.html — ${data.camps.length} camps, ${(html.length / 1024).toFixed(0)} KB`);

@@ -1,4 +1,4 @@
-// The strip map beside a camp guide (/main-salmon-camps): every camp on the
+// The strip map beside a camp guide (/main-salmon-camps, /mf-salmon-camps): every camp on the
 // river's real line, an orange boat that is at whichever camp you are reading,
 // and mile markers where there is room for them.
 //
@@ -13,11 +13,19 @@
 // Camps are read from the page itself (the .camp articles the generator wrote),
 // so the map can never disagree with the list, and filtered-out camps fade.
 //
-// Positions: river mile x 1.609 km laid along the OSM centerline. Checked
-// against the surveyed creek mouths in the data (Bargamin, Big Mallard, South
-// Fork) that agrees with the Forest Service miles to about a quarter mile.
-// Sideways the line is squeezed into RIVER_COL pixels so both banks have room
-// for labels — distances down the river are true, bends are flattened.
+// Positions: Forest Service river miles laid along the OSM centerline, pinned
+// at the page's data-anchors — creek mouths named in the data file whose
+// Forest Service mile is known, matched by name to the surveyed MARKS in
+// <slug>-data.js. Without them the Middle Fork's line drifts up to a mile from
+// the Forest Service's miles; with them it agrees to about a quarter mile.
+// Down the page is distance ALONG the river (PX_PER_KM per km of channel), not
+// the map frame's y: where a river turns across the frame (the Middle Fork
+// between Indian Creek and the Lodge), frame y would fold ten miles into a few
+// pixels and stack twenty labels on top of each other. Sideways, the line keeps
+// its real wiggle squeezed into RIVER_COL pixels so both banks have room for
+// labels. So miles are true and bends are flattened, as the legend says.
+// Glyphs come from each camp's data-glyph (filled / open triangle, or a dot),
+// chosen per river by the generator and explained in the rail's legend.
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 const KM_PER_MILE = 1.609344;
@@ -50,15 +58,16 @@ const shown = host && getComputedStyle(host).display !== "none";
 if (shown && guide && box && svg && pan && bed && flow && milesG && campsG && boat) {
   // Tributaries are left out on purpose: squeezed sideways this hard they read
   // as stray lines beside the river, not as creeks.
-  const { FRAME, RIVER } = await import(host.dataset.campRail);
+  const { FRAME, RIVER, MARKS = [] } = await import(host.dataset.campRail);
   const landmarks = JSON.parse(host.dataset.landmarks || "[]");
+  const anchorList = JSON.parse(host.dataset.anchors || "[]");
 
   const camps = [...guide.querySelectorAll(".camp")].map((el) => ({
     el,
     id: el.id,
     mile: Number(el.dataset.mile),
-    bank: el.dataset.side, // "L" | "R", looking downstream
-    res: el.dataset.res,
+    bank: el.dataset.side, // "L" | "R" looking downstream, "C" for an island
+    glyph: el.dataset.glyph || "dot",
     name: el.querySelector("h3").textContent.replace(/ Campsite$/, ""),
   }));
 
@@ -68,7 +77,35 @@ if (shown && guide && box && svg && pan && bed && flow && milesG && campsG && bo
     cumKm.push(cumKm[i - 1] + Math.hypot(RIVER[i][0] - RIVER[i - 1][0], RIVER[i][1] - RIVER[i - 1][1]));
   }
   const totalKm = cumKm[cumKm.length - 1];
-  const totalMiles = totalKm / KM_PER_MILE;
+
+  // Forest Service mile -> mile along this line, piecewise-linear through the
+  // anchors; below the last one its offset carries on.
+  const lineMileOf = (x, y) => {
+    let best = 0;
+    let bd = Infinity;
+    RIVER.forEach(([rx, ry], i) => {
+      const d = Math.hypot(rx - x, ry - y);
+      if (d < bd) [bd, best] = [d, i];
+    });
+    return cumKm[best] / KM_PER_MILE;
+  };
+  const pins = [[0, 0]];
+  for (const a of anchorList) {
+    const m = MARKS.find((k) => k.name === a.mark);
+    if (m) pins.push([a.mile, lineMileOf(m.x, m.y)]);
+  }
+  pins.sort((a, b) => a[0] - b[0]);
+  const lineMile = (mile) => {
+    for (let i = 1; i < pins.length; i += 1) {
+      const [m0, l0] = pins[i - 1];
+      const [m1, l1] = pins[i];
+      if (mile <= m1) return l0 + ((l1 - l0) * (mile - m0)) / (m1 - m0);
+    }
+    const [mLast, lLast] = pins[pins.length - 1];
+    return mile + (lLast - mLast);
+  };
+  // The last river mile anything on this page names (a camp or a landmark).
+  const lastMile = Math.max(...camps.map((c) => c.mile), ...landmarks.map((l) => l.m));
 
   // Vertex index + fraction for a distance down the river.
   const locate = (km) => {
@@ -93,7 +130,7 @@ if (shown && guide && box && svg && pan && bed && flow && milesG && campsG && bo
   let active = null;
 
   const at = (mile) => {
-    const { i, t } = locate(mile * KM_PER_MILE);
+    const { i, t } = locate(lineMile(mile) * KM_PER_MILE);
     const a = px[i];
     const b = px[Math.min(px.length - 1, i + 1)];
     return {
@@ -119,12 +156,12 @@ if (shown && guide && box && svg && pan && bed && flow && milesG && campsG && bo
 
     const sx = RIVER_COL / FRAME.w;
     const ox = (w - RIVER_COL) / 2;
-    px = RIVER.map(([x, y]) => [ox + x * sx, PAD + y * PX_PER_KM]);
+    px = RIVER.map(([x], i) => [ox + x * sx, PAD + cumKm[i] * PX_PER_KM]);
     cumPx = [0];
     for (let i = 1; i < px.length; i += 1) {
       cumPx.push(cumPx[i - 1] + Math.hypot(px[i][0] - px[i - 1][0], px[i][1] - px[i - 1][1]));
     }
-    mapH = FRAME.h * PX_PER_KM + PAD * 2;
+    mapH = totalKm * PX_PER_KM + PAD * 2;
 
     const line = (pts) => `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`;
     const d = line(px);
@@ -162,16 +199,16 @@ if (shown && guide && box && svg && pan && bed && flow && milesG && campsG && bo
 
     for (const it of items) {
       const p = at(it.m);
-      const bank = it.s === "R" ? "R" : "L";
+      const bank = it.s === "R" ? "R" : "L"; // an island camp labels on the left-bank side
       const ly = place(bank, p.y);
-      const g = el("g", { class: it.landmark ? "camp-rail__landmark" : `camp-rail__camp res-${it.camp.res}` });
+      const g = el("g", { class: it.landmark ? "camp-rail__landmark" : `camp-rail__camp glyph-${it.camp.glyph}` });
       g.append(leader(p, bank, ly));
       if (it.landmark) {
         g.append(el("rect", { x: (p.x - 3).toFixed(1), y: (p.y - 3).toFixed(1), width: 6, height: 6 }));
         g.append(el("text", { x: col[bank].toFixed(1), y: (ly + 3).toFixed(1), "text-anchor": anchor[bank] }, it.n));
       } else {
         const glyph =
-          it.camp.res === "F"
+          it.camp.glyph === "dot"
             ? el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: 2.4 })
             : el("path", { d: "M-4 3 L0 -4 L4 3 Z", transform: `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})` });
         g.append(glyph);
@@ -186,7 +223,7 @@ if (shown && guide && box && svg && pan && bed && flow && milesG && campsG && bo
     // on whichever bank has a clear line for it. No room, no number.
     milesG.replaceChildren();
     const clear = (bank, y) => taken[bank].every((ly) => Math.abs(ly - y) >= LABEL_GAP);
-    for (let m = MILE_EVERY; m < totalMiles; m += MILE_EVERY) {
+    for (let m = MILE_EVERY; m < lastMile; m += MILE_EVERY) {
       const p = at(m);
       milesG.append(el("path", { class: "camp-rail__tick", d: `M ${(p.x - 5).toFixed(1)} ${p.y.toFixed(1)} h 10` }));
       const bank = clear("L", p.y) ? "L" : clear("R", p.y) ? "R" : null;
@@ -215,7 +252,7 @@ if (shown && guide && box && svg && pan && bed && flow && milesG && campsG && bo
     }
     const last = visible[visible.length - 1];
     const end = document.documentElement.scrollHeight - window.innerHeight * (1 - READ_AT);
-    if (last) stops.push([Math.max(end, last.el.getBoundingClientRect().bottom + y0), totalMiles]);
+    if (last) stops.push([Math.max(end, last.el.getBoundingClientRect().bottom + y0), lastMile]);
     for (const [id, g] of labels) g.classList.toggle("off", document.getElementById(id).hidden);
   };
 

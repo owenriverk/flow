@@ -251,22 +251,24 @@
 .river-body .camp h3 { font-size: 0.95rem; margin: 0.15rem 0 0.45rem; }
 .river-body .camp p { margin-bottom: 0.4rem; }
 
-.camp-res { border: 1px solid var(--border-mid); padding: 0.05rem 0.4rem; white-space: nowrap; color: var(--muted); }
-.camp-res-L { background: #111; border-color: #111; color: #fff; }
-.camp-res-S { border-color: #111; color: #111; font-weight: 700; }
+.camp-badges { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.3rem; }
+.camp-badge { border: 1px solid var(--border-mid); padding: 0.05rem 0.4rem; white-space: nowrap; color: var(--muted); }
+.camp-badge.solid { background: #111; border-color: #111; color: #fff; }
+.camp-badge.outline { border-color: #111; color: #111; font-weight: 700; }
 
 /* The two capacities. The level the reader picked is full strength; the other
    is still legible, just quieter. "No camp" is red at either level. */
-.camp-cap { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); margin: 0 0 0.55rem; }
-.camp-cap > div { padding: 0.35rem 0.6rem; }
+.camp-cap { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); border: 1px solid var(--border); margin: 0 0 0.55rem; }
+.camp-cap > div { padding: 0.35rem 0.6rem; min-width: 0; }
 .camp-cap > div + div { border-left: 1px solid var(--border-light); }
 .camp-cap dt { color: var(--faint); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .camp-cap dd { font-size: 0.95rem; font-weight: 700; margin: 0; }
 .camp-cap .none dd { color: var(--low); }
-.camp-guide[data-level="low"] .camp-cap-hi,
-.camp-guide[data-level="high"] .camp-cap-lo { background: #f6f6f6; }
-.camp-guide[data-level="low"] .camp-cap-hi dd,
-.camp-guide[data-level="high"] .camp-cap-lo dd { font-weight: 400; opacity: 0.75; }
+.camp-cap .unknown dd { color: var(--faint); font-weight: 400; font-style: italic; }
+/* camps.js adds .dim to every level except the one picked in the filters. */
+.camp-cap .dim { background: #f6f6f6; }
+.camp-cap .dim dd { font-weight: 400; opacity: 0.75; }
+@media (max-width: 420px) { .camp-cap dd { font-size: 0.85rem; } }
 
 .river-body .camp .camp-level { font-size: 0.78rem; line-height: 1.6; }
 .camp-level strong { color: var(--text); }
@@ -332,6 +334,8 @@
 .camp-chip:hover { background: #ececec; }
 .camp-chip[aria-pressed="true"] { background: var(--text); color: var(--bg); }
 .river-body p.camp-count { flex-basis: 100%; color: var(--muted); font-size: 0.72rem; margin: 0; }
+/* Today's gauge reading against the list's columns (Middle Fork). */
+.river-body p.camp-live { flex-basis: 100%; color: var(--text); font-size: 0.74rem; line-height: 1.55; margin: 0; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border-light); }
 .camp-reset {
   border: 0;
   background: none;
@@ -350,5 +354,5 @@
   .site-header, .site-footer, .camp-filters, .river-toc, .river-related, #photos, #photos + p, #photos ~ .river-tip { display: none; }
   .camp { break-inside: avoid; }
   .camp[hidden], .camp-section[hidden] { display: none; }
-  .camp-res-L { background: none; color: #000; font-weight: 700; }
+  .camp-badge.solid { background: none; color: #000; font-weight: 700; }
 }

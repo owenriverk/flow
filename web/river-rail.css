@@ -72,9 +72,9 @@
 .camp-rail__camp text { font-size: 9px; fill: #555; paint-order: stroke; stroke: #fff; stroke-width: 2.5px; stroke-linejoin: round; }
 .camp-rail__camp circle { fill: #fff; stroke: #555; stroke-width: 1; }
 .camp-rail__camp path:not(.camp-rail__leader) { stroke: #111; stroke-width: 1.1; stroke-linejoin: round; }
-.camp-rail__camp.res-L path:not(.camp-rail__leader) { fill: #111; }
-.camp-rail__camp.res-S path:not(.camp-rail__leader) { fill: #fff; }
-.camp-rail__camp.res-L text, .camp-rail__camp.res-S text { fill: #111; }
+.camp-rail__camp.glyph-filled path:not(.camp-rail__leader) { fill: #111; }
+.camp-rail__camp.glyph-open path:not(.camp-rail__leader) { fill: #fff; }
+.camp-rail__camp.glyph-filled text, .camp-rail__camp.glyph-open text { fill: #111; }
 .camp-rail__camp:hover text { fill: #000; text-decoration: underline; }
 /* The camp at the reading line. */
 .camp-rail__camp.on text { fill: #000; font-weight: 700; font-size: 10px; }

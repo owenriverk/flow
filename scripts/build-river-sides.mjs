@@ -147,21 +147,25 @@ export const RIVERS = [
     span: "Boundary Creek → Cache Bar",
     levelStep: 100, indexEvery: 500, simplifyEps: 0.04, minLength: 0.4, demStep: 3, corridorKm: 5, padX: 3, padY: 1.5,
     marks: [
-      { name: "Velvet Falls", kind: "rapid", km: 8.2 },
-      { name: "Powerhouse", kind: "rapid", km: 23.7 },
+      // Rapid km corrected 2026-09-30 while building the Middle Fork camp
+      // guide: Tappan Falls sat ~7 miles early, Powerhouse ~3 and Weber ~2.
+      // Now GoRafting's mile guide x 1.609; its miles track this OSM line
+      // closely (Camas Creek mouth: 60.38 there, 60.36 on the line).
+      { name: "Velvet Falls", kind: "rapid", km: 8.5 },
+      { name: "Powerhouse", kind: "rapid", km: 18.5 },
       { name: "Pistol Creek", kind: "rapid", at: "mfsalmon-osm.json:way:Pistol Creek" },
       { name: "Indian Creek", kind: "camp", km: 40.9 },
       { name: "Sunflower Flat", kind: "camp", km: 53.8 },
       { name: "Loon Creek", kind: "camp", at: "mfsalmon-osm.json:way:Loon Creek" },
-      { name: "Tappan Falls", kind: "rapid", km: 82.9 },
+      { name: "Tappan Falls", kind: "rapid", km: 94.0 },
       { name: "Camas Creek", kind: "rapid", at: "mfsalmon-osm.json:way:Camas Creek" },
-      { name: "Haystack", kind: "rapid", km: 107.2 },
+      { name: "Haystack", kind: "rapid", km: 109.1 },
       { name: "Big Creek", kind: "camp", at: "mfsalmon-osm.json:way:Big Creek" },
-      { name: "Redside", kind: "rapid", km: 132.6 },
-      { name: "Weber", kind: "rapid", km: 136.0 },
-      { name: "Rubber", kind: "rapid", km: 147.3 },
-      { name: "Devils Tooth", kind: "rapid", km: 149.0 },
-      { name: "House Rocks", kind: "rapid", km: 150.3 },
+      { name: "Redside", kind: "rapid", km: 132.3 },
+      { name: "Weber", kind: "rapid", km: 133.0 },
+      { name: "Rubber", kind: "rapid", km: 146.5 },
+      { name: "Devils Tooth", kind: "rapid", km: 150.3 },
+      { name: "House Rocks", kind: "rapid", km: 150.6 },
       { name: "Main Salmon confluence", kind: "rapid", at: "mfsalmon-osm.json:way:Middle Fork Salmon River" },
     ],
     tribs: [

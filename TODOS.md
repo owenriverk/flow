@@ -256,7 +256,7 @@
 - **Effort:** S (human: ~1h / CC: ~10min) to archive, M to wire up.
   **Priority:** P2 — it is actively misleading, which is worse than the bytes.
 
-## Campsite guide: photos for the Main, then the Middle Fork
+## Campsite guides: Main Salmon and Middle Fork (photos still open)
 
 - **Done 2026-09-30:** `/main-salmon-camps` — all 92 Main Salmon camps from the
   Forest Service's 2025 list (mile, bank, low-water and high-water capacity,
@@ -281,11 +281,18 @@
 - **Open — trip verification.** Nothing in the descriptions is from a LateBoof
   trip. Three camps carry a "sources disagree" note (river side at Five Mile
   Creek, Cove Creek, Lower Pine Tree Hole; high-water access at Groundhog Bar).
-- **Next — Middle Fork.** Same generator. Move the two Main-specific prose
-  blocks in `render()` ("requesting camps", "picking camps for your group")
-  into the data file first, add `scripts/data/mf-salmon-camps.json` from the
-  Forest Service's Middle Fork camp list, and link it from `/mf-salmon#camps`
-  (that page still has the "Coming to this page" aside).
+- **Done 2026-09-30 — Middle Fork:** `/mf-salmon-camps`, all 98 camps on the
+  Forest Service's 2025 PDF list (the web table is identical but leaves out
+  Airplane). Three capacities per camp, at 2.5 ft / about 4 ft / 6 ft on the
+  Middle Fork Lodge gauge (USGS 13309220 gauge height), plus layover,
+  hot-springs, heritage, no-wood and June / July-Aug use columns. The page
+  shows today's Lodge reading against those columns. The generator is now a
+  core plus one profile per river (`scripts/camp-guides/<slug>.mjs`) for the
+  rules and group lists; the strip map and aerials are pinned to creek-mouth
+  `anchors` in each data file (the MF line drifts ~1 mile from Forest Service
+  miles without them). Three camps carry a "sources disagree" note (Flying B
+  Airport's bank, Fish Camp's and Solitude's size); Hood Ranch, Culver Creek
+  and Last Chance mention a GoRafting / Forest Service difference in their text.
 - **Later:** Lower Salmon and Grand Canyon are first-come, so a lighter
   "beaches by mile" list rather than a reservation guide. A phone-width
   version of the strip map (it is hidden below 1180px, like the other rails).

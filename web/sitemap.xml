@@ -61,7 +61,12 @@
   </url>
   <url>
     <loc>https://lateboof.com/mf-salmon</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-09-30</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lateboof.com/mf-salmon-camps</loc>
+    <lastmod>2026-09-30</lastmod>
     <priority>0.8</priority>
   </url>
   <url>

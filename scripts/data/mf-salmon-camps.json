@@ -1,0 +1,269 @@
+{
+  "_readme": [
+    "Middle Fork Salmon camp guide data, the source for web/mf-salmon-camps.html.",
+    "Build: node scripts/build-camp-guide.mjs mf-salmon",
+    "",
+    "m/n/s/cap/lay/hot/heritage/noWood/use come straight from the Forest Service list and",
+    "are the authority: 'Middle Fork Salmon Campsites' (2025 Middle Fork Camps for Website.pdf,",
+    "Salmon-Challis NF, https://www.fs.usda.gov/media/233549), read 2026-09-30 and cross-checked",
+    "against the table on the Forest Service's Middle Fork page (identical except that the web",
+    "table leaves out Airplane, mile 23.9).",
+    "  m        river mile from Boundary Creek     s    river side: L, R, or C (an island)",
+    "  cap      capacity at 2.5 ft or less / about 4 ft / 6 ft or more on the Middle Fork",
+    "           Lodge gauge (USGS 13309220); null = blank on the list, 0 = no camp",
+    "  lay      layover allowed                     hot  hot-springs camp (one per trip)",
+    "  heritage heritage site with camping restrictions",
+    "  noWood   asterisked on the list: do not gather downed wood for fires",
+    "  use      Forest Service use level, [June, July-August]",
+    "",
+    "d (and lowNote/highNote/conflict) are LateBoof's own words. Anything in them beyond the",
+    "Forest Service columns is corroborated by GoRafting's mile-by-mile Middle Fork guide",
+    "(https://gorafting.com/united-states/idaho/middle-fork-salmon/), read the same day; src",
+    "lists which sources an entry leans on. GoRafting's miles run up to a mile off the Forest",
+    "Service's; the Forest Service miles are used throughout.",
+    "Nothing here is from a LateBoof trip yet. Do not add detail without a source.",
+    "",
+    "t = attribute tags (see TAGS in the build script). photos = optional { low, high }, as in",
+    "main-salmon-camps.json. landmarks = non-camp labels on the strip map. anchors = creek",
+    "mouths whose Forest Service mile pins the map line and the aerials (see build-camp-aerials)."
+  ],
+  "river": "Middle Fork Salmon",
+  "slug": "mf-salmon",
+  "source": {
+    "fs": {
+      "label": "Forest Service, Middle Fork Salmon Campsites (2025)",
+      "url": "https://www.fs.usda.gov/media/233549"
+    },
+    "fsRules": {
+      "label": "Salmon-Challis National Forest, Middle Fork of the Salmon",
+      "url": "https://www.fs.usda.gov/r04/salmon-challis/recreation/epic-adventures/middle-fork-salmon-river"
+    },
+    "gr": {
+      "label": "GoRafting, Middle Fork of the Salmon River Rafting Guide",
+      "url": "https://gorafting.com/united-states/idaho/middle-fork-salmon/"
+    },
+    "grFlows": {
+      "label": "GoRafting, Middle Fork of the Salmon River Flows & Levels",
+      "url": "https://gorafting.com/middle-fork-of-the-salmon-river-flows-levels/"
+    }
+  },
+  "checked": "2026-09-30",
+  "levels": [
+    {
+      "label": "2.5 ft or less",
+      "ft": 2.5
+    },
+    {
+      "label": "About 4 ft",
+      "ft": 4
+    },
+    {
+      "label": "6 ft or more",
+      "ft": 6
+    }
+  ],
+  "gauge": {
+    "site": "13309220",
+    "name": "Middle Fork Lodge",
+    "key": "middle fork salmon",
+    "stage": true
+  },
+  "anchors": [
+    {
+      "mile": 21.4,
+      "mark": "Pistol Creek",
+      "at": "mfsalmon-osm.json:way:Pistol Creek"
+    },
+    {
+      "mile": 31.7,
+      "at": "mfsalmon-osm.json:way:Marble Creek"
+    },
+    {
+      "mile": 49.3,
+      "mark": "Loon Creek",
+      "at": "mfsalmon-osm.json:way:Loon Creek"
+    },
+    {
+      "mile": 59.9,
+      "mark": "Camas Creek",
+      "at": "mfsalmon-osm.json:way:Camas Creek"
+    },
+    {
+      "mile": 77.9,
+      "mark": "Big Creek",
+      "at": "mfsalmon-osm.json:way:Big Creek"
+    },
+    {
+      "mile": 96.3,
+      "mark": "Main Salmon confluence",
+      "at": "mfsalmon-osm.json:way:Middle Fork Salmon River"
+    }
+  ],
+  "sections": [
+    {
+      "id": "upper",
+      "title": "Boundary Creek to Indian Creek",
+      "from": 0,
+      "to": 24.5,
+      "blurb": "The steep, cold upper river: Velvet Falls and the Powerhouse rapids, three hot-springs camps between miles 7 and 13, and a run of camps burned in the 2007 fire. At low water many trips skip it and fly in to Indian Creek."
+    },
+    {
+      "id": "middle",
+      "title": "Indian Creek to Loon Creek",
+      "from": 24.5,
+      "to": 50.5,
+      "blurb": "The heart of the trip: big ponderosa camps, Sunflower Hot Springs, the Middle Fork Lodge and its gauge, heritage sites and airstrips, ending at the huge bar at the mouth of Loon Creek."
+    },
+    {
+      "id": "lower",
+      "title": "Loon Creek to Big Creek",
+      "from": 50.5,
+      "to": 78.5,
+      "blurb": "Hospital Bar hot springs, the Tappan homestead and canyon, Camas Creek, the Flying B Ranch, and a long run of grassy-flat camps down to Big Creek."
+    },
+    {
+      "id": "impassable",
+      "title": "The Impassable Canyon",
+      "from": 78.5,
+      "to": 100,
+      "blurb": "Below Big Creek the trail leaves the river and the walls close in. During the control season a group gets one night down here, so choose it carefully."
+    }
+  ],
+  "landmarks": [
+    {
+      "m": 0,
+      "n": "Boundary Creek put-in",
+      "s": "L"
+    },
+    {
+      "m": 25,
+      "n": "Indian Creek airstrip",
+      "s": "L"
+    },
+    {
+      "m": 33.4,
+      "n": "MF Lodge gauge",
+      "s": "R"
+    },
+    {
+      "m": 66.6,
+      "n": "Flying B Ranch",
+      "s": "L"
+    },
+    {
+      "m": 78.3,
+      "n": "One night below here",
+      "s": "L"
+    },
+    {
+      "m": 96.3,
+      "n": "Main Salmon confluence",
+      "s": "L"
+    },
+    {
+      "m": 99.7,
+      "n": "Cache Bar take-out",
+      "s": "R"
+    }
+  ],
+  "camps": [
+    {"m": 0.7, "n": "Teepee Hole", "s": "L", "cap": [10, 10, 10], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["easy-landing"], "d": "A small camp with a good eddy, less than a mile below the Boundary Creek ramp."},
+    {"m": 1.6, "n": "Cable Hole", "s": "L", "cap": [10, null, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "A small, rarely used camp just above Dorr's Rock."},
+    {"m": 2.4, "n": "Gardells Hole", "s": "R", "cap": [20, null, 10], "lay": true, "use": ["Low", "High"], "src": ["fs", "gr"], "t": [], "d": "A gravel camp that guides call the coldest camp on the river.", "lowNote": "It gets better as the water drops."},
+    {"m": 5.5, "n": "Boy Scout", "s": "R", "cap": [10, 10, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "A small camp below Velvet Falls that is hard to spot from upstream. It is also the usual lunch stop after running the falls, so expect company at midday."},
+    {"m": 6.5, "n": "Big Bend", "s": "R", "cap": [30, null, 30], "lay": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["sand", "shade"], "d": "A well-liked camp on a big bend, with a sandy pull-in and a mix of shade and sun."},
+    {"m": 6.9, "n": "Trail Flat", "s": "L", "cap": [30, 30, 30], "lay": false, "hot": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["bench", "carry", "hot-springs"], "d": "The first hot-springs camp on the river. The camp is on a bench, so there is a carry, and the soaking pools sit in the cobbles at the back of the bar.", "lowNote": "The small pools in the cobbles appear as the river drops."},
+    {"m": 8.1, "n": "Rapid Camp", "s": "L", "cap": [5, null, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs"], "t": [], "d": "A five-person camp that disappears at 6 ft or more. Neither source says more about it."},
+    {"m": 8.2, "n": "Elkhorn Bar", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["burned"], "d": "A large camp spread through the trees. The marker is the big boulder in the river just above camp. The downstream end burned, but there is still plenty of room."},
+    {"m": 9.3, "n": "Saddle Camp", "s": "L", "cap": [15, 10, 15], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench"], "d": "A medium camp on a bench above the river. The Forest Service rates it smaller at about 4 ft (10 people) than at either low or high water (15)."},
+    {"m": 9.5, "n": "Boot Camp", "s": "R", "cap": [6, 6, 6], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench"], "d": "A six-person camp on a bench above the river, easy to float past."},
+    {"m": 11.8, "n": "Joe Bump Cabin", "s": "L", "cap": [30, 30, 30], "lay": false, "use": ["High", "Mid"], "src": ["fs", "gr"], "t": ["history", "tricky-landing"], "d": "A large camp beside Joe Bump's cabin, a Depression-era homestead. The ditch a few men dug to water it still cuts a long scar across the bench. One of the busiest camps in June.", "highNote": "The eddy is easy to miss at higher water: stay on the inside of the bend."},
+    {"m": 12.5, "n": "Thimbleberry", "s": "R", "cap": [12, 12, 12], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "A 12-person camp that some boaters call a secret gem for small groups."},
+    {"m": 12.7, "n": "Scout Camp", "s": "L", "cap": [30, 30, 30], "lay": false, "hot": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["hot-springs"], "d": "Tent sites tucked among the shrubs, with a trail downstream to the Sheepeater hot springs."},
+    {"m": 13, "n": "Sheepeater", "s": "L", "cap": [30, 30, 30], "lay": false, "hot": true, "use": ["High", "Mid"], "src": ["fs", "gr"], "t": ["hot-springs"], "d": "A large hot-springs camp with two pull-ins for different set-ups. Across a muddy, tepid stretch are several pools at different temperatures, and the minerals draw wildlife.", "lowNote": "The lower pull-in, the easy park-and-cook one, closes off as the river drops."},
+    {"m": 13.8, "n": "Fire Island", "s": "L", "cap": [30, 30, 30], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["burned", "no-shade"], "d": "A large camp marked by a boulder stacked with flood logs. The 2007 fire took the shade trees."},
+    {"m": 14.9, "n": "Lake Creek", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["burned"], "d": "Burned in 2007 like most camps in this stretch, but it holds a big group at every level."},
+    {"m": 15.2, "n": "Johns Camp", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Low"], "src": ["fs", "gr"], "t": ["burned", "no-shade"], "d": "A big camp with no shade, another casualty of the 2007 fire."},
+    {"m": 15.9, "n": "Greyhound", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["burned", "swimming"], "d": "A large camp burned in the 2007 fire, with a good swimming hole when the river is not too high."},
+    {"m": 15.9, "n": "Dome Hole", "s": "L", "cap": [12, 12, 12], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench", "burned"], "d": "A small camp up on a bench, burned in 2007."},
+    {"m": 16.5, "n": "Rapid River", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs"], "t": [], "d": "The Forest Service rates it for 30 at every level and allows layovers. Neither source describes it further."},
+    {"m": 19, "n": "Dolly Lake", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["High", "Mid"], "src": ["fs", "gr"], "t": ["shade", "swimming"], "d": "A gravel bar on the slow bend boaters call Dolly Lake, with tent sites up in the trees. One of the busiest camps in June.", "lowNote": "At medium and lower flows a boulder island appears that you can swim out to."},
+    {"m": 19.1, "n": "Big Snag", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Low"], "src": ["fs", "gr"], "t": ["shade", "tricky-landing", "hiking"], "d": "Named for the big dead tree you land just below. Tent sites spread through the trees behind camp, and there is a scramble up the rock outcrop behind it.", "highNote": "The landing comes up fast at medium and higher flows."},
+    {"m": 21.4, "n": "Pistol Creek Camp", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["easy-landing", "hiking"], "d": "At the mouth of Pistol Creek, with an easy park-and-cook landing, the creek to hike or fish, and pools below Pistol Creek Rapid to explore."},
+    {"m": 23.9, "n": "Airplane", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["carry", "shade"], "d": "A short, steep carry up the bank to a camp with room to spread out in the trees. The snags across the river are good for birds. It is on the Forest Service's PDF camp list but missing from the table on its web page."},
+    {"m": 24.7, "n": "Indian Creek Beach", "s": "L", "cap": [null, null, null], "lay": true, "use": ["Low", "Low"], "src": ["fs"], "t": ["traffic"], "d": "On the Forest Service list at Indian Creek, where low-water trips fly in to skip the upper river, but with no capacity given at any level. Ask the River Office what it holds before you request it."},
+    {"m": 26.2, "n": "Indian Creek Camp", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Low"], "src": ["fs", "gr"], "t": ["shade", "tricky-landing", "hiking"], "d": "A large, shady camp just above the mouth of Indian Creek, with the creek to explore. The pull-in is fast."},
+    {"m": 27.3, "n": "Anderson Camp", "s": "R", "cap": [12, 12, 12], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench"], "d": "A 12-person camp on a bench, landing just below a small cliff. GoRafting calls it a hidden gem."},
+    {"m": 27.4, "n": "Pungo Creek", "s": "L", "cap": [30, 30, 30], "lay": true, "heritage": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["history"], "d": "A large camp with the old Pungo Mine to explore. The ground above the creek is closed to camping to protect Native cultural sites."},
+    {"m": 30.8, "n": "Little Soldier", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["High", "Mid"], "src": ["fs", "gr"], "t": ["easy-landing", "shade", "bench"], "d": "A park-and-cook gravel beach under a big ponderosa, with tent sites on the benches behind and a flat ponderosa grove a short walk downstream. One of the busiest camps in June."},
+    {"m": 31.7, "n": "Marble Cr. Left", "s": "L", "cap": [30, 30, 30], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": [], "d": "Looks across at Marble Rapid. There are two ways in: from the top of the pool, best at high water, or below the small cliff. Busy all summer."},
+    {"m": 31.7, "n": "Marble Cr. Right", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["sand", "shade", "tricky-landing"], "d": "A sandy beach that takes a strong pull to break through the eddy line. Bigger groups put the kitchen on the beach and the tents up in the trees.", "highNote": "At medium and higher flows, aim high for the eddy."},
+    {"m": 32.6, "n": "Sunflower", "s": "R", "cap": [8, 8, 8], "lay": false, "hot": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["hot-springs", "traffic"], "d": "An eight-person camp beside Sunflower Hot Springs, some of the most scenic riverside pools anywhere, with a hot shower at the base of the cliff. Expect a steady stream of soakers in camp and in the eddy."},
+    {"m": 32.6, "n": "Lost Oak", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["bench", "carry", "hot-springs"], "d": "A large camp across the river from Sunflower Hot Springs, close enough to visit them. The trade-off is a steep carry up to the bench."},
+    {"m": 34.4, "n": "State Land Left", "s": "L", "cap": [30, 30, 30], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["shade"], "d": "A huge, park-like camp under well-spaced ponderosas. Busy all summer.", "lowNote": "As the water drops, land higher up. The lower beach leaves you dragging boats upstream to leave."},
+    {"m": 34.6, "n": "State Land Right", "s": "R", "cap": [30, 30, 30], "lay": false, "use": ["Mid", "High"], "src": ["fs"], "t": [], "d": "Across the river from State Land Left and a little below it. Rated for 30 at every level. Neither source describes it further."},
+    {"m": 35.7, "n": "Little Creek Bridge", "s": "L", "cap": [20, null, 10], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["traffic"], "d": "Just above the Little Creek pack bridge. The bar is all cobbles, with good tent sites behind it. The Thomas Creek airstrip, on the same bank, is busy at low water."},
+    {"m": 35.8, "n": "Little Creek Camp", "s": "R", "cap": [20, null, 10], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench", "shade"], "d": "Past the Little Creek guard station cabins: land among the fallen trees and camp on the bench. Some of the biggest ponderosas on the river stand around the cabins."},
+    {"m": 35.9, "n": "Hood Ranch", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["tricky-landing"], "d": "Pull in at the island.", "lowNote": "GoRafting says it is hard to reach below 3.5 ft, though the Forest Service still rates it for 30 at low water."},
+    {"m": 37.3, "n": "Upper Jackass Flat", "s": "R", "cap": [30, null, 30], "lay": false, "use": ["High", "Mid"], "src": ["fs", "gr"], "t": [], "d": "A large camp right below Jackass Rapid. Pull over as soon as you are through."},
+    {"m": 37.6, "n": "Lower Jackass", "s": "R", "cap": [20, null, 0], "lay": false, "heritage": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["history"], "d": "A long camp with a good gravel bar at lower flows.", "highNote": "GoRafting says it cannot be reached from about 4 ft up, and the Forest Service lists no capacity at 4 ft and none at 6 ft."},
+    {"m": 41.6, "n": "Mahoney", "s": "R", "cap": [20, null, 10], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["swimming"], "d": "A sunny camp with a good swimming hole. GoRafting calls it best for a small group."},
+    {"m": 43.2, "n": "Pine Creek Flat", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench", "carry"], "d": "A short, rocky carry up to a flat bench with plenty of room."},
+    {"m": 45.6, "n": "Culver Creek", "s": "R", "cap": [10, null, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["shade"], "d": "A small camp among big trees, some of them dead.", "lowNote": "GoRafting says the river gets too shallow to land here as it drops, though the Forest Service rates it for 10 at low water."},
+    {"m": 46.2, "n": "Whitey Cox", "s": "R", "cap": [30, 30, 30], "lay": false, "use": ["Mid", "High"], "src": ["fs", "gr"], "t": ["bench", "swimming"], "d": "A large camp with a good swimming hole and tent sites on the bench above the gravel bar. There is a small hot spring, but GoRafting says it has mites and does not recommend soaking."},
+    {"m": 46.3, "n": "Rock Island", "s": "L", "cap": [30, 30, 30], "lay": false, "heritage": true, "noWood": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["shade", "tricky-landing", "history"], "d": "Named for the rock island standing in the river. Tent sites are in the trees, and there are camping restrictions around the cultural site nearby. The landing changes a lot with the flow."},
+    {"m": 47.3, "n": "White Creek", "s": "R", "cap": [30, 30, 30], "lay": false, "heritage": true, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["history"], "d": "A popular camp with tent sites tucked into the brush downstream. The upper bench holds the remains of Native pit houses and is closed to camping."},
+    {"m": 48.1, "n": "Shelf", "s": "R", "cap": [30, 30, 30], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["bench", "shade"], "d": "Below Shelf Rapid: look for the big downed tree on the gravel bar. The camp is on a treed bench with room for any size of group."},
+    {"m": 49.3, "n": "Big Loon", "s": "R", "cap": [30, 30, 30], "lay": false, "hot": true, "use": ["Very High", "High"], "src": ["fs", "gr"], "t": ["hot-springs", "hiking", "traffic"], "d": "A huge gravel bar at the mouth of Loon Creek. The hot springs are about a mile up the creek and the Lower Loon Creek airstrip is behind camp, so expect visitors. The only camp the Forest Service rates as very high use in June.", "highNote": "Hug the right bank above the Loon Creek confluence or you will float past."},
+    {"m": 49.9, "n": "Cow Creek", "s": "R", "cap": [15, null, 0], "lay": false, "heritage": true, "noWood": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["hiking", "hot-springs", "history"], "d": "A small camp with good hiking, including the trail up to the Loon Creek hot springs."},
+    {"m": 51.8, "n": "Cave Camp", "s": "R", "cap": [10, null, 0], "lay": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["hot-springs"], "d": "A small camp on a pretty bend, across the river from the Hospital Bar hot springs."},
+    {"m": 52.1, "n": "Hospital Bar", "s": "L", "cap": [30, 30, 30], "lay": false, "hot": true, "noWood": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["hot-springs"], "d": "A spacious hot-springs camp, with the pools right at the river's edge at its upstream end. Guides call it Inhospitable Bar for the wind that rips through."},
+    {"m": 53.5, "n": "Cub Creek", "s": "L", "cap": [10, 10, 10], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench"], "d": "A 10-person camp well above Cub Creek, easy to float past."},
+    {"m": 56.4, "n": "Upper Grouse", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "Shares a grassy flat with Lower Grouse. Depending on the flow, park at the upper end of the beach so you can get out in the morning."},
+    {"m": 56.5, "n": "Lower Grouse", "s": "R", "cap": [30, 30, 30], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["sand", "shade", "tricky-landing"], "d": "A big beach of sand and cobbles with tent sites in the trees. The landing is a tight eddy on the outside of the second turn in Grouse Creek Rapid: stay right to make it. Busy all summer."},
+    {"m": 57, "n": "Tappan Island", "s": "C", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["tricky-landing", "history"], "d": "A camp on the island itself. Fred and Daisy Tappan's homestead cabin, still used by hunters, is close by.", "lowNote": "Only the right-hand channel goes, and the landing near the bottom of the island is tricky.", "highNote": "Take the channel left of the island and land near the top."},
+    {"m": 57.3, "n": "Tiny Tappan", "s": "R", "cap": [8, null, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "An eight-person camp that goes underwater at higher flows."},
+    {"m": 57.9, "n": "Tappan Falls", "s": "L", "cap": [10, 10, 10], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "A small camp in the heart of Tappan Canyon, just above Tappan Falls."},
+    {"m": 59.9, "n": "Camas Creek", "s": "R", "cap": [30, 30, 30], "lay": false, "heritage": true, "noWood": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["shade", "swimming", "hiking", "history"], "d": "At the mouth of Camas Creek, one of the bigger tributaries, with shade under big trees and the creek to explore and swim in."},
+    {"m": 60.6, "n": "Johnny Walker", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["shade"], "d": "Park along the cobble bar and set up the kitchen in the shade just above the fallen logs. Tents spread out through the grass."},
+    {"m": 61.1, "n": "Pool Camp", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Mid", "High"], "src": ["fs", "gr"], "t": ["swimming", "bench", "carry"], "d": "Named for the swimming pool in front of camp. A short carry up to the bench, and camp spreads out downstream.", "lowNote": "A beach or two often appears at the river's edge."},
+    {"m": 61.6, "n": "Funston", "s": "L", "cap": [30, 30, 30], "lay": false, "use": ["Mid", "High"], "src": ["fs", "gr"], "t": ["bench", "carry"], "d": "Kitchen near the boats, tents up a short, steep hill on the upper bench."},
+    {"m": 61.9, "n": "Broken Oar", "s": "R", "cap": [15, 15, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["shade", "hiking"], "d": "A small camp in the ponderosas, within sight of Funston, with good hiking."},
+    {"m": 64.5, "n": "Trail Camp", "s": "R", "cap": [30, null, 15], "lay": true, "use": ["Mid", "High"], "src": ["fs", "gr"], "t": ["shade", "hiking"], "d": "A flat camp close to the river with shaded tent sites and an easy carry. A hard hike to Aparejo Point starts upstream behind camp.", "lowNote": "The landing gets shallow."},
+    {"m": 65.3, "n": "Sheep Creek", "s": "L", "cap": [30, 30, 30], "lay": false, "noWood": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["carry", "hiking"], "d": "A roomy camp with a bit of a carry and plenty of hiking."},
+    {"m": 66.8, "n": "Flying B Camp", "s": "R", "cap": [10, null, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs"], "t": ["traffic"], "d": "A small camp near the Flying B Ranch, which has a small store with ice cream. Neither source describes the camp itself."},
+    {"m": 67.3, "n": "Flying B Airport", "s": "R", "cap": [20, null, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["traffic"], "d": "A camp at the Flying B airstrip, which mostly serves guests of the ranch.", "conflict": "GoRafting puts the Flying B airstrip on river left. The Forest Service list, followed here, has this camp on the right."},
+    {"m": 68.7, "n": "Bernard", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["no-shade", "traffic"], "d": "A big camp that many groups float past without noticing. Little shade. The Bernard airstrip, the last on the river, is close by."},
+    {"m": 68.9, "n": "Short Creek", "s": "R", "cap": [30, 30, 30], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench", "sand", "carry"], "d": "Hidden behind the riverside brush. The landing can be rocky, then a short carry to a flat, grassy, mostly sandy bench."},
+    {"m": 71.4, "n": "Little Pine", "s": "L", "cap": [30, 30, 30], "lay": true, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["shade", "sand", "bench", "hiking"], "d": "A well-laid-out camp: kitchen on the sand by the boats, tents on the grassy bench behind, some shade, and the hard hike to Johnson Point. Busy all summer."},
+    {"m": 72.1, "n": "Driftwood Flat", "s": "R", "cap": [30, null, 20], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["sand", "shade"], "d": "A mix of sand, shade and sun. Despite the name, bring firewood."},
+    {"m": 72.9, "n": "Wilson Creek", "s": "R", "cap": [30, null, 20], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["sand", "easy-landing"], "d": "A sandy kitchen right where you park, with tent sites strung out along the trail downstream."},
+    {"m": 73, "n": "Grassy Flat I", "s": "L", "cap": [30, 30, 30], "lay": false, "noWood": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "Plenty of room on a grassy flat."},
+    {"m": 73.1, "n": "Grassy Flat II", "s": "L", "cap": [30, 30, 30], "lay": false, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["shade", "poison-ivy"], "d": "A little more shade than Grassy Flat I. Watch for poison ivy in the cobbles between camp and the boats."},
+    {"m": 74.8, "n": "Survey Creek", "s": "L", "cap": [30, 30, 30], "lay": false, "noWood": true, "use": ["Mid", "High"], "src": ["fs", "gr"], "t": ["shade", "swimming"], "d": "A popular big camp in an evenly spaced ponderosa grove, with shade and a swimming hole."},
+    {"m": 74.9, "n": "Woolard Creek", "s": "R", "cap": [30, 30, 30], "lay": false, "noWood": true, "use": ["Mid", "High"], "src": ["fs", "gr"], "t": ["bench"], "d": "An easy carry to a long, grassy bench behind the trees.", "lowNote": "Land at the lower end, below Woolard Rapid.", "highNote": "Land at the upper end, above Woolard Rapid."},
+    {"m": 75.7, "n": "Fly Camp", "s": "R", "cap": [12, null, 0], "lay": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["hiking"], "d": "A small, pretty camp across from Kimmel Creek, with the Middle Fork trail running behind it."},
+    {"m": 77.4, "n": "Fish Camp", "s": "L", "cap": [30, null, 0], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "A gravel-bar camp that exists only at lower flows. The mid-river bar off camp is a textbook example of imbrication: cobbles tilted and stacked like roof shingles.", "conflict": "GoRafting calls it a small camp. The Forest Service rates it for 30 at low water."},
+    {"m": 77.9, "n": "Big Creek", "s": "L", "cap": [4, 4, 4], "lay": true, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["hiking"], "d": "Four people only. Groups use it more as a base for exploring Big Creek and Waterfall Creek. Below here the trail leaves the river and the Impassable Canyon begins."},
+    {"m": 78, "n": "Last Chance", "s": "R", "cap": [20, 20, 20], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["bench", "hiking"], "d": "A small bench rated for 20 that GoRafting calls extremely cramped at that number; worth it if you plan to hike the side creeks. The Forest Service's camp list puts it above the one-night line, but its web page draws that line at Big Creek, a tenth of a mile upstream. Ask the River Office if it matters for your itinerary."},
+    {"m": 78.7, "n": "Pine Bluff", "s": "L", "cap": [4, 4, 4], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["tricky-landing"], "d": "Four people, with a swift pull-in just above Cutthroat Cove Rapid."},
+    {"m": 78.9, "n": "Cutthroat Cove", "s": "L", "cap": [10, null, 0], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "A small low-water camp across from Cutthroat Cove, an overhung cove big enough to float several rafts into."},
+    {"m": 79.2, "n": "Big Pine", "s": "R", "cap": [4, null, 0], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["shade"], "d": "Four people in a small grove of trees."},
+    {"m": 79.6, "n": "Elk Bar", "s": "L", "cap": [30, null, 20], "lay": false, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["sand", "swimming", "hiking"], "d": "A giant sandbar with big views, steep country behind it to explore, and good swimming. Camping this far up the canyon leaves a long last day to Cache Bar."},
+    {"m": 79.7, "n": "Love Bar", "s": "L", "cap": [10, null, 0], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["sand"], "d": "A smaller beach just below Elk Bar."},
+    {"m": 82.5, "n": "Redside", "s": "L", "cap": [15, 15, 15], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["hiking"], "d": "A small camp at Redside Rapid, with Golden Creek to explore just downstream."},
+    {"m": 84.4, "n": "Papoose", "s": "L", "cap": [5, null, 0], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["sand", "rock-art"], "d": "A tiny, beautiful beach for a few people. The Tombstone pictographs are a short way upstream on the same bank."},
+    {"m": 84.5, "n": "Ship Island", "s": "L", "cap": [30, 30, 30], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": [], "d": "A long, narrow, beautiful camp across from Ship Island Creek: kitchen at the upstream end, tents strung out below, the groover far down behind a rock. Busy all summer."},
+    {"m": 85, "n": "Lightning Strike", "s": "L", "cap": [15, null, 2], "lay": false, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": [], "d": "A small camp named for a lightning-burned tree."},
+    {"m": 86.2, "n": "Parrot Placer", "s": "R", "cap": [30, null, 10], "lay": false, "use": ["High", "Mid"], "src": ["fs", "gr"], "t": [], "d": "The main camp has room for about eight tents. In some years a lower sandbar adds space, though GoRafting says not lately."},
+    {"m": 87.9, "n": "Parrot Cabin", "s": "L", "cap": [6, null, 0], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["history"], "d": "A small camp at the foot of the boulder shore at Nugget Creek, where Earl Parrott's cabin stands."},
+    {"m": 88.6, "n": "Cradle Creek", "s": "R", "cap": [30, 30, 20], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": [], "d": "A beautiful camp looking at Cliffside Rapid. Do not mix it up with Cliffside camp, about a mile downstream, when you read your permit."},
+    {"m": 88.8, "n": "Tumble Creek", "s": "R", "cap": [30, 30, 30], "lay": false, "noWood": true, "use": ["Mid", "Mid"], "src": ["fs", "gr"], "t": ["carry"], "d": "A large, flat camp on top of a rock shelf. Getting gear up from the boats is hard work."},
+    {"m": 89.6, "n": "Ouzel", "s": "L", "cap": [10, null, 0], "lay": false, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": [], "d": "A small camp on the left just above Cliffside."},
+    {"m": 89.7, "n": "Cliffside", "s": "R", "cap": [30, null, 6], "lay": false, "use": ["High", "High"], "src": ["fs", "gr"], "t": ["tricky-landing"], "d": "Often confused with Cradle Creek camp upstream. The eddy is trickier than it looks, so be ready as you come around the corner."},
+    {"m": 90, "n": "Stoddard Bar", "s": "L", "cap": [30, 30, 30], "lay": false, "heritage": true, "noWood": true, "use": ["Low", "Mid"], "src": ["fs", "gr"], "t": ["tricky-landing", "carry", "hiking", "rock-art", "history"], "d": "A large camp on a tall shelf bar, with a tricky landing at every level. Stoddard Creek has cool pools to hike to on a hot day, and good pictographs."},
+    {"m": 90.4, "n": "Otter Bar", "s": "R", "cap": [30, null, 4], "lay": false, "use": ["Mid", "High"], "src": ["fs", "gr"], "t": ["sand"], "d": "A large, secluded sandbar, and a popular one."},
+    {"m": 92.7, "n": "Solitude", "s": "L", "cap": [12, null, 0], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": [], "d": "A very small camp that only exists at low water.", "conflict": "The Forest Service rates it for 12. GoRafting says a group of more than 8 may end up sleeping on the rafts."},
+    {"m": 94.9, "n": "Goat Creek", "s": "R", "cap": [6, null, 0], "lay": false, "use": ["Low", "Low"], "src": ["fs", "gr"], "t": ["sand"], "d": "A very small beach, the last camp before the confluence, gone at high water."}
+  ]
+}

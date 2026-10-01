@@ -18,9 +18,9 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=2026093002">
-  <link rel="stylesheet" href="river.css?v=2026093002">
-  <link rel="stylesheet" href="river-rail.css?v=2026093002">
+  <link rel="stylesheet" href="style.css?v=2026093003">
+  <link rel="stylesheet" href="river.css?v=2026093003">
+  <link rel="stylesheet" href="river-rail.css?v=2026093003">
 </head>
 <body>
   <header class="site-header">
@@ -144,8 +144,8 @@
         <span class="camp-filter-label" id="level-label">Water level</span>
         <div class="status-btns" role="group" aria-labelledby="level-label">
           <button type="button" class="status-btn active" data-level="any" aria-pressed="true">Any</button>
-          <button type="button" class="status-btn" data-level="low" aria-pressed="false">Low water</button>
-          <button type="button" class="status-btn" data-level="high" aria-pressed="false">High water</button>
+          <button type="button" class="status-btn" data-level="0" data-label="low water" aria-pressed="false">Low water</button>
+          <button type="button" class="status-btn" data-level="1" data-label="high water" aria-pressed="false">High water</button>
         </div>
       </div>
       <div class="camp-filter">
@@ -153,12 +153,12 @@
         <input type="number" id="camp-size" class="search-input camp-size" min="1" max="30" inputmode="numeric" placeholder="people">
       </div>
       <div class="camp-filter">
-        <span class="camp-filter-label" id="res-label">Type</span>
-        <div class="status-btns" role="group" aria-labelledby="res-label">
-          <button type="button" class="status-btn active" data-res="all" aria-pressed="true">All</button>
-          <button type="button" class="status-btn" data-res="L" aria-pressed="false">Large res.</button>
-          <button type="button" class="status-btn" data-res="S" aria-pressed="false">Small res.</button>
-          <button type="button" class="status-btn" data-res="F" aria-pressed="false">First-come</button>
+        <span class="camp-filter-label" id="type-label">Type</span>
+        <div class="status-btns" role="group" aria-labelledby="type-label">
+          <button type="button" class="status-btn active" data-type="all" aria-pressed="true">All</button>
+          <button type="button" class="status-btn" data-type="L" aria-pressed="false">Large res.</button>
+          <button type="button" class="status-btn" data-type="S" aria-pressed="false">Small res.</button>
+          <button type="button" class="status-btn" data-type="F" aria-pressed="false">First-come</button>
         </div>
       </div>
       <div class="camp-filter camp-filter-wide">
@@ -180,12 +180,12 @@
     <section class="camp-section" id="corn-creek">
     <h2>Corn Creek to Black Canyon <span class="camp-range">miles 2.5&ndash;19.9 · 28 camps</span></h2>
     <p>The first day or two. Short mileage between camps, the Lantz Bar and Devil's Teeth clusters, and the first reservable sites.</p>
-    <article class="camp" id="lunch-bar" data-mile="2.5" data-side="L" data-lo="10" data-hi="10" data-res="F" data-tags="sand shade">
-      <div class="camp-top"><span class="camp-mile">Mile 2.5 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="lunch-bar" data-mile="2.5" data-side="L" data-cap="10 10" data-types="F" data-glyph="dot" data-tags="sand shade">
+      <div class="camp-top"><span class="camp-mile">Mile 2.5 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Lunch Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>10 people</dd></div>
       </dl>
       <p>A small sloping sand beach that loses the sun early. Better known as a first-day lunch stop than a camp, but it works for a small group that launched late.</p>
       <p class="camp-level"><strong>Low water:</strong> The beach gets bigger as the river drops.</p>
@@ -196,12 +196,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small beach, early shade.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-horse-creek" data-mile="3.4" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="shade bench">
-      <div class="camp-top"><span class="camp-mile">Mile 3.4 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="upper-horse-creek" data-mile="3.4" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="shade bench">
+      <div class="camp-top"><span class="camp-mile">Mile 3.4 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Upper Horse Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>Upstream of Horse Creek, with the camp back in the trees rather than on a beach. Room for a full-size group at any level, and the closest big camp to the put-in.</p>
       <figure class="camp-aerial">
@@ -211,12 +211,12 @@
       <ul class="camp-tags"><li>Shade</li><li>Bench camp</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;In trees by the creek.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-horse-creek" data-mile="3.5" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 3.5 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="lower-horse-creek" data-mile="3.5" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 3.5 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Lower Horse Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>On the bar just below the creek. Across the river are the remains of a pack bridge that was condemned and removed in 1970. The eddy is small, so set up for it early.</p>
       <p class="camp-level"><strong>Low water:</strong> The bar is at its best at low water.</p>
@@ -227,12 +227,12 @@
       <ul class="camp-tags"><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Downstream of the creek.&rdquo;</p>
     </article>
-    <article class="camp" id="bridge-piling-campsite" data-mile="3.6" data-side="L" data-lo="20" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 3.6 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="bridge-piling-campsite" data-mile="3.6" data-side="L" data-cap="20 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 3.6 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Bridge Piling Campsite</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A mid-sized sand beach on the left at Horse Creek, on the old pack bridge's side of the river. A low-water camp only.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -243,12 +243,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="legend-creek" data-mile="4.7" data-side="R" data-lo="20" data-hi="20" data-res="F" data-tags="easy-landing rock-art poison-ivy">
-      <div class="camp-top"><span class="camp-mile">Mile 4.7 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="legend-creek" data-mile="4.7" data-side="R" data-cap="20 20" data-types="F" data-glyph="dot" data-tags="easy-landing rock-art poison-ivy">
+      <div class="camp-top"><span class="camp-mile">Mile 4.7 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Legend Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>20 people</dd></div>
       </dl>
       <p>An easy landing on a small beach, with the camp up by the trail. The Legend Creek pictographs are about 500 yards back upstream on foot. Watch for poison ivy.</p>
       <figure class="camp-aerial">
@@ -258,12 +258,12 @@
       <ul class="camp-tags"><li>Easy landing</li><li>Pictographs</li><li>Poison ivy</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Campsite up by trail.&rdquo;</p>
     </article>
-    <article class="camp" id="spindle-creek" data-mile="6.1" data-side="R" data-lo="10" data-hi="10" data-res="F" data-tags="bench history carry">
-      <div class="camp-top"><span class="camp-mile">Mile 6.1 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="spindle-creek" data-mile="6.1" data-side="R" data-cap="10 10" data-types="F" data-glyph="dot" data-tags="bench history carry">
+      <div class="camp-top"><span class="camp-mile">Mile 6.1 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Spindle Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>10 people</dd></div>
       </dl>
       <p>A sloped beach leads up to tent sites on the bench beside the trail. Stone ruins left by 1950s settlers are nearby on the same bench. Small groups only.</p>
       <figure class="camp-aerial">
@@ -273,12 +273,12 @@
       <ul class="camp-tags"><li>Bench camp</li><li>History</li><li>Carry or climb</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Campsite up by trail.&rdquo;</p>
     </article>
-    <article class="camp" id="phantom-creek" data-mile="7.9" data-side="R" data-lo="20" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 7.9 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="phantom-creek" data-mile="7.9" data-side="R" data-cap="20 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 7.9 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Phantom Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>Two sand beaches split by a band of rock, the upper one the bigger of the two, just above Rainier Rapid.</p>
       <p class="camp-level"><strong>Low water:</strong> The beach keeps growing as the water drops.</p>
@@ -290,12 +290,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="alder-creek" data-mile="8.6" data-side="L" data-lo="30" data-hi="0" data-res="L" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 8.6 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="alder-creek" data-mile="8.6" data-side="L" data-cap="30 0" data-types="L" data-glyph="filled" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 8.6 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Alder Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>The first reservable camp on the river: a big, comfortable sand beach on the left bank across from Alder Creek. A natural first night for a large group once the water is down.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -306,12 +306,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="otter-beach" data-mile="10" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="sand shade">
-      <div class="camp-top"><span class="camp-mile">Mile 10 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="otter-beach" data-mile="10" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand shade">
+      <div class="camp-top"><span class="camp-mile">Mile 10 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Otter Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small shaded beach at the bottom of a slow-water stretch. Low water only, and small groups only.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -322,12 +322,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water beach, shade.&rdquo;</p>
     </article>
-    <article class="camp" id="fawn-creek" data-mile="10.2" data-side="R" data-lo="20" data-hi="20" data-res="F" data-tags="shade bench">
-      <div class="camp-top"><span class="camp-mile">Mile 10.2 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="fawn-creek" data-mile="10.2" data-side="R" data-cap="20 20" data-types="F" data-glyph="dot" data-tags="shade bench">
+      <div class="camp-top"><span class="camp-mile">Mile 10.2 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Fawn Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>20 people</dd></div>
       </dl>
       <p>A shaded camp up on the bench, so it holds the same number of people at any water level.</p>
       <figure class="camp-aerial">
@@ -337,12 +337,12 @@
       <ul class="camp-tags"><li>Shade</li><li>Bench camp</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Campsite up on bench.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-lantz-bar" data-mile="10.6" data-side="R" data-lo="20" data-hi="0" data-res="S" data-tags="tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 10.6 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="upper-lantz-bar" data-mile="10.6" data-side="R" data-cap="20 0" data-types="S" data-glyph="open" data-tags="tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 10.6 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Upper Lantz Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>The upstream camp at Lantz Bar. The eddy is large, but the Forest Service warns the camp is hard to see from the river, so know where it is before you get there.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -353,12 +353,12 @@
       <ul class="camp-tags"><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large eddy, hard to see.&rdquo;</p>
     </article>
-    <article class="camp" id="little-squaw-creek" data-mile="10.7" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="shade bench tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 10.7 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="little-squaw-creek" data-mile="10.7" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="shade bench tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 10.7 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Little Squaw Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A camp among the trees on the bench. The landing is a rocky bar upstream of the creek.</p>
       <p class="camp-level"><strong>High water:</strong> The Forest Service calls this a high-water camp, and the rocky landing is easier with more water over it.</p>
@@ -369,12 +369,12 @@
       <ul class="camp-tags"><li>Shade</li><li>Bench camp</li><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;High-water camp.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-lantz-bar" data-mile="11.1" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="sand bench">
-      <div class="camp-top"><span class="camp-mile">Mile 11.1 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="lower-lantz-bar" data-mile="11.1" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand bench">
+      <div class="camp-top"><span class="camp-mile">Mile 11.1 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Lower Lantz Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large bar above a sand beach, immediately above Lantz Rapid. The camp is on the bench, so it stays usable when the beach floods.</p>
       <figure class="camp-aerial">
@@ -384,12 +384,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Bench camp</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Just above rapid on bench.&rdquo;</p>
     </article>
-    <article class="camp" id="tag-creek" data-mile="11.3" data-side="L" data-lo="30" data-hi="30" data-res="F" data-tags="shade bench carry">
-      <div class="camp-top"><span class="camp-mile">Mile 11.3 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="tag-creek" data-mile="11.3" data-side="L" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="shade bench carry">
+      <div class="camp-top"><span class="camp-mile">Mile 11.3 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Tag Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>On the left immediately below Lantz Rapid, in the trees. A comfortable camp once you are up there.</p>
       <p class="camp-level"><strong>Low water:</strong> The climb from the boats is rocky when the river is low.</p>
@@ -401,12 +401,12 @@
       <ul class="camp-tags"><li>Shade</li><li>Bench camp</li><li>Carry or climb</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;High-water camp in trees.&rdquo;</p>
     </article>
-    <article class="camp" id="eddy-beach" data-mile="11.3" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 11.3 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="eddy-beach" data-mile="11.3" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 11.3 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Eddy Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small low-water beach on the right below Lantz Rapid, across from Tag Creek.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -417,12 +417,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water beach camp.&rdquo;</p>
     </article>
-    <article class="camp" id="disappointment-creek" data-mile="11.7" data-side="L" data-lo="30" data-hi="30" data-res="F" data-tags="bench carry">
-      <div class="camp-top"><span class="camp-mile">Mile 11.7 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="disappointment-creek" data-mile="11.7" data-side="L" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="bench carry">
+      <div class="camp-top"><span class="camp-mile">Mile 11.7 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Disappointment Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A high bench downstream of the creek, reached by a trail from the river. Holds a big group at any level, but it is a hard carry in summer heat.</p>
       <figure class="camp-aerial">
@@ -432,12 +432,12 @@
       <ul class="camp-tags"><li>Bench camp</li><li>Carry or climb</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Trail to high camp.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-devils-teeth" data-mile="12.9" data-side="R" data-lo="20" data-hi="0" data-res="S" data-tags="tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 12.9 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="upper-devils-teeth" data-mile="12.9" data-side="R" data-cap="20 0" data-types="S" data-glyph="open" data-tags="tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 12.9 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Upper Devil's Teeth</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A pebble bar on the right just above Devil's Teeth Rapid. Groups float past it regularly. If you have it reserved, be on the right and looking for it before the rapid.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -448,12 +448,12 @@
       <ul class="camp-tags"><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Pebble bar, easy to miss.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-devils-teeth" data-mile="13" data-side="L" data-lo="30" data-hi="30" data-res="L" data-tags="sand bench rock-art">
-      <div class="camp-top"><span class="camp-mile">Mile 13 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="lower-devils-teeth" data-mile="13" data-side="L" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="sand bench rock-art">
+      <div class="camp-top"><span class="camp-mile">Mile 13 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Lower Devil's Teeth</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large, pleasant camp on a high sandy bench below the rapid, good at any level. A pictograph panel is a short scramble downstream.</p>
       <figure class="camp-aerial">
@@ -463,12 +463,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Bench camp</li><li>Pictographs</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;High sandy bench.&rdquo;</p>
     </article>
-    <article class="camp" id="overhang" data-mile="14.3" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 14.3 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="overhang" data-mile="14.3" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 14.3 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Overhang</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small sand beach under the rock overhang that names it, visible from well upstream. Some boaters call it Hangover.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -479,12 +479,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="elkhorn-creek" data-mile="14.7" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="bench">
-      <div class="camp-top"><span class="camp-mile">Mile 14.7 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="elkhorn-creek" data-mile="14.7" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="bench">
+      <div class="camp-top"><span class="camp-mile">Mile 14.7 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Elkhorn Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large, good-looking camp up on the bar. The bank where you tie up is rocky.</p>
       <figure class="camp-aerial">
@@ -494,12 +494,12 @@
       <ul class="camp-tags"><li>Bench camp</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Rocky bank, camp on bar.&rdquo;</p>
     </article>
-    <article class="camp" id="chamberlin-creek" data-mile="15.4" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="sand hiking">
-      <div class="camp-top"><span class="camp-mile">Mile 15.4 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="chamberlin-creek" data-mile="15.4" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand hiking">
+      <div class="camp-top"><span class="camp-mile">Mile 15.4 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Chamberlin Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small low-water beach. Catch the eddy just above the creek. A trail on the downstream side of the creek climbs toward Chamberlain Basin.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -510,12 +510,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Hiking</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small beach in low-water.&rdquo;</p>
     </article>
-    <article class="camp" id="chukar-beach" data-mile="15.9" data-side="R" data-lo="15" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 15.9 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="chukar-beach" data-mile="15.9" data-side="R" data-cap="15 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 15.9 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Chukar Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>15 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>15 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A medium low-water beach, a step up in size from the 10-person beaches around it.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -526,12 +526,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water beach camp.&rdquo;</p>
     </article>
-    <article class="camp" id="blackadar-hole" data-mile="17" data-side="R" data-lo="30" data-hi="30" data-res="L" data-tags="sand shade bench history">
-      <div class="camp-top"><span class="camp-mile">Mile 17 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="blackadar-hole" data-mile="17" data-side="R" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="sand shade bench history">
+      <div class="camp-top"><span class="camp-mile">Mile 17 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Blackadar Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A shaded sand beach with the camp on a high bench in a ponderosa grove. Named for Dr. Walt Blackadar of Salmon, known for a solo descent of the Alsek in 1971. A full-size camp at any water level.</p>
       <figure class="camp-aerial">
@@ -541,12 +541,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li><li>Bench camp</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Shaded sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="motor" data-mile="17.2" data-side="L" data-lo="30" data-hi="10" data-res="L" data-tags="sand tricky-landing history">
-      <div class="camp-top"><span class="camp-mile">Mile 17.2 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="motor" data-mile="17.2" data-side="L" data-cap="30 10" data-types="L" data-glyph="filled" data-tags="sand tricky-landing history">
+      <div class="camp-top"><span class="camp-mile">Mile 17.2 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Motor</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>10 people</dd></div>
       </dl>
       <p>A sand beach just above a right-hand bend, with an old engine sitting in the middle of camp. The eddy is small.</p>
       <p class="camp-level"><strong>High water:</strong> Mostly a low-water camp: the Forest Service cuts it from 30 people to 10 at high water.</p>
@@ -557,12 +557,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Tricky landing</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach, small eddy.&rdquo;</p>
     </article>
-    <article class="camp" id="big-squaw-creek" data-mile="17.9" data-side="R" data-lo="20" data-hi="10" data-res="S" data-tags="sand history">
-      <div class="camp-top"><span class="camp-mile">Mile 17.9 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="big-squaw-creek" data-mile="17.9" data-side="R" data-cap="20 10" data-types="S" data-glyph="open" data-tags="sand history">
+      <div class="camp-top"><span class="camp-mile">Mile 17.9 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Big Squaw Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>10 people</dd></div>
       </dl>
       <p>A sand beach with tent sites up on the bar, about a quarter mile below the creek and around the bend. This was the site of the Guth cabins.</p>
       <p class="camp-level"><strong>High water:</strong> Drops from 20 people to 10 at high water.</p>
@@ -573,12 +573,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach, sites on bar.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-corey-bar" data-mile="19.6" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="burned">
-      <div class="camp-top"><span class="camp-mile">Mile 19.6 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="upper-corey-bar" data-mile="19.6" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="burned">
+      <div class="camp-top"><span class="camp-mile">Mile 19.6 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Upper Corey Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large, rocky camp, partly shaded, that burned in 2000. Land at the upstream end of the bar before the river starts bending left. It sits well apart from the lower camp.</p>
       <p class="camp-level"><strong>High water:</strong> A dependable high-water camp for a big group.</p>
@@ -589,12 +589,12 @@
       <ul class="camp-tags"><li>Burned</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Rocky high-water camp.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-corey-bar" data-mile="19.7" data-side="R" data-lo="30" data-hi="0" data-res="F" data-tags="sand tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 19.7 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="lower-corey-bar" data-mile="19.7" data-side="R" data-cap="30 0" data-types="F" data-glyph="dot" data-tags="sand tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 19.7 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Lower Corey Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A beach at the lower end of Corey Bar with a difficult approach.</p>
       <p class="camp-level"><strong>Low water:</strong> The beach comes out as the river drops.</p>
@@ -606,12 +606,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Difficult approach, beach.&rdquo;</p>
     </article>
-    <article class="camp" id="pebble-beach-mile-19-9" data-mile="19.9" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="">
-      <div class="camp-top"><span class="camp-mile">Mile 19.9 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="pebble-beach-mile-19-9" data-mile="19.9" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="">
+      <div class="camp-top"><span class="camp-mile">Mile 19.9 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Pebble Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small low-water beach on the left, the last camp above Black Canyon. Not to be confused with the larger Pebble Beach at mile 53.2.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -626,12 +626,12 @@
     <section class="camp-section" id="black-canyon">
     <h2>Black Canyon to Big Mallard <span class="camp-range">miles 21.4&ndash;36.9 · 17 camps</span></h2>
     <p>Black Creek Rapid, the Barth hot springs camps, then a quieter stretch down to Bargamin Creek and the Yellowpine and Mallard camps.</p>
-    <article class="camp" id="black-canyon-beach" data-mile="21.4" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand easy-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 21.4 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="black-canyon-beach" data-mile="21.4" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand easy-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 21.4 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Black Canyon Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small beach with an easy landing and a view back upstream into Black Canyon. It is the first camp below Black Creek Rapid, the Class IV that formed in a 2011 debris flow.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -642,12 +642,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Easy landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="sunny-bar" data-mile="22.6" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="shade bench carry tricky-landing hot-springs">
-      <div class="camp-top"><span class="camp-mile">Mile 22.6 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="sunny-bar" data-mile="22.6" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="shade bench carry tricky-landing hot-springs">
+      <div class="camp-top"><span class="camp-mile">Mile 22.6 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Sunny Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A rocky landing and a medium carry up to a shaded ponderosa grove on the bench. It is across the river from the Barth hot springs.</p>
       <p class="camp-level"><strong>Low water:</strong> At low water you may still be able to get across to the hot springs from here.</p>
@@ -655,30 +655,30 @@
         <img src="img/camps/main-salmon/sunny-bar-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 22.6, where Sunny Bar is on river right" loading="lazy" decoding="async">
         <figcaption>From the air, 30 Sep 2021, White Bird at 2,870 cfs. North is up. The camp is on river right, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Shade</li><li>Bench camp</li><li>Carry or climb</li><li>Tricky landing</li><li>Hot springs</li></ul>
+      <ul class="camp-tags"><li>Shade</li><li>Bench camp</li><li>Carry or climb</li><li>Tricky landing</li><li>Hot springs nearby</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;High camp on bench.&rdquo;</p>
     </article>
-    <article class="camp" id="hotsprings-camp" data-mile="22.8" data-side="L" data-lo="30" data-hi="30" data-res="F" data-tags="bench carry hot-springs">
-      <div class="camp-top"><span class="camp-mile">Mile 22.8 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="hotsprings-camp" data-mile="22.8" data-side="L" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="bench carry hot-springs">
+      <div class="camp-top"><span class="camp-mile">Mile 22.8 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Hotsprings Camp</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>The first-come camp on the hot springs side of the river. A steep trail climbs from the boats to the bench. The springs themselves are closed to camping.</p>
       <figure class="camp-aerial">
         <img src="img/camps/main-salmon/hotsprings-camp-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 22.8, where Hotsprings Camp is on river left" loading="lazy" decoding="async">
         <figcaption>From the air, 30 Sep 2021, White Bird at 2,870 cfs. North is up. The camp is on river left, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Bench camp</li><li>Carry or climb</li><li>Hot springs</li></ul>
+      <ul class="camp-tags"><li>Bench camp</li><li>Carry or climb</li><li>Hot springs nearby</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Steep trail to bench.&rdquo;</p>
     </article>
-    <article class="camp" id="barth-camp" data-mile="23.1" data-side="L" data-lo="30" data-hi="30" data-res="L" data-tags="tricky-landing hot-springs history">
-      <div class="camp-top"><span class="camp-mile">Mile 23.1 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="barth-camp" data-mile="23.1" data-side="L" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="tricky-landing hot-springs history">
+      <div class="camp-top"><span class="camp-mile">Mile 23.1 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Barth Camp</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>The reservable camp around the corner from Barth Hot Springs, and a good one. The price is the landing: strong current and rocks. Boatmen's inscriptions are carved in the rocks near the springs.</p>
       <p class="camp-level"><strong>Low water:</strong> Look for the carved names and dates on the rocks when the river is low.</p>
@@ -686,15 +686,15 @@
         <img src="img/camps/main-salmon/barth-camp-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 23.1, where Barth Camp is on river left" loading="lazy" decoding="async">
         <figcaption>From the air, 30 Sep 2021, White Bird at 2,870 cfs. North is up. The camp is on river left, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Tricky landing</li><li>Hot springs</li><li>History</li></ul>
+      <ul class="camp-tags"><li>Tricky landing</li><li>Hot springs nearby</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Fast rocky approach.&rdquo;</p>
     </article>
-    <article class="camp" id="sandy-hole" data-mile="23.8" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 23.8 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="sandy-hole" data-mile="23.8" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 23.8 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Sandy Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small beach below a high bench. Often used as the lunch stop after a soak at the hot springs.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -705,12 +705,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small beach, high bench.&rdquo;</p>
     </article>
-    <article class="camp" id="poor-bar" data-mile="24.2" data-side="L" data-lo="30" data-hi="30" data-res="F" data-tags="bench carry">
-      <div class="camp-top"><span class="camp-mile">Mile 24.2 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="poor-bar" data-mile="24.2" data-side="L" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="bench carry">
+      <div class="camp-top"><span class="camp-mile">Mile 24.2 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Poor Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A big camp reached by a high, rocky approach, downstream of Nixon Creek and on the opposite bank.</p>
       <p class="camp-level"><strong>High water:</strong> A good high-water camp for a full-size group.</p>
@@ -721,12 +721,12 @@
       <ul class="camp-tags"><li>Bench camp</li><li>Carry or climb</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;High rocky approach.&rdquo;</p>
     </article>
-    <article class="camp" id="bruin-bar" data-mile="24.8" data-side="L" data-lo="30" data-hi="0" data-res="L" data-tags="tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 24.8 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="bruin-bar" data-mile="24.8" data-side="L" data-cap="30 0" data-types="L" data-glyph="filled" data-tags="tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 24.8 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Bruin Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A large and well-regarded camp behind a rocky approach.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity. The Forest Service gives it no high-water capacity, and the landing gets hard as flows rise. On an early-season trip, stop upstream and look before you commit.</p>
@@ -737,12 +737,12 @@
       <ul class="camp-tags"><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Rocky approach, large.&rdquo;</p>
     </article>
-    <article class="camp" id="hancock" data-mile="25.9" data-side="L" data-lo="20" data-hi="0" data-res="S" data-tags="sand tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 25.9 · river left</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="hancock" data-mile="25.9" data-side="L" data-cap="20 0" data-types="S" data-glyph="open" data-tags="sand tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 25.9 · river left</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Hancock</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A beach in the eddy immediately below Hancock Rapid. Start working left early in the rapid or you will be past it.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -753,12 +753,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Beach in rapid eddy.&rdquo;</p>
     </article>
-    <article class="camp" id="magpie" data-mile="29.5" data-side="L" data-lo="30" data-hi="30" data-res="F" data-tags="sand burned">
-      <div class="camp-top"><span class="camp-mile">Mile 29.5 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="magpie" data-mile="29.5" data-side="L" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand burned">
+      <div class="camp-top"><span class="camp-mile">Mile 29.5 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Magpie</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large beach and long a popular camp. It burned in a 2023 wildfire, so expect less shade than older trip reports describe.</p>
       <figure class="camp-aerial">
@@ -768,12 +768,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Burned</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large beach, burned in 2023.&rdquo;</p>
     </article>
-    <article class="camp" id="hida-creek" data-mile="30.5" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="">
-      <div class="camp-top"><span class="camp-mile">Mile 30.5 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="hida-creek" data-mile="30.5" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="">
+      <div class="camp-top"><span class="camp-mile">Mile 30.5 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Hida Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small low-water camp with tent sites among the boulders and on the beach. The creek flash-flooded in 2024, so expect it to look different from older descriptions.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -783,12 +783,12 @@
       </figure>
       <p class="camp-fs">Forest Service note: &ldquo;Creek blew out in 2024.&rdquo;</p>
     </article>
-    <article class="camp" id="bargamin" data-mile="32" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="sand bench hiking">
-      <div class="camp-top"><span class="camp-mile">Mile 32 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="bargamin" data-mile="32" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand bench hiking">
+      <div class="camp-top"><span class="camp-mile">Mile 32 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Bargamin</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A big camp on a high bench about 50 yards below Bargamin Creek, good at any level. A good trail runs up the creek, and it is an easy walk downstream to scout Bailey Rapid.</p>
       <p class="camp-level"><strong>Low water:</strong> A small beach appears below the bench.</p>
@@ -799,12 +799,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Bench camp</li><li>Hiking</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;High bench, sandy approach.&rdquo;</p>
     </article>
-    <article class="camp" id="bailey-bar" data-mile="32.5" data-side="R" data-lo="20" data-hi="0" data-res="S" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 32.5 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="bailey-bar" data-mile="32.5" data-side="R" data-cap="20 0" data-types="S" data-glyph="open" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 32.5 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Bailey Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A nice sand beach below Bailey Rapid. Also a popular lunch stop, so expect company at midday.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -815,12 +815,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-allison-campsite" data-mile="33.4" data-side="R" data-lo="20" data-hi="0" data-res="F" data-tags="sand poison-ivy traffic">
-      <div class="camp-top"><span class="camp-mile">Mile 33.4 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="upper-allison-campsite" data-mile="33.4" data-side="R" data-cap="20 0" data-types="F" data-glyph="dot" data-tags="sand poison-ivy traffic">
+      <div class="camp-top"><span class="camp-mile">Mile 33.4 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Upper Allison Campsite</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A sand beach with a lot of poison ivy. The land above the beach is private, so stay on the sand.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -828,15 +828,15 @@
         <img src="img/camps/main-salmon/upper-allison-campsite-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 33.4, where Upper Allison Campsite is on river right" loading="lazy" decoding="async">
         <figcaption>From the air, 25 Sep 2021, White Bird at 2,790 cfs. North is up. The camp is on river right, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Sand beach</li><li>Poison ivy</li><li>Planes, boats or road</li></ul>
+      <ul class="camp-tags"><li>Sand beach</li><li>Poison ivy</li><li>Visitors, planes or road</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach, poison ivy.&rdquo;</p>
     </article>
-    <article class="camp" id="allison-ranch-campsite" data-mile="33.5" data-side="R" data-lo="30" data-hi="10" data-res="F" data-tags="sand traffic">
-      <div class="camp-top"><span class="camp-mile">Mile 33.5 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="allison-ranch-campsite" data-mile="33.5" data-side="R" data-cap="30 10" data-types="F" data-glyph="dot" data-tags="sand traffic">
+      <div class="camp-top"><span class="camp-mile">Mile 33.5 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Allison Ranch Campsite</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>10 people</dd></div>
       </dl>
       <p>A large beach below the Allison Ranch, a private inholding with its own airstrip. The ranch jet boat is often parked here.</p>
       <p class="camp-level"><strong>High water:</strong> Shrinks from 30 people to 10 at high water.</p>
@@ -844,15 +844,15 @@
         <img src="img/camps/main-salmon/allison-ranch-campsite-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 33.5, where Allison Ranch Campsite is on river right" loading="lazy" decoding="async">
         <figcaption>From the air, 25 Sep 2021, White Bird at 2,790 cfs. North is up. The camp is on river right, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Sand beach</li><li>Planes, boats or road</li></ul>
+      <ul class="camp-tags"><li>Sand beach</li><li>Visitors, planes or road</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-yellowpine" data-mile="36.7" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="sand carry hiking history">
-      <div class="camp-top"><span class="camp-mile">Mile 36.7 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="upper-yellowpine" data-mile="36.7" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand carry hiking history">
+      <div class="camp-top"><span class="camp-mile">Mile 36.7 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Upper Yellowpine</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A nice big camp with a carry up from the sand. A good trail leads downstream to a view of Big Mallard Rapid, and wire from the Forest Service's old crank telephone line is still strung through camp.</p>
       <figure class="camp-aerial">
@@ -862,12 +862,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Carry or climb</li><li>Hiking</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach with carry.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-yellowpine" data-mile="36.8" data-side="R" data-lo="30" data-hi="30" data-res="L" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 36.8 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="lower-yellowpine" data-mile="36.8" data-side="R" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 36.8 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Lower Yellowpine</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A sand beach just below Upper Yellowpine and just above Big Mallard Rapid. The Forest Service remark calls it a low-water beach but keeps the capacity at 30 for both levels.</p>
       <figure class="camp-aerial">
@@ -877,12 +877,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="big-mallard" data-mile="36.9" data-side="R" data-lo="30" data-hi="30" data-res="L" data-tags="">
-      <div class="camp-top"><span class="camp-mile">Mile 36.9 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="big-mallard" data-mile="36.9" data-side="R" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="">
+      <div class="camp-top"><span class="camp-mile">Mile 36.9 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Big Mallard</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large camp immediately below Big Mallard Rapid and Mallard Creek, good at any level. You run the rapid to get here, so it is a camp for the end of a day, not a place to scout from.</p>
       <figure class="camp-aerial">
@@ -896,12 +896,12 @@
     <section class="camp-section" id="mallard">
     <h2>Big Mallard to the South Fork <span class="camp-range">miles 37.5&ndash;56.7 · 23 camps</span></h2>
     <p>Homestead country: Jim Moore's place, Campbell's Ferry, Buckskin Bill's at Five Mile Bar, and the airstrips and pack bridge around Mackay Bar.</p>
-    <article class="camp" id="oakie-groggs" data-mile="37.5" data-side="L" data-lo="15" data-hi="15" data-res="F" data-tags="sand carry history">
-      <div class="camp-top"><span class="camp-mile">Mile 37.5 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="oakie-groggs" data-mile="37.5" data-side="L" data-cap="15 15" data-types="F" data-glyph="dot" data-tags="sand carry history">
+      <div class="camp-top"><span class="camp-mile">Mile 37.5 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Oakie Groggs</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>15 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>15 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>15 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>15 people</dd></div>
       </dl>
       <p>A sandy camp below the riffle, named for the moonshiner Oakie Grogg. Nobody's first choice.</p>
       <p class="camp-level"><strong>Low water:</strong> The carry from the boats is difficult when the river is low.</p>
@@ -912,12 +912,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Carry or climb</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Difficult carry at low flows.&rdquo;</p>
     </article>
-    <article class="camp" id="boiler-hole" data-mile="38.3" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="sand shade bench history">
-      <div class="camp-top"><span class="camp-mile">Mile 38.3 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="boiler-hole" data-mile="38.3" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand shade bench history">
+      <div class="camp-top"><span class="camp-mile">Mile 38.3 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Boiler Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large-group camp on a treed bench. There is a small beach, but the easy landing is on the rocky shoreline beside it. The name comes from a steamboat boiler that washed down from a wreck in Big Mallard.</p>
       <figure class="camp-aerial">
@@ -927,12 +927,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li><li>Bench camp</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach and shade.&rdquo;</p>
     </article>
-    <article class="camp" id="little-trout-creek" data-mile="41.3" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="">
-      <div class="camp-top"><span class="camp-mile">Mile 41.3 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="little-trout-creek" data-mile="41.3" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="">
+      <div class="camp-top"><span class="camp-mile">Mile 41.3 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Little Trout Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small low-water camp tucked among large boulders.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -942,12 +942,12 @@
       </figure>
       <p class="camp-fs">Forest Service note: &ldquo;Small camp, large rocks.&rdquo;</p>
     </article>
-    <article class="camp" id="easter-egg" data-mile="42.7" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 42.7 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="easter-egg" data-mile="42.7" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 42.7 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Easter Egg</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small low-water beach on the left near Campbell's Ferry. The camp is the beach downstream of the rock outcrop, not the bar above it, which is the one people usually pull into by mistake.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -958,12 +958,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water camp.&rdquo;</p>
     </article>
-    <article class="camp" id="jim-moore" data-mile="42.8" data-side="R" data-lo="20" data-hi="0" data-res="S" data-tags="sand history traffic">
-      <div class="camp-top"><span class="camp-mile">Mile 42.8 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="jim-moore" data-mile="42.8" data-side="R" data-cap="20 0" data-types="S" data-glyph="open" data-tags="sand history traffic">
+      <div class="camp-top"><span class="camp-mile">Mile 42.8 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Jim Moore</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A mix of sand and cobble just below the Jim Moore Place, a prospector's homestead with a cluster of buildings he put up himself. Other parties stop here to walk up to the cabins, so expect to share the beach during the day.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -971,15 +971,15 @@
         <img src="img/camps/main-salmon/jim-moore-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 42.8, where Jim Moore is on river right" loading="lazy" decoding="async">
         <figcaption>From the air, 21 Sep 2021, White Bird at 2,900 cfs. North is up. The camp is on river right, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Sand beach</li><li>History</li><li>Planes, boats or road</li></ul>
+      <ul class="camp-tags"><li>Sand beach</li><li>History</li><li>Visitors, planes or road</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water beach camp.&rdquo;</p>
     </article>
-    <article class="camp" id="ruff-creek" data-mile="43.2" data-side="L" data-lo="10" data-hi="10" data-res="S" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 43.2 · river left</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="ruff-creek" data-mile="43.2" data-side="L" data-cap="10 10" data-types="S" data-glyph="open" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 43.2 · river left</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Ruff Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>10 people</dd></div>
       </dl>
       <p>One of two 10-person reservable camps, and the only one that keeps its capacity at high water. A good request for a small private trip that wants a guaranteed site in this stretch.</p>
       <figure class="camp-aerial">
@@ -989,12 +989,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small beach camp.&rdquo;</p>
     </article>
-    <article class="camp" id="groundhog-bar" data-mile="44" data-side="R" data-lo="30" data-hi="30" data-res="L" data-tags="tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 44 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="groundhog-bar" data-mile="44" data-side="R" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 44 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Groundhog Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large camp at Whiplash Rapid. The eddy is on the right, in front of the big rock that gives the rapid its teeth, and it is easy to wash past.</p>
       <p class="camp-level"><strong>High water:</strong> The Forest Service lists 30 at high water, but Whiplash becomes a very large rapid at high flows and at least one guide calls the camp unreachable then. Scout before you count on it.</p>
@@ -1006,12 +1006,12 @@
       <ul class="camp-tags"><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large camp above rapid.&rdquo;</p>
     </article>
-    <article class="camp" id="reed-creek" data-mile="45.2" data-side="R" data-lo="30" data-hi="0" data-res="L" data-tags="sand hiking">
-      <div class="camp-top"><span class="camp-mile">Mile 45.2 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="reed-creek" data-mile="45.2" data-side="R" data-cap="30 0" data-types="L" data-glyph="filled" data-tags="sand hiking">
+      <div class="camp-top"><span class="camp-mile">Mile 45.2 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Reed Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A sandy camp just below a pretty creek, with the river trail close by.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1022,12 +1022,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Hiking</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy camp, trail access.&rdquo;</p>
     </article>
-    <article class="camp" id="gaines-bar" data-mile="46.3" data-side="R" data-lo="20" data-hi="20" data-res="F" data-tags="shade bench tricky-landing history">
-      <div class="camp-top"><span class="camp-mile">Mile 46.3 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="gaines-bar" data-mile="46.3" data-side="R" data-cap="20 20" data-types="F" data-glyph="dot" data-tags="shade bench tricky-landing history">
+      <div class="camp-top"><span class="camp-mile">Mile 46.3 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Gaines Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>20 people</dd></div>
       </dl>
       <p>A rocky landing with no eddy, then a short carry to a grassy bench where you camp in the field between the buildings. Not often used.</p>
       <figure class="camp-aerial">
@@ -1037,12 +1037,12 @@
       <ul class="camp-tags"><li>Shade</li><li>Bench camp</li><li>Tricky landing</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Bench camp in trees.&rdquo;</p>
     </article>
-    <article class="camp" id="rhett-creek" data-mile="46.6" data-side="R" data-lo="30" data-hi="30" data-res="L" data-tags="sand no-shade">
-      <div class="camp-top"><span class="camp-mile">Mile 46.6 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="rhett-creek" data-mile="46.6" data-side="R" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="sand no-shade">
+      <div class="camp-top"><span class="camp-mile">Mile 46.6 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Rhett Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large, exposed beach just below a rapid and just above Rhett Creek. Plenty of room and very little shade.</p>
       <figure class="camp-aerial">
@@ -1052,12 +1052,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Little or no shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Beach just after rapid.&rdquo;</p>
     </article>
-    <article class="camp" id="paine-creek" data-mile="49" data-side="R" data-lo="20" data-hi="0" data-res="S" data-tags="sand easy-landing hiking">
-      <div class="camp-top"><span class="camp-mile">Mile 49 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="paine-creek" data-mile="49" data-side="R" data-cap="20 0" data-types="S" data-glyph="open" data-tags="sand easy-landing hiking">
+      <div class="camp-top"><span class="camp-mile">Mile 49 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Paine Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small sand beach at the foot of a cliff with an easy landing and access to the trail.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1068,12 +1068,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Easy landing</li><li>Hiking</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small beach, trail access.&rdquo;</p>
     </article>
-    <article class="camp" id="boise-bar" data-mile="49.9" data-side="R" data-lo="20" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 49.9 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="boise-bar" data-mile="49.9" data-side="R" data-cap="20 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 49.9 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Boise Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A low-water sand beach that changes a lot from one year to the next. Have a backup.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1084,12 +1084,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="no-man-beach" data-mile="51" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand easy-landing no-shade">
-      <div class="camp-top"><span class="camp-mile">Mile 51 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="no-man-beach" data-mile="51" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand easy-landing no-shade">
+      <div class="camp-top"><span class="camp-mile">Mile 51 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>No Man Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small sloped beach, part sand and part rock, with an easy landing and no shade. Little used.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1100,12 +1100,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Easy landing</li><li>Little or no shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy sloped beach.&rdquo;</p>
     </article>
-    <article class="camp" id="teepee-creek" data-mile="51.2" data-side="R" data-lo="10" data-hi="0" data-res="S" data-tags="sand history">
-      <div class="camp-top"><span class="camp-mile">Mile 51.2 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="teepee-creek" data-mile="51.2" data-side="R" data-cap="10 0" data-types="S" data-glyph="open" data-tags="sand history">
+      <div class="camp-top"><span class="camp-mile">Mile 51.2 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Teepee Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small reservable sand beach. The grave marker in camp is for Jack Ranger, who drowned crossing the river here in 1928.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1116,12 +1116,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="five-mile-creek" data-mile="52.6" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="easy-landing shade history">
-      <div class="camp-top"><span class="camp-mile">Mile 52.6 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="five-mile-creek" data-mile="52.6" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="easy-landing shade history">
+      <div class="camp-top"><span class="camp-mile">Mile 52.6 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Five Mile Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small beach under a cliff with an easy cobble landing and a grassy, shaded spot to camp. Buckskin Bill's, the Five Mile Bar homestead with a small museum and store, is a walk from here.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1133,12 +1133,12 @@
       <ul class="camp-tags"><li>Easy landing</li><li>Shade</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small beach under cliff.&rdquo;</p>
     </article>
-    <article class="camp" id="pebble-beach-mile-53-2" data-mile="53.2" data-side="L" data-lo="30" data-hi="30" data-res="F" data-tags="bench shade carry">
-      <div class="camp-top"><span class="camp-mile">Mile 53.2 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="pebble-beach-mile-53-2" data-mile="53.2" data-side="L" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="bench shade carry">
+      <div class="camp-top"><span class="camp-mile">Mile 53.2 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Pebble Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A pretty camp on a high bench above a small beach, with some shade at the top. The second Pebble Beach on the river, and the larger one.</p>
       <p class="camp-level"><strong>Low water:</strong> The beach is steep when the river is low.</p>
@@ -1149,12 +1149,12 @@
       <ul class="camp-tags"><li>Bench camp</li><li>Shade</li><li>Carry or climb</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;High bench, small beach.&rdquo;</p>
     </article>
-    <article class="camp" id="haynie-bar" data-mile="53.4" data-side="L" data-lo="30" data-hi="30" data-res="L" data-tags="tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 53.4 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="haynie-bar" data-mile="53.4" data-side="L" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 53.4 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Haynie Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large camp with a tricky, rocky approach. Aim for the big boulder sitting at the water's edge. The tent sites are on the bar just upstream of it.</p>
       <figure class="camp-aerial">
@@ -1164,12 +1164,12 @@
       <ul class="camp-tags"><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Tricky rocky approach.&rdquo;</p>
     </article>
-    <article class="camp" id="bluebird-hole" data-mile="53.7" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="sand shade easy-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 53.7 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="bluebird-hole" data-mile="53.7" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand shade easy-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 53.7 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Bluebird Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large beach with an easy landing and a long, narrow, grassy flat shaded by pines. Pull in before the river bends and the current picks up. One of the best first-come camps for a big group.</p>
       <figure class="camp-aerial">
@@ -1179,57 +1179,57 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li><li>Easy landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large beach, flat area.&rdquo;</p>
     </article>
-    <article class="camp" id="wilson-bar" data-mile="54.1" data-side="R" data-lo="20" data-hi="20" data-res="F" data-tags="bench carry traffic">
-      <div class="camp-top"><span class="camp-mile">Mile 54.1 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="wilson-bar" data-mile="54.1" data-side="R" data-cap="20 20" data-types="F" data-glyph="dot" data-tags="bench carry traffic">
+      <div class="camp-top"><span class="camp-mile">Mile 54.1 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Wilson Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>20 people</dd></div>
       </dl>
       <p>A steep bench beside the Wilson Bar airstrip, the one public airstrip in the river corridor. Also called Jackson Bar. Expect planes, and a climb.</p>
       <figure class="camp-aerial">
         <img src="img/camps/main-salmon/wilson-bar-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 54.1, where Wilson Bar is on river right" loading="lazy" decoding="async">
         <figcaption>From the air, 21 Sep 2021, White Bird at 2,900 cfs. North is up. The camp is on river right, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Bench camp</li><li>Carry or climb</li><li>Planes, boats or road</li></ul>
+      <ul class="camp-tags"><li>Bench camp</li><li>Carry or climb</li><li>Visitors, planes or road</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Steep bench near airstrip.&rdquo;</p>
     </article>
-    <article class="camp" id="mackay-bar-bridge" data-mile="55.4" data-side="R" data-lo="30" data-hi="30" data-res="L" data-tags="sand no-shade traffic">
-      <div class="camp-top"><span class="camp-mile">Mile 55.4 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="mackay-bar-bridge" data-mile="55.4" data-side="R" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="sand no-shade traffic">
+      <div class="camp-top"><span class="camp-mile">Mile 55.4 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Mackay Bar Bridge</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A sunny sand beach by the Mackay Bar pack bridge. A road reaches the river here, and trucks are often parked nearby, so it is the least wild of the reservable camps.</p>
       <figure class="camp-aerial">
         <img src="img/camps/main-salmon/mackay-bar-bridge-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 55.4, where Mackay Bar Bridge is on river right" loading="lazy" decoding="async">
         <figcaption>From the air, 21 Sep 2021, White Bird at 2,900 cfs. North is up. The camp is on river right, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Sand beach</li><li>Little or no shade</li><li>Planes, boats or road</li></ul>
+      <ul class="camp-tags"><li>Sand beach</li><li>Little or no shade</li><li>Visitors, planes or road</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach, sunny camp.&rdquo;</p>
     </article>
-    <article class="camp" id="deadmans-hole" data-mile="55.7" data-side="L" data-lo="30" data-hi="30" data-res="F" data-tags="traffic">
-      <div class="camp-top"><span class="camp-mile">Mile 55.7 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="deadmans-hole" data-mile="55.7" data-side="L" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="traffic">
+      <div class="camp-top"><span class="camp-mile">Mile 55.7 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Deadman's Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A camp near the Mackay Bar Ranch airstrip. The Forest Service sums it up in three words: air traffic overhead.</p>
       <figure class="camp-aerial">
         <img src="img/camps/main-salmon/deadmans-hole-aerial-2021.webp" width="900" height="675" alt="Aerial view of the river around mile 55.7, where Deadman's Hole is on river left" loading="lazy" decoding="async">
         <figcaption>From the air, 21 Sep 2021, White Bird at 2,900 cfs. North is up. The camp is on river left, near the middle of the frame. <span class="credit">USDA NAIP, public domain.</span></figcaption>
       </figure>
-      <ul class="camp-tags"><li>Planes, boats or road</li></ul>
+      <ul class="camp-tags"><li>Visitors, planes or road</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Air traffic overhead.&rdquo;</p>
     </article>
-    <article class="camp" id="south-fork" data-mile="56.5" data-side="L" data-lo="0" data-hi="30" data-res="F" data-tags="tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 56.5 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="south-fork" data-mile="56.5" data-side="L" data-cap="0 30" data-types="F" data-glyph="dot" data-tags="tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 56.5 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>South Fork</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo none"><dt>Low water</dt><dd>No camp</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="0"><dt>Low water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>The only camp on the list that exists at high water and not at low. It sits at the mouth of the South Fork of the Salmon, technically on the South Fork itself, and it is hard to get into at any level.</p>
       <p class="camp-level"><strong>Low water:</strong> No camp at low water. The Forest Service calls it impossible at low water.</p>
@@ -1241,12 +1241,12 @@
       <ul class="camp-tags"><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Impossible at low-water.&rdquo;</p>
     </article>
-    <article class="camp" id="south-fork-island" data-mile="56.7" data-side="L" data-lo="20" data-hi="0" data-res="F" data-tags="sand no-shade tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 56.7 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="south-fork-island" data-mile="56.7" data-side="L" data-cap="20 0" data-types="F" data-glyph="dot" data-tags="sand no-shade tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 56.7 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>South Fork Island</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small, sunny beach at the bottom of the island below the South Fork confluence. The eddy comes up fast as you round the corner.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1262,12 +1262,12 @@
     <section class="camp-section" id="south-fork">
     <h2>South Fork to Long Tom Bar <span class="camp-range">miles 57.8&ndash;75.7 · 24 camps</span></h2>
     <p>Below the South Fork the river is bigger and the canyon hotter. Mostly sand beaches, most of them low-water camps, and the last reservable sites before the take-outs.</p>
-    <article class="camp" id="cove-creek" data-mile="57.8" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand easy-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 57.8 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="cove-creek" data-mile="57.8" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand easy-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 57.8 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Cove Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small sand beach against a cliff with an easy landing.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1279,12 +1279,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Easy landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="red-harland-hole" data-mile="58.1" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand carry history">
-      <div class="camp-top"><span class="camp-mile">Mile 58.1 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="red-harland-hole" data-mile="58.1" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand carry history">
+      <div class="camp-top"><span class="camp-mile">Mile 58.1 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Red Harland Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small camp at the top of a steep sand beach, named for Henry &quot;Red&quot; Harlan, a longtime river hermit.</p>
       <p class="camp-level"><strong>Low water:</strong> A cobble beach at the upper end opens up more room.</p>
@@ -1296,12 +1296,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Carry or climb</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-pine-tree-hole" data-mile="58.6" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="sand carry">
-      <div class="camp-top"><span class="camp-mile">Mile 58.6 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="upper-pine-tree-hole" data-mile="58.6" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand carry">
+      <div class="camp-top"><span class="camp-mile">Mile 58.6 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Upper Pine Tree Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small camp perched at the top of a steep, sloped sand beach.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1312,12 +1312,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Carry or climb</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small sloped sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-pine-tree-hole" data-mile="59.6" data-side="L" data-lo="15" data-hi="0" data-res="F" data-tags="sand carry">
-      <div class="camp-top"><span class="camp-mile">Mile 59.6 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="lower-pine-tree-hole" data-mile="59.6" data-side="L" data-cap="15 0" data-types="F" data-glyph="dot" data-tags="sand carry">
+      <div class="camp-top"><span class="camp-mile">Mile 59.6 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Lower Pine Tree Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>15 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>15 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>Much like its upstream twin: a small camp at the top of a steep sand beach, with room for a few more people.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1329,12 +1329,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Carry or climb</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small sloped sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="hungry-bar" data-mile="60.3" data-side="R" data-lo="20" data-hi="0" data-res="S" data-tags="sand shade">
-      <div class="camp-top"><span class="camp-mile">Mile 60.3 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="hungry-bar" data-mile="60.3" data-side="R" data-cap="20 0" data-types="S" data-glyph="open" data-tags="sand shade">
+      <div class="camp-top"><span class="camp-mile">Mile 60.3 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Hungry Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A sloping sand beach with more room than most small camps and a few pines at the upper end for shade.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1345,12 +1345,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach camp.&rdquo;</p>
     </article>
-    <article class="camp" id="mann-creek" data-mile="60.6" data-side="L" data-lo="30" data-hi="30" data-res="L" data-tags="sand tricky-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 60.6 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="mann-creek" data-mile="60.6" data-side="L" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="sand tricky-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 60.6 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Mann Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large reservable camp. The Forest Service's one piece of advice is to approach the beach from below.</p>
       <figure class="camp-aerial">
@@ -1360,12 +1360,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Tricky landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Access beach from below.&rdquo;</p>
     </article>
-    <article class="camp" id="warren-creek" data-mile="61" data-side="L" data-lo="30" data-hi="30" data-res="L" data-tags="tricky-landing hiking">
-      <div class="camp-top"><span class="camp-mile">Mile 61 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="warren-creek" data-mile="61" data-side="L" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="tricky-landing hiking">
+      <div class="camp-top"><span class="camp-mile">Mile 61 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Warren Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A large reservable camp at Warren Creek with a rocky approach and hiking out of camp. Good at any level.</p>
       <figure class="camp-aerial">
@@ -1375,12 +1375,12 @@
       <ul class="camp-tags"><li>Tricky landing</li><li>Hiking</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Rocky approach, hiking.&rdquo;</p>
     </article>
-    <article class="camp" id="swimming-hole" data-mile="61.6" data-side="R" data-lo="30" data-hi="30" data-res="L" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 61.6 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="swimming-hole" data-mile="61.6" data-side="R" data-cap="30 30" data-types="L" data-glyph="filled" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 61.6 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Swimming Hole</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A sand beach with a grassy flat behind it, also known as Warren Bar. With Mann Creek and Warren Creek it makes three large reservable camps inside a single mile.</p>
       <figure class="camp-aerial">
@@ -1390,12 +1390,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach, grassy flat.&rdquo;</p>
     </article>
-    <article class="camp" id="indian-creek-bar" data-mile="62.2" data-side="R" data-lo="20" data-hi="20" data-res="F" data-tags="sand bench hiking shade">
-      <div class="camp-top"><span class="camp-mile">Mile 62.2 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="indian-creek-bar" data-mile="62.2" data-side="R" data-cap="20 20" data-types="F" data-glyph="dot" data-tags="sand bench hiking shade">
+      <div class="camp-top"><span class="camp-mile">Mile 62.2 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Indian Creek Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>20 people</dd></div>
       </dl>
       <p>A nice camp just below the creek, with a sand beach and an upper bench. A shady trail heads up Indian Creek toward the ranch.</p>
       <figure class="camp-aerial">
@@ -1405,12 +1405,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Bench camp</li><li>Hiking</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach, upper bench.&rdquo;</p>
     </article>
-    <article class="camp" id="james-creek" data-mile="62.4" data-side="L" data-lo="30" data-hi="0" data-res="F" data-tags="sand shade">
-      <div class="camp-top"><span class="camp-mile">Mile 62.4 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="james-creek" data-mile="62.4" data-side="L" data-cap="30 0" data-types="F" data-glyph="dot" data-tags="sand shade">
+      <div class="camp-top"><span class="camp-mile">Mile 62.4 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>James Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A nice sand beach with a little shade, and a flat grassy field with trees to camp in. Low water only, but big when it is there.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1421,12 +1421,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="rabbit-creek" data-mile="65.2" data-side="L" data-lo="30" data-hi="0" data-res="L" data-tags="sand history">
-      <div class="camp-top"><span class="camp-mile">Mile 65.2 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="rabbit-creek" data-mile="65.2" data-side="L" data-cap="30 0" data-types="L" data-glyph="filled" data-tags="sand history">
+      <div class="camp-top"><span class="camp-mile">Mile 65.2 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Rabbit Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A large low-water sand beach, and the last reservable camp above the Polly Bemis Ranch, the national historic site a short way downstream on the same bank.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1437,12 +1437,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>History</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="alex-meadows" data-mile="67.2" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand shade">
-      <div class="camp-top"><span class="camp-mile">Mile 67.2 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="alex-meadows" data-mile="67.2" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand shade">
+      <div class="camp-top"><span class="camp-mile">Mile 67.2 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Alex Meadows</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A nice beach camp flanked by a few big ponderosas. The Forest Service caps it at 10 people.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1453,12 +1453,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sandy beach, shade.&rdquo;</p>
     </article>
-    <article class="camp" id="basin-creek" data-mile="67.8" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand carry no-shade">
-      <div class="camp-top"><span class="camp-mile">Mile 67.8 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="basin-creek" data-mile="67.8" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand carry no-shade">
+      <div class="camp-top"><span class="camp-mile">Mile 67.8 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Basin Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A steep sand beach with no shade. Hot in the afternoon.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1469,12 +1469,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Carry or climb</li><li>Little or no shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Steep sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="whiskey-bob" data-mile="68.7" data-side="R" data-lo="10" data-hi="0" data-res="F" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 68.7 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="whiskey-bob" data-mile="68.7" data-side="R" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 68.7 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Whiskey Bob</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small low-water sand beach. Neither source says more about it than that.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1485,12 +1485,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-bull-creek" data-mile="69.1" data-side="R" data-lo="30" data-hi="0" data-res="L" data-tags="sand no-shade">
-      <div class="camp-top"><span class="camp-mile">Mile 69.1 · river right</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="upper-bull-creek" data-mile="69.1" data-side="R" data-cap="30 0" data-types="L" data-glyph="filled" data-tags="sand no-shade">
+      <div class="camp-top"><span class="camp-mile">Mile 69.1 · river right</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Upper Bull Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A large low-water sand beach above Bull Creek. A hot camp: plan the kitchen around the afternoon sun.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1501,12 +1501,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Little or no shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-bull-creek" data-mile="69.3" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="sand bench hiking poison-ivy">
-      <div class="camp-top"><span class="camp-mile">Mile 69.3 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="lower-bull-creek" data-mile="69.3" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand bench hiking poison-ivy">
+      <div class="camp-top"><span class="camp-mile">Mile 69.3 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Lower Bull Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A nice sloping sand beach with a short carry to a flat bench, and a freshwater spring with a small sitting pool. Good hiking upstream toward Upper Bull. Poison ivy grows near the creek. A strong first-come choice for a big group, and it works at any level.</p>
       <figure class="camp-aerial">
@@ -1516,12 +1516,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Bench camp</li><li>Hiking</li><li>Poison ivy</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Sloping beach, flat bench.&rdquo;</p>
     </article>
-    <article class="camp" id="california-creek" data-mile="71.1" data-side="L" data-lo="30" data-hi="10" data-res="L" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 71.1 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="california-creek" data-mile="71.1" data-side="L" data-cap="30 10" data-types="L" data-glyph="filled" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 71.1 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>California Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>10 people</dd></div>
       </dl>
       <p>A large, popular camp on a sprawling beach just below California Creek.</p>
       <p class="camp-level"><strong>High water:</strong> Shrinks from 30 people to 10 at high water.</p>
@@ -1532,12 +1532,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Moderate low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="t-bone-creek" data-mile="71.6" data-side="R" data-lo="20" data-hi="0" data-res="S" data-tags="sand">
-      <div class="camp-top"><span class="camp-mile">Mile 71.6 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="t-bone-creek" data-mile="71.6" data-side="R" data-cap="20 0" data-types="S" data-glyph="open" data-tags="sand">
+      <div class="camp-top"><span class="camp-mile">Mile 71.6 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>T-Bone Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A moderate low-water beach just below California Creek, on the opposite bank.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1548,12 +1548,12 @@
       <ul class="camp-tags"><li>Sand beach</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Moderate low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="maxwell-bar" data-mile="72.8" data-side="L" data-lo="30" data-hi="0" data-res="L" data-tags="sand no-shade kids">
-      <div class="camp-top"><span class="camp-mile">Mile 72.8 · river left</span><span class="camp-res camp-res-L">Large reservable</span></div>
+    <article class="camp" id="maxwell-bar" data-mile="72.8" data-side="L" data-cap="30 0" data-types="L" data-glyph="filled" data-tags="sand no-shade kids">
+      <div class="camp-top"><span class="camp-mile">Mile 72.8 · river left</span><span class="camp-badges"><span class="camp-badge solid">Large reservable</span></span></div>
       <h3>Maxwell Bar</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A very large beach with little or no shade. The camp to ask for with kids along: there is a big sand dune to jump off into the river.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1564,12 +1564,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Little or no shade</li><li>Good with kids</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Large low water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="upper-sheep-creek" data-mile="73.9" data-side="R" data-lo="30" data-hi="30" data-res="F" data-tags="sand bench no-shade">
-      <div class="camp-top"><span class="camp-mile">Mile 73.9 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="upper-sheep-creek" data-mile="73.9" data-side="R" data-cap="30 30" data-types="F" data-glyph="dot" data-tags="sand bench no-shade">
+      <div class="camp-top"><span class="camp-mile">Mile 73.9 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Upper Sheep Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>30 people</dd></div>
       </dl>
       <p>A steep, medium-sized beach with more room on the flat bench above. The eddy is below a jumble of boulders. No afternoon shade.</p>
       <figure class="camp-aerial">
@@ -1579,12 +1579,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Bench camp</li><li>Little or no shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Steep beach, flat bench.&rdquo;</p>
     </article>
-    <article class="camp" id="middle-sheep" data-mile="74" data-side="R" data-lo="20" data-hi="0" data-res="F" data-tags="sand easy-landing">
-      <div class="camp-top"><span class="camp-mile">Mile 74 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="middle-sheep" data-mile="74" data-side="R" data-cap="20 0" data-types="F" data-glyph="dot" data-tags="sand easy-landing">
+      <div class="camp-top"><span class="camp-mile">Mile 74 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Middle Sheep</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A beach camp upstream of Sheep Creek with an easy landing on cobble.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1595,12 +1595,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Easy landing</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water beach.&rdquo;</p>
     </article>
-    <article class="camp" id="lower-sheep-creek" data-mile="74.1" data-side="R" data-lo="30" data-hi="0" data-res="F" data-tags="sand shade">
-      <div class="camp-top"><span class="camp-mile">Mile 74.1 · river right</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="lower-sheep-creek" data-mile="74.1" data-side="R" data-cap="30 0" data-types="F" data-glyph="dot" data-tags="sand shade">
+      <div class="camp-top"><span class="camp-mile">Mile 74.1 · river right</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Lower Sheep Creek</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>30 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>30 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A beach of mixed rock and sand just below Sheep Creek that gets late-afternoon shade, which is rare this far down the canyon.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1611,12 +1611,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Small rocky sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="slide-beach" data-mile="75.2" data-side="L" data-lo="10" data-hi="0" data-res="F" data-tags="sand carry shade">
-      <div class="camp-top"><span class="camp-mile">Mile 75.2 · river left</span><span class="camp-res">First-come</span></div>
+    <article class="camp" id="slide-beach" data-mile="75.2" data-side="L" data-cap="10 0" data-types="F" data-glyph="dot" data-tags="sand carry shade">
+      <div class="camp-top"><span class="camp-mile">Mile 75.2 · river left</span><span class="camp-badges"><span class="camp-badge plain">First-come</span></span></div>
       <h3>Slide Beach</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>10 people</dd></div>
-        <div class="camp-cap-hi none"><dt>High water</dt><dd>No camp</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>10 people</dd></div>
+        <div class="camp-cap-cell none" data-i="1"><dt>High water</dt><dd>No camp</dd></div>
       </dl>
       <p>A small beach with a carry up the slope and some shade.</p>
       <p class="camp-level"><strong>High water:</strong> No camp. The Forest Service gives it no high-water capacity.</p>
@@ -1627,12 +1627,12 @@
       <ul class="camp-tags"><li>Sand beach</li><li>Carry or climb</li><li>Shade</li></ul>
       <p class="camp-fs">Forest Service note: &ldquo;Low-water sandy beach.&rdquo;</p>
     </article>
-    <article class="camp" id="johnson-creek-campsite" data-mile="75.7" data-side="R" data-lo="20" data-hi="20" data-res="S" data-tags="sand carry">
-      <div class="camp-top"><span class="camp-mile">Mile 75.7 · river right</span><span class="camp-res camp-res-S">Small-medium reservable</span></div>
+    <article class="camp" id="johnson-creek-campsite" data-mile="75.7" data-side="R" data-cap="20 20" data-types="S" data-glyph="open" data-tags="sand carry">
+      <div class="camp-top"><span class="camp-mile">Mile 75.7 · river right</span><span class="camp-badges"><span class="camp-badge outline">Small-medium reservable</span></span></div>
       <h3>Johnson Creek Campsite</h3>
       <dl class="camp-cap">
-        <div class="camp-cap-lo"><dt>Low water</dt><dd>20 people</dd></div>
-        <div class="camp-cap-hi"><dt>High water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="0"><dt>Low water</dt><dd>20 people</dd></div>
+        <div class="camp-cap-cell" data-i="1"><dt>High water</dt><dd>20 people</dd></div>
       </dl>
       <p>The last reservable camp on the river, a steep sand beach two miles above Long Tom Bar, good for 20 people at any level. A sensible last night if you want a short float to the Vinegar Creek or Carey Creek ramp in the morning.</p>
       <figure class="camp-aerial">
@@ -1675,7 +1675,7 @@
       <a href="https://www.fs.usda.gov/media/233548">Forest Service, Wild Main Salmon Campsites (2025)</a>. Camp names are
       spelled as that list spells them, because that is what the request form
       uses. The descriptions are LateBoof&rsquo;s own wording; details beyond
-      the Forest Service note were checked against
+      the Forest Service list were checked against
       <a href="https://gorafting.com/united-states/idaho/main-salmon/">GoRafting, Main Salmon River Rafting Guide</a>, and where the two
       disagree the Forest Service figure is used and the camp says so.
     </p>
@@ -1697,7 +1697,7 @@
     </div>
   </div>
 
-    <aside class="river-side camp-rail" aria-hidden="true" data-camp-rail="/main-salmon-data.js" data-landmarks="[{&quot;m&quot;:0,&quot;n&quot;:&quot;Corn Creek put-in&quot;,&quot;s&quot;:&quot;R&quot;},{&quot;m&quot;:77.6,&quot;n&quot;:&quot;Long Tom Bar&quot;,&quot;s&quot;:&quot;R&quot;},{&quot;m&quot;:78.2,&quot;n&quot;:&quot;Vinegar Creek ramp&quot;,&quot;s&quot;:&quot;L&quot;},{&quot;m&quot;:80.8,&quot;n&quot;:&quot;Carey Creek ramp&quot;,&quot;s&quot;:&quot;L&quot;}]">
+    <aside class="river-side camp-rail" aria-hidden="true" data-camp-rail="/main-salmon-data.js" data-landmarks="[{&quot;m&quot;:0,&quot;n&quot;:&quot;Corn Creek put-in&quot;,&quot;s&quot;:&quot;R&quot;},{&quot;m&quot;:77.6,&quot;n&quot;:&quot;Long Tom Bar&quot;,&quot;s&quot;:&quot;R&quot;},{&quot;m&quot;:78.2,&quot;n&quot;:&quot;Vinegar Creek ramp&quot;,&quot;s&quot;:&quot;L&quot;},{&quot;m&quot;:80.8,&quot;n&quot;:&quot;Carey Creek ramp&quot;,&quot;s&quot;:&quot;L&quot;}]" data-anchors="[{&quot;mile&quot;:32,&quot;mark&quot;:&quot;Bargamin Creek&quot;},{&quot;mile&quot;:36.9,&quot;mark&quot;:&quot;Big Mallard&quot;},{&quot;mile&quot;:56.5,&quot;mark&quot;:&quot;South Fork confluence&quot;}]">
       <div class="river-side__head">Camps down the river<span data-rail-now>Mile 0</span></div>
       <div class="river-map camp-rail__map" data-rail-map>
         <svg class="camp-rail__svg" data-rail-svg>
@@ -1723,7 +1723,7 @@
     </span>
   </footer>
 
-  <script type="module" src="camps.js?v=2026093002"></script>
-  <script type="module" src="camp-rail.js?v=2026093002"></script>
+  <script type="module" src="camps.js?v=2026093003"></script>
+  <script type="module" src="camp-rail.js?v=2026093003"></script>
 </body>
 </html>

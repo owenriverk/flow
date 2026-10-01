@@ -79,8 +79,10 @@ The Oracle forecast pages under `web/forecast*` are build outputs of the private
 Two kinds of page under `web/` are generated here and committed: the scroll-map
 data (`node scripts/build-river-sides.mjs <slug>` -> `web/<slug>-data.js` +
 `-topo.svg`) and the camp guides (`node scripts/build-camp-guide.mjs` ->
-`web/main-salmon-camps.html` from `scripts/data/main-salmon-camps.json`). Edit
-the data or the script and rebuild; `test/campGuide.test.ts` fails on a stale page.
+`web/<slug>-camps.html` from `scripts/data/<slug>-camps.json`, with each river's
+rules and group lists in `scripts/camp-guides/<slug>.mjs`; aerials from
+`node scripts/build-camp-aerials.mjs <slug>`). Edit the data or the scripts and
+rebuild; `test/campGuide.test.ts` fails on a stale page or a stale aerial.
 
 ## Guardrails worth knowing before changing anything
 
