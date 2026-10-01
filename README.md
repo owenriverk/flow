@@ -22,7 +22,7 @@ Supabase).
 
 ```
 src/
-  worker.ts          Cloudflare Worker entry: email() for inReach/email ingress, fetch() for /api/sms + status
+  worker.ts          Cloudflare Worker entry: email() for inReach/email ingress, fetch() for /api/sms + status + request
   handleInbound.ts   email glue: parseInbound -> handleQuery -> replyToInreach
   parseInbound.ts    inReach email body -> { query, reply token }
   replyToInreach.ts  reply via Garmin's messenger page (GET token page -> find Server Action -> POST)
@@ -43,6 +43,8 @@ src/
   canaryRunner/Sweep/Garmin/Helpers.ts   nightly self-checks (docs/SELF-CHECKING.md)
   replayLogic.ts     nightly deterministic re-resolution of the real query corpus (CI)
   stripeWebhook.ts   donation webhook verification/mapping (used by web/functions/)
+  gaugeRequest.ts    "request a gauge" form on the homepage -> one email to the owner
+                     (POST /api/request; capped 40/day, 5/day per visitor, fails closed)
   aliases.json       ~150 curated phrases -> 47 gauges; provenance.json is the audit trail
 ```
 

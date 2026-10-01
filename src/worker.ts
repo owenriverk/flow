@@ -45,6 +45,7 @@ import {
 } from './sms.js';
 import { senderKey, checkSmsThrottle, claimOwnerAlert, INREACH_GATEWAY_CAPS } from './smsThrottle.js';
 import { buildReplyHeaders } from './emailReply.js';
+import { handleGaugeRequest } from './gaugeRequest.js';
 import {
   recordReplySuccess,
   recordReplyFailure,
@@ -72,6 +73,9 @@ const STATUS_ENDPOINT_PATH = '/api/status';
 // wrangler.jsonc, beside the status endpoint. Distinct from the static /sms
 // opt-in page, which stays on the static site.
 const SMS_ENDPOINT_PATH = '/api/sms';
+// "Request a gauge" form under the homepage table (web/request.js). Emails the
+// owner; see src/gaugeRequest.ts for the caps that keep it from being a flood.
+const REQUEST_ENDPOINT_PATH = '/api/request';
 
 interface Env {
   AI: Ai;
@@ -426,11 +430,25 @@ export default {
   //   POST /api/sms    — Twilio inbound-SMS webhook (handleSmsWebhook).
   //   GET  /api/status — public read-only reply-health JSON for status.html
   //                      (src/statusTracking.ts).
+  //   POST /api/request — "request a gauge" form on the homepage; one email to
+  //                      the owner per request (src/gaugeRequest.ts).
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === SMS_ENDPOINT_PATH) {
       return handleSmsWebhook(request, env, ctx);
+    }
+
+    if (url.pathname === REQUEST_ENDPOINT_PATH) {
+      return handleGaugeRequest(request, {
+        kv: env.AI_BUDGET as unknown as KvLike,
+        aliases,
+        notify: (subject, text) => notifyOwner(env, subject, text),
+        // Same HMAC as SMS sender ids, so a visitor's IP is never stored. The
+        // fallback only matters before TWILIO_AUTH_TOKEN is set: HMAC rejects an
+        // empty key, and an unkeyed counter is still better than none.
+        visitorKey: (ip) => senderKey(ip, env.TWILIO_AUTH_TOKEN || 'lateboof-request'),
+      });
     }
 
     if (url.pathname === STATUS_ENDPOINT_PATH) {

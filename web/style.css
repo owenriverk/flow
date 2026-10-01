@@ -500,6 +500,63 @@ th.sortable::after { content: ''; display: inline-block; width: 1.1em; color: va
 th.sortable[data-dir="asc"]::after  { content: ' ↑'; }
 th.sortable[data-dir="desc"]::after { content: ' ↓'; }
 
+/* ── Request a gauge ── */
+/* Sits directly under the table and reads as its last row: same grey strip as
+   the filter bar above. No `display` on the section itself, so the `hidden`
+   attribute (set until request.js runs) still wins. */
+.request-bar {
+  padding: 0.55rem 1rem;
+  border-top: 1px solid var(--border);
+  background: #f6f6f6;
+}
+
+.request-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+}
+
+.request-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Input and button share a border, like the joined status buttons. */
+.request-field { display: flex; }
+.request-input { width: 17rem; }
+
+.request-btn {
+  padding: 0.28rem 0.75rem;
+  border: 1px solid var(--border);
+  border-left-width: 0;
+  border-radius: 0;
+  background: var(--text);
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.request-btn:hover    { background: #333; }
+.request-btn:disabled { background: var(--border-mid); border-color: var(--border-mid); cursor: default; }
+.request-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+.request-note { color: var(--muted); font-size: 0.78rem; }
+.request-note[data-state="ok"]    { color: var(--good); }
+.request-note[data-state="error"] { color: var(--low); }
+
+/* Honeypot: off-screen rather than display:none, which some bots skip. */
+.request-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
 /* ── Footer ── */
 .site-footer {
   display: flex;
@@ -555,6 +612,10 @@ th.sortable[data-dir="desc"]::after { content: ' ↓'; }
   }
 
   .search-input { width: 100%; }
+
+  .request-bar   { padding: 0.6rem 0.75rem; }
+  .request-field { width: 100%; }
+  .request-input { flex: 1; min-width: 0; }
 
   /* Cards */
   table, thead, tbody, tr, th, td { display: block; }

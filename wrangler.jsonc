@@ -16,7 +16,9 @@
   // continues to hit the static site.
   "routes": [
     { "pattern": "lateboof.com/api/status", "zone_name": "lateboof.com" },
-    { "pattern": "lateboof.com/api/sms", "zone_name": "lateboof.com" }
+    { "pattern": "lateboof.com/api/sms", "zone_name": "lateboof.com" },
+    // "Request a gauge" form on the homepage — src/gaugeRequest.ts.
+    { "pattern": "lateboof.com/api/request", "zone_name": "lateboof.com" }
   ],
   // Nightly self-check (src/canaryRunner.ts): ONE cron dispatches every check
   // sequentially — gauge sweep, canary watchdog, Garmin form check. 14:00 UTC,

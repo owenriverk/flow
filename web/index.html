@@ -221,6 +221,23 @@ USGS 13309220
     </table>
   </div>
 
+  <!-- Request a gauge. Hidden until request.js runs: the endpoint takes JSON
+       only, so without JS this would be a form that cannot submit. -->
+  <section class="request-bar" id="request-bar" hidden>
+    <form class="request-form" id="request-form" novalidate>
+      <label class="request-label" for="request-input">Don&rsquo;t see your run?</label>
+      <span class="request-field">
+        <input type="text" id="request-input" name="request" class="search-input request-input"
+               placeholder="Request a gauge or run…" maxlength="200" autocomplete="off"
+               enterkeyhint="send">
+        <button type="submit" class="request-btn" id="request-btn">Request</button>
+      </span>
+      <!-- Honeypot: people never see or reach this; a bot that fills it is ignored. -->
+      <input type="text" name="website" class="request-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <span class="request-note" id="request-note" role="status" aria-live="polite"></span>
+    </form>
+  </section>
+
   <footer class="site-footer">
     <span>Text a gauge name (e.g. <em>mf salmon</em>, <em>grand canyon</em>, <em>stikine</em>) to <strong>866-284-5181</strong> from an InReach or phone. No app, no account.</span>
     <span class="footer-links">
@@ -299,6 +316,7 @@ USGS 13309220
   </script>
 
   <script type="module" src="gauges.js"></script>
+  <script type="module" src="request.js"></script>
   <script>
     const dialog = document.getElementById('contact-dialog');
     document.getElementById('contact-btn').addEventListener('click', () => dialog.showModal());
