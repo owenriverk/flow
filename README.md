@@ -14,7 +14,7 @@ for how it watches itself, and [web/DEPLOY.md](./web/DEPLOY.md) for the website.
 **Live in production on both channels.** Email/inReach since 2026-06-28 (reply
 path verified on a real device; re-verified 2026-08-26 after Garmin moved their
 reply page). SMS public since 2026-08-28, including inReach-via-SMS through
-Garmin's relay. 45 gauges, ~150 curated phrases, US/Canada/NZ. Nightly
+Garmin's relay. 47 gauges, ~150 curated phrases, US/Canada/NZ. Nightly
 self-checks with a public status page (lateboof.com/status), a live gauge
 directory (lateboof.com), come-in forecasts (lateboof.com/forecast, built by the
 companion `weth` repo), and a donations page (lateboof.com/support, Stripe →
@@ -43,7 +43,7 @@ src/
   canaryRunner/Sweep/Garmin/Helpers.ts   nightly self-checks (docs/SELF-CHECKING.md)
   replayLogic.ts     nightly deterministic re-resolution of the real query corpus (CI)
   stripeWebhook.ts   donation webhook verification/mapping (used by web/functions/)
-  aliases.json       ~150 curated phrases -> 45 gauges; provenance.json is the audit trail
+  aliases.json       ~150 curated phrases -> 47 gauges; provenance.json is the audit trail
 ```
 
 ## Develop

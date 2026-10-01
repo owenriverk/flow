@@ -79,6 +79,7 @@ export const GAUGES: GaugeConfig[] = [
   // key stays 'calor' (misspelling) on purpose: it is the Supabase row id and renaming would orphan the gauge's history — text_key carries the correct public spelling.
   { key: 'calor',         name: 'Clore (Zymoetz R)',  location: 'Above O.K. Creek, BC',         source: 'wsc',   site: '08EF005',  text_key: 'clore',       gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08EF005',  low: 100,   high: 150 },
   { key: 'clearwater',    name: 'Clearwater R',        location: 'Near Clearwater Station, BC',  source: 'wsc',   site: '08LA001',  text_key: 'clearwater',  gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08LA001',  low: 50,    high: 200 },
+  { key: 'homathko',      name: 'Homathko R',          location: 'At the mouth, BC',             source: 'wsc',   site: '08GD004',  text_key: 'homathko',    gauge_url: 'https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=08GD004',  low: 150,   high: 350 },
 
   // ── New Zealand (cms) ──────────────────────────────────────────────
   { key: 'wairaurahiri', name: 'Wairaurahiri R',       location: 'At Lake Hauroko outlet, Southland, NZ', source: 'envdata',  site: 'Wairaurahiri at Lake Hauroko', text_key: 'wairaurahiri', gauge_url: 'https://envdata.es.govt.nz/?tab=graph&view=eyJkIjoiZmxvdy54bWwiLCJzIjoiV2FpcmF1cmFoaXJpIGF0IExha2UgSGF1cm9rbyIsIm0iOiJGbG93IiwiaSI6N30%3D', low: null, high: null },

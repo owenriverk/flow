@@ -1,10 +1,10 @@
 # Run roster
 
 What to text the bot → the run it maps to → the gauge it reads.
-This roster is generated from `src/aliases.json` **as of 2026-08-30** and lists
+This roster is generated from `src/aliases.json` **as of 2026-09-30** and lists
 every phrase the bot will currently resolve to a gauge. It is **not** a live-API
 verification pass — it reflects what's configured, not a fresh check that every
-upstream station is reporting data right now. The 45-gauge set here matches
+upstream station is reporting data right now. The 47-gauge set here matches
 `supabase/functions/refresh-gauges/gauges.ts` (the website's source list).
 Units are native: US runs **cfs / ft**, Canadian runs **cms / m**, New Zealand
 runs **cms** (discharge only, no stage).
@@ -63,6 +63,7 @@ answer on a satellite link is worse than none.
 | `iskut` | Iskut | 08CG001 | WSC | Below Johnson River, BC |
 | `copper` / `zymoetz` | Clore (Zymoetz R) — the Copper (AKA: `clore`, `gc clore`, `grand canyon clore`, `copper river`) | 08EF005 | WSC | Above O.K. Creek, BC |
 | `clearwater` | Clearwater, BC (AKA: `bc clearwater`) | 08LA001 | WSC | Near Clearwater Station, BC |
+| `homathko` | Homathko — Tatlayoko Lake to Bute Inlet | 08GD004 | WSC | At the mouth, BC |
 
 ## New Zealand
 

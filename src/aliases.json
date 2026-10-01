@@ -653,6 +653,12 @@
     "location": "Near Clearwater Station, BC",
     "source": "wsc"
   },
+  "homathko": {
+    "site": "08GD004",
+    "name": "Homathko R",
+    "location": "At the mouth, BC",
+    "source": "wsc"
+  },
   "wairaurahiri": {
     "site": "Wairaurahiri at Lake Hauroko",
     "name": "Wairaurahiri R",

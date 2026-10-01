@@ -82,6 +82,12 @@
       "verifiedOn": "2026-08-30",
       "source": "usgs",
       "notes": "San Juan R at Four Corners — upstream indicator for the San Juan trip, not its own run: water here reaches Bluff/Sand Island roughly a day later, so it is the early read for a launch decision. Station specified by the owner. Band mirrors the Bluff row (500-5000) because it is the same river and trip and the two gauges track closely (662 vs 560 cfs when added); American Whitewater publishes no reach correlated to this station that could be cited instead."
+    },
+    "wsc:08GD004": {
+      "verifiedBy": "claude",
+      "verifiedOn": "2026-09-30",
+      "source": "wsc",
+      "notes": "Homathko at the mouth (Bute Inlet) — the reference gauge for the Tatlayoko Lake-to-Bute Inlet class V multiday. OWNER SIGN-OFF PENDING: Owen asked for the river; the station and band were chosen from published beta, not from his firsthand check — switch verifiedBy to owen once he confirms. Receipt: bcwhitewater.org/reaches/45-homathko-river links this exact station ('Look at this gauge found at the mouth of the river for an accurate flow report') and reads its own level off it. Band 150-350 from the same page: 'The consensus is that flows of 150-350 cms are optimal, although trips have been run lower. Flows above 400 cms were consistently described as huge portage-fests before the landslide.' Its level table calls 350-400 High and 400+ Above Recommended, so HIGH above 350 agrees with it. Glacier-fed fall run: one hot day or warm rain spikes it. NOT 08GD008 (inlet to Tatlayoko Lake, 495 km2), the only other active Homathko station — it sits above the put-in. Live-verified 154 cms at add time."
     }
   },
   "rituals": [

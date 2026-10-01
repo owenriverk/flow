@@ -134,6 +134,8 @@ live('tier 1 — exact alias', () => {
     ['zymoetz',                  'Clore (Zymoetz R)'],
     ['clearwater',              'Clearwater R'],
     ['bc clearwater',           'Clearwater R'],
+    ['homathko',                'Homathko R'],
+    ['homathko river',          'Homathko R'],
   ])('"%s" → reply contains "%s"', async (query, nameSubstring) => {
     const reply = await handleQuery(query, { aliases: table });
     console.log(`[${query}] ${reply.split('\n')[0]}`);
