@@ -76,6 +76,12 @@ supabase functions deploy refresh-gauges --project-ref vfkoegvzllxvshcnfbox --no
 The Oracle forecast pages under `web/forecast*` are build outputs of the private
 `weth` repo — edit them there (`mock/build_mock.py`), never here.
 
+Two kinds of page under `web/` are generated here and committed: the scroll-map
+data (`node scripts/build-river-sides.mjs <slug>` -> `web/<slug>-data.js` +
+`-topo.svg`) and the camp guides (`node scripts/build-camp-guide.mjs` ->
+`web/main-salmon-camps.html` from `scripts/data/main-salmon-camps.json`). Edit
+the data or the script and rebuild; `test/campGuide.test.ts` fails on a stale page.
+
 ## Guardrails worth knowing before changing anything
 
 - The reply is a raw reading, never a runnable judgment — the website colors

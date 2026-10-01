@@ -26,12 +26,13 @@
  * metres; and a slug list on the command line builds only those rivers.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
 
 const DATA = new URL("./data/", import.meta.url);
 const WEB = new URL("../web/", import.meta.url);
 const CACHE = "node_modules/.cache/skadi-tiles";
-const KM_DEG = 111.32;
+export const KM_DEG = 111.32;
 const LEVEL_STEP = 40; // metres
 const INDEX_EVERY = 200;
 const PAD_X = 1.6; // km of topo beyond the river's lateral extent
@@ -42,7 +43,7 @@ const QUANT = 200; // svg units per km
 const MIN_POINTS = 4;
 const MIN_LENGTH = 0.12; // km
 
-const RIVERS = [
+export const RIVERS = [
   {
     slug: "kings",
     osm: ["kings-osm.json", "kings-main-osm.json"],
@@ -184,20 +185,25 @@ const RIVERS = [
       // Teeth 13, Salmon Falls 20.5, Barth 22.5, Big Mallard 37, Elkhorn 40.5,
       // Mackay Bar / South Fork 56, Chittam 78.5, Vinegar 79. OSM stream mouths
       // agree with it to within a mile, so the surveyed anchors stay.
-      { name: "Killum", kind: "rapid", km: 5.6 },
+      // Corrected 2026-09-30 while building the camp guide: five km estimates
+      // were 2-8 miles off. Now from the Forest Service camp list (Bailey Bar
+      // 32.5, Jim Moore 42.8, Groundhog Bar 44, Five Mile Creek 52.6) and
+      // GoRafting's mile guide (Killam 1.4, Bailey 32.6, Campbell's Ferry
+      // 42.8, Whiplash 44.3, Buckskin Bill's at Five Mile Bar 52.7), x 1.609.
+      { name: "Killum", kind: "rapid", km: 2.3 },
       { name: "Rainier", kind: "rapid", km: 12.9 },
       { name: "Lantz Bar", kind: "camp", km: 15.3 },
       { name: "Devils Teeth", kind: "rapid", km: 20.9 },
       { name: "Salmon Falls", kind: "rapid", km: 33.0 },
       { name: "Barth Hot Springs", kind: "camp", km: 36.2 },
       { name: "Bargamin Creek", kind: "camp", at: "mainsalmon-osm.json:way:Bargamin Creek" },
-      { name: "Bailey", kind: "rapid", km: 57.1 },
+      { name: "Bailey", kind: "rapid", km: 52.5 },
       { name: "Big Mallard", kind: "rapid", at: "mainsalmon-osm.json:way:Big Mallard Creek" },
       { name: "Elkhorn", kind: "rapid", km: 65.2 },
-      { name: "Whiplash", kind: "rapid", km: 69.2 },
-      { name: "Campbell's Ferry", kind: "camp", km: 81.3 },
+      { name: "Whiplash", kind: "rapid", km: 71.2 },
+      { name: "Campbell's Ferry", kind: "camp", km: 68.8 },
       { name: "South Fork confluence", kind: "rapid", at: "mainsalmon-osm.json:way:South Fork Salmon River" },
-      { name: "Five Mile Bar", kind: "camp", km: 96.6 },
+      { name: "Five Mile Bar", kind: "camp", km: 84.8 },
       { name: "Chittam", kind: "rapid", km: 126.3 },
       { name: "Vinegar Creek", kind: "rapid", at: "mainsalmon-osm.json:way:Vinegar Creek" },
     ],
@@ -304,13 +310,13 @@ function dpSimplify(points, eps) {
   return [points[0], points[points.length - 1]];
 }
 
-const loadJson = (file) =>
+export const loadJson = (file) =>
   Array.isArray(file)
     ? { elements: file.flatMap((f) => loadJson(f).elements) }
     : JSON.parse(readFileSync(new URL(file, DATA), "utf8"));
 
 // chain OSM ways (digitized downstream) into the longest head→mouth line
-function chainWays(json, names) {
+export function chainWays(json, names) {
   const ways = json.elements.filter((e) => e.type === "way" && names.includes(e.tags?.name));
   const key = (p) => `${p.lat.toFixed(6)},${p.lon.toFixed(6)}`;
   const byStart = new Map();
@@ -376,7 +382,7 @@ function lakePolys(name) {
 }
 
 // resolve "file.json:Name" (node) or "file.json:way:Name" (way mouth) to [lat, lon]
-function resolveAt(ref) {
+export function resolveAt(ref) {
   if (Array.isArray(ref)) return ref;
   const [file, ...rest] = ref.split(":");
   const j = loadJson(file);
@@ -774,9 +780,13 @@ export const MARKS = ${JSON.stringify(marks)};
   return { slug: cfg.slug, span: cfg.span, runLen };
 }
 
-const only = process.argv.slice(2);
-for (const cfg of RIVERS) {
-  if (only.length && !only.includes(cfg.slug)) continue;
-  console.log(`${cfg.slug}:`);
-  await build(cfg);
+// Only build when run directly: scripts/build-camp-aerials.mjs imports the OSM
+// helpers above and must not trigger a rebuild of every map.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const only = process.argv.slice(2);
+  for (const cfg of RIVERS) {
+    if (only.length && !only.includes(cfg.slug)) continue;
+    console.log(`${cfg.slug}:`);
+    await build(cfg);
+  }
 }

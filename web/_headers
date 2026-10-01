@@ -5,3 +5,7 @@
 # let phones keep them across the season instead of refetching on every visit.
 /img/rivers/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Camp aerials carry their imagery year in the filename, so the same holds.
+/img/camps/*
+  Cache-Control: public, max-age=31536000, immutable

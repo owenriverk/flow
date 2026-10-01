@@ -48,3 +48,41 @@
 @media (max-width: 1179.98px) {
   .river-side { display: none; }
 }
+
+/* ---- Camp strip map (2026-09-30) ---------------------------------------------
+   /<river>-camps, engine /camp-rail.js. Same sticky aside, but the map is
+   zoomed in and pans under a fixed reading line, so it needs clipping, a wider
+   column for a label on each bank, and a soft edge where the river runs off the
+   top and bottom. The engine draws leaders, glyphs, labels and mile ticks. */
+@media (min-width: 1180px) {
+  .river-wrap.camp-wrap {
+    grid-template-columns: minmax(0, 44rem) 300px;
+    max-width: calc(44rem + 300px + 1.6rem + 2rem);
+  }
+}
+.camp-rail__map {
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, #000 5%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 5%, #000 93%, transparent);
+}
+.camp-rail__svg { overflow: hidden; }
+.camp-rail .river-map__bed { stroke-width: 6; }
+.camp-rail__leader { fill: none; stroke: #c9c9c9; stroke-width: 0.6; }
+.camp-rail__camp { cursor: pointer; }
+.camp-rail__camp text { font-size: 9px; fill: #555; paint-order: stroke; stroke: #fff; stroke-width: 2.5px; stroke-linejoin: round; }
+.camp-rail__camp circle { fill: #fff; stroke: #555; stroke-width: 1; }
+.camp-rail__camp path:not(.camp-rail__leader) { stroke: #111; stroke-width: 1.1; stroke-linejoin: round; }
+.camp-rail__camp.res-L path:not(.camp-rail__leader) { fill: #111; }
+.camp-rail__camp.res-S path:not(.camp-rail__leader) { fill: #fff; }
+.camp-rail__camp.res-L text, .camp-rail__camp.res-S text { fill: #111; }
+.camp-rail__camp:hover text { fill: #000; text-decoration: underline; }
+/* The camp at the reading line. */
+.camp-rail__camp.on text { fill: #000; font-weight: 700; font-size: 10px; }
+.camp-rail__camp.on .camp-rail__leader { stroke: #ff5a00; stroke-width: 1.2; }
+.camp-rail__camp.on circle, .camp-rail__camp.on path:not(.camp-rail__leader) { fill: #ff5a00; stroke: #111; }
+/* Hidden by the filters, or no camp at the chosen water level. */
+.camp-rail__camp.off { opacity: 0.25; }
+.camp-rail__landmark text { font-size: 8.5px; fill: #777; text-transform: uppercase; letter-spacing: 0.06em; paint-order: stroke; stroke: #fff; stroke-width: 2.5px; }
+.camp-rail__landmark rect { fill: #fff; stroke: #777; stroke-width: 1; }
+.camp-rail__tick { stroke: #111; stroke-width: 1; }
+.camp-rail__mile { font-size: 8.5px; fill: #999; font-style: italic; }
