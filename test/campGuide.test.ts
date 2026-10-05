@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import mainJson from '../scripts/data/main-salmon-camps.json' with { type: 'json' };
 import mfJson from '../scripts/data/mf-salmon-camps.json' with { type: 'json' };
-import { PROFILES, TAGS, build, campIds, caps, missingAerials, onDisk } from '../scripts/build-camp-guide.mjs';
+import { PROFILES, TAGS, build, campIds, caps, missingAerials, onDisk, webFileExists } from '../scripts/build-camp-guide.mjs';
 import { positions } from '../scripts/build-camp-aerials.mjs';
 
 /**
@@ -157,6 +157,20 @@ describe.each(RIVERS)('web/%s-camps.html', (slug, data) => {
   it('is rebuilt whenever the data or the generator changes', () => {
     // Fails after an edit without `node scripts/build-camp-guide.mjs`.
     expect(onDisk(slug)).toBe(html);
+  });
+
+  it('keeps the title and description short enough to show whole in search results', () => {
+    const title = html.match(/<title>(.*?)<\/title>/)![1]!.replace(/&amp;/g, '&');
+    const desc = html.match(/<meta name="description" content="([^"]*)"/)![1]!.replace(/&#39;|&quot;|&amp;/g, 'x');
+    expect(title.length, title).toBeLessThanOrEqual(60);
+    expect(desc.length, desc).toBeLessThanOrEqual(155);
+  });
+
+  it('shares with its own 1200x630 image, and the file is there', () => {
+    const src = html.match(/<meta property="og:image" content="https:\/\/lateboof\.com\/([^"]+)"/)![1]!;
+    expect(src).toMatch(new RegExp(`^img/camps/${slug}/.+\\.jpg$`));
+    expect(webFileExists(src), src).toBe(true);
+    expect(html).toContain('<meta property="og:image:alt"');
   });
 
   it('renders every camp once, with the strip map and no template leaks', () => {

@@ -240,7 +240,10 @@ ${inSection.map(([c, id]) => campArticle(ctx, c, id)).join("\n")}
   const placed = sections.reduce((sum, s) => sum + count((c) => c.m >= s.from && c.m < s.to), 0);
   if (placed !== n) throw new Error(`${n - placed} camps fall outside every section`);
 
-  const title = `${river} Camps — All ${n} by Mile, Size &amp; Water Level | LateBoof`;
+  // Kept under 60 characters so search results show it whole; the mile, size
+  // and water-level detail is in the description.
+  const shareTitle = `${river} Camp Guide: All ${n} Camps`;
+  const title = `${shareTitle} | LateBoof`;
   const description = profile.description(ctx);
   const url = `https://lateboof.com/${slug}-camps`;
   const breadcrumb = JSON.stringify({
@@ -269,15 +272,18 @@ ${inSection.map(([c, id]) => campArticle(ctx, c, id)).join("\n")}
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${url}">
   <script type="application/ld+json">${breadcrumb}</script>
-  <meta property="og:title" content="${river} Camps — All ${n} by Mile, Size &amp; Water Level">
+  <meta property="og:title" content="${shareTitle}">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:url" content="${url}">
   <meta property="og:site_name" content="LateBoof">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://lateboof.com/og.png">
+  <meta property="og:image" content="https://lateboof.com/${profile.ogImage.src}">
+  <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${esc(profile.ogImage.alt)}">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image:alt" content="${esc(profile.ogImage.alt)}">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css?v=${CSS_VERSION}">
   <link rel="stylesheet" href="river.css?v=${CSS_VERSION}">
@@ -446,6 +452,11 @@ export function missingAerials(slug, aerials) {
   return Object.values(aerials?.camps ?? {})
     .map((a) => a.file)
     .filter((file) => !existsSync(new URL(`web/img/camps/${slug}/${file}`, ROOT)));
+}
+
+/** Whether a path under web/ exists (the share images; the tests run without Node types). */
+export function webFileExists(path) {
+  return existsSync(new URL(`web/${path}`, ROOT));
 }
 
 /** The page as it currently sits in web/ — test/campGuide.test.ts checks it is not stale. */

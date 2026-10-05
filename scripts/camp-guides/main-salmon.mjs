@@ -17,8 +17,11 @@ export default {
   span: "Corn Creek to Long Tom Bar",
   wilderness: "Frank Church&ndash;River of No Return Wilderness",
 
+  // Search results show about 155 characters; test/campGuide.test.ts holds it there.
   description: ({ river, n, count }) =>
-    `Every named camp on the ${river}, Corn Creek to Long Tom Bar: river mile, side, how many people it holds at low and at high water, which ${count((c) => c.r)} are reservable, and what each is like. Filter by group size and water level.`,
+    `All ${n} ${river} camps, Corn Creek to Long Tom Bar: river mile, size at low and high water, the ${count((c) => c.r)} reservable camps, and an aerial of each.`,
+  // Share image: the river page's public-domain hero (Forest Service, Corn Creek), cropped to 1200x630.
+  ogImage: { src: "img/camps/main-salmon/og-camps-1200x630.jpg", alt: "Rafts lined up on a gravel bar at Corn Creek, canyon walls behind" },
 
   facts: ({ n, count, cap, lastLevel }) => {
     const large = count((c) => c.r === "L");

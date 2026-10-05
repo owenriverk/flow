@@ -15,8 +15,11 @@ export default {
   span: "Boundary Creek to the confluence",
   wilderness: "Frank Church&ndash;River of No Return Wilderness",
 
+  // Search results show about 155 characters; test/campGuide.test.ts holds it there.
   description: ({ river, n }) =>
-    `Every camp on the Forest Service's ${river} list, Boundary Creek to the confluence: river mile, side, how many people it holds at 2.5 ft, about 4 ft and 6 ft on the Middle Fork Lodge gauge, which allow layovers, the hot-springs and heritage camps, and what each is like. ${n} camps; filter by group size and level.`,
+    `All ${n} ${river} camps by river mile: how many people each holds at 2.5, 4 and 6 ft, layovers, hot springs, heritage sites, and an aerial of each.`,
+  // Share image: the river page's public-domain hero (Forest Service, Charity Parks), cropped to 1200x630.
+  ogImage: { src: "img/camps/mf-salmon/og-camps-1200x630.jpg", alt: "The Middle Fork of the Salmon below Indian Creek, ponderosa pines on the bank" },
 
   facts: ({ n, count, cap, lastLevel }) => [
     ["Camps", `${n} on the list, ${count((c) => c.lay)} allow layovers`],
