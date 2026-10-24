@@ -18,7 +18,7 @@ describe('deterministic — must resolve without AI', () => {
   test.each([
     // ── Exact alias ────────────────────────────────────────────────
     ['mf salmon',                     'Salmon / Middle Fork'],
-    ['grand canyon',                  'Colorado / Grand Canyon'],
+    ['grand canyon',                  'Colorado / Grand Canyon — Phantom'],
     ['stikine',                       'Stikine / Grand Canyon'],
     ['desolation',                    'Green / Desolation'],
     ['deso grey',                     'Green / Desolation'],
@@ -38,7 +38,7 @@ describe('deterministic — must resolve without AI', () => {
     ['san juan river',                'San Juan'],
     ['salt river levels',             'Salt'],
     // location context appended
-    ['grand canyon colorado',         'Colorado / Grand Canyon'],
+    ['grand canyon colorado',         'Colorado / Grand Canyon — Phantom'],
     ['lees ferry az',                 'Colorado / Grand Canyon'],
     ['mf salmon at the lodge',        'Salmon / Middle Fork'],
     ['main salmon white bird',        'Salmon / Main'],
@@ -49,7 +49,7 @@ describe('deterministic — must resolve without AI', () => {
     ['fantasy falls ca',              'Mokelumne / North Fork — Fantasy Falls'],
     // Caps + whitespace normalisation
     ['MF SALMON',                     'Salmon / Middle Fork'],
-    ['GRAND CANYON',                  'Colorado / Grand Canyon'],
+    ['GRAND CANYON',                  'Colorado / Grand Canyon — Phantom'],
     ['  stikine  ',                   'Stikine / Grand Canyon'],
     ['mf  salmon',                    'Salmon / Middle Fork'],
 
@@ -121,7 +121,7 @@ describe('ambiguous queries — must refuse to guess, never return the wrong gau
   });
 
   test('sanity: "grand canyon" alone is unaffected and still resolves to Colorado', () => {
-    expect(resolve('grand canyon')).toBe('Colorado / Grand Canyon');
+    expect(resolve('grand canyon')).toBe('Colorado / Grand Canyon — Phantom');
   });
 
   test('sanity: a nested match ("grand canyon" inside a longer known alias) still resolves', () => {

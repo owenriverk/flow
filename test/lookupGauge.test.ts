@@ -159,7 +159,6 @@ describe('two rivers in one message are refused, never half-answered', () => {
   // unmatchable, so it answered confidently about Clore alone. Punctuation is
   // now a separator, and a conjunction forces a refusal rather than a guess.
   test.each([
-    'grand canyon and phantom',
     'mf salmon and selway',
     'stikine, clore',
     'kings, fantasy falls',
@@ -207,8 +206,17 @@ describe('official USGS station names resolve', () => {
   test('grand canyon at grand canyon is the Phantom station', () => {
     expect(lookupGauge('grand canyon at grand canyon', real)?.site).toBe('09402500');
   });
-  test('bare grand canyon stays Lees Ferry', () => {
-    expect(lookupGauge('grand canyon', real)?.site).toBe('09380000');
+  // Bare "grand canyon" defaults to Phantom: nearly every Grand Canyon query in
+  // the log comes from a party already on the water, where Lees Ferry is the
+  // dam's release a day or more ahead of them. Lees Ferry stays one word away.
+  test('bare grand canyon defaults to Phantom', () => {
+    expect(lookupGauge('grand canyon', real)?.site).toBe('09402500');
+    expect(lookupGauge('gc', real)?.site).toBe('09402500');
+    expect(lookupGauge('the ditch', real)?.site).toBe('09402500');
+  });
+  test('lees ferry still reads the dam release', () => {
+    expect(lookupGauge('lees ferry', real)?.site).toBe('09380000');
+    expect(lookupGauge('grand canyon, lees ferry', real)?.site).toBe('09380000');
   });
 
   // Ambiguity we must keep refusing: there is no "Salmon at Riggins" gauge --
@@ -249,6 +257,10 @@ describe('punctuation + comma-qualifier hardening (from the 2026-08-30 exhaustiv
     // Unanimity: every top-level phrase here names the Phantom/Diamond gauge.
     ['grand canyon, phantom ranch', '09402500'],
     ['grand canyon, diamond creek', '09404200'],
+    // Bare "grand canyon" is Phantom, so pairing it with Phantom is one gauge.
+    ['grand canyon and phantom', '09402500'],
+    ['phantom ranch, grand canyon', '09402500'],
+    ['the ditch, phantom', '09402500'],
   ])('%s resolves (one gauge, however phrased)', (q, site) => {
     expect(lookupGauge(q, real)?.site).toBe(site);
   });
@@ -258,9 +270,7 @@ describe('punctuation + comma-qualifier hardening (from the 2026-08-30 exhaustiv
   test.each([
     'kings, the middle fork',
     'kings and the middle fork',
-    'phantom ranch, grand canyon',
     'diamond creek, grand canyon',
-    'the ditch, phantom',
   ])('refuses %s', (q) => {
     expect(lookupGauge(q, real)).toBeNull();
   });

@@ -44,8 +44,8 @@ answer on a satellite link is worse than none.
 
 | Text this | Run / AKA | Gauge | Source | Location |
 |---|---|---|---|---|
-| `grand canyon` / `lees ferry` | Colorado / Grand Canyon (AKA: `gc`, `the ditch`) | 09380000 | USGS | At Lees Ferry, AZ |
-| `phantom` / `phantom ranch` | Colorado / Grand Canyon — Phantom — mid-canyon reading (AKA: `grand canyon phantom`; same trip as `grand canyon`, see caveats) | 09402500 | USGS | Near Phantom Ranch, AZ |
+| `lees ferry` | Colorado / Grand Canyon — dam release at the launch (AKA: `grand canyon lees ferry`) | 09380000 | USGS | At Lees Ferry, AZ |
+| `grand canyon` / `phantom` / `phantom ranch` | Colorado / Grand Canyon — Phantom — mid-canyon reading; the default for a bare `grand canyon` (AKA: `gc`, `the ditch`, `grand canyon phantom`; see caveats) | 09402500 | USGS | Near Phantom Ranch, AZ |
 | `diamond` / `diamond creek` | Colorado / Grand Canyon — Diamond — takeout gauge, river mile 226 (AKA: `grand canyon diamond`) | 09404200 | USGS | Above Diamond Creek, AZ |
 | `cataract` | Colorado / Cataract Canyon (AKA: `cat`) | 09328960 | USGS | Near Hite, UT |
 | `yampa` | Yampa | 09260050 | USGS | At Deerlodge Park, CO |
@@ -154,13 +154,13 @@ gauge (`494`).
   (site `69`, above Lake Clementine) rather than a distinct Chamberlain
   Falls/Giant Gap station. If you're running the lower reach, treat the
   number as approximate.
-- **Grand Canyon "Phantom" gauge** → `phantom` / `phantom ranch` is the same
-  trip as `grand canyon` / `lees ferry` (Lee's Ferry to Lake Mead), not a
-  separate run — it's a second real-time reading ~87 river miles downstream
-  at Phantom Ranch (USGS `09402500`). Useful because Lees Ferry reflects
-  what Glen Canyon Dam is releasing *now*, which can be a day or more ahead
-  of what's actually passing a party already mid-canyon; checking `phantom`
-  instead gives the locally-current number once you're down there.
+- **Grand Canyon defaults to Phantom** → a bare `grand canyon` (and `gc`,
+  `the ditch`) reads Phantom Ranch (USGS `09402500`), ~87 river miles below
+  the launch, not Lees Ferry. Lees Ferry reflects what Glen Canyon Dam is
+  releasing *now*, which can be a day or more ahead of what's passing a party
+  already mid-canyon, and nearly every Grand Canyon query in the log comes
+  from a party on the water (changed 2026-10-23). Text `lees ferry` for the
+  dam release itself.
 - **Landsborough** → `landsborough` / `roaring billy` / `haast` all read the
   same flowrate.co.nz station (site `61`), which flowrate itself labels
   "Haast River — Roaring Billy." The gauge sits on the Haast mainstem a few
