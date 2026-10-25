@@ -88,6 +88,18 @@
       "verifiedOn": "2026-09-30",
       "source": "wsc",
       "notes": "Homathko at the mouth (Bute Inlet) — the reference gauge for the Tatlayoko Lake-to-Bute Inlet class V multiday. OWNER SIGN-OFF PENDING: Owen asked for the river; the station and band were chosen from published beta, not from his firsthand check — switch verifiedBy to owen once he confirms. Receipt: bcwhitewater.org/reaches/45-homathko-river links this exact station ('Look at this gauge found at the mouth of the river for an accurate flow report') and reads its own level off it. Band 150-350 from the same page: 'The consensus is that flows of 150-350 cms are optimal, although trips have been run lower. Flows above 400 cms were consistently described as huge portage-fests before the landslide.' Its level table calls 350-400 High and 400+ Above Recommended, so HIGH above 350 agrees with it. Glacier-fed fall run: one hot day or warm rain spikes it. NOT 08GD008 (inlet to Tatlayoko Lake, 495 km2), the only other active Homathko station — it sits above the put-in. Live-verified 154 cms at add time."
+    },
+    "usgs:09163500": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-10-24",
+      "source": "usgs",
+      "notes": "Colorado nr CO-UT State Line — the gauge for both Ruby–Horsethief and Westwater (two roster rows, one gauge, like the Salmon pair on White Bird). Westwater sits above the Dolores confluence, so NOT 09180500 (Colorado nr Cisco), which the pre-compaction entry used: on 2026-10-24 Cisco read 11,700 cfs vs 5,930 here with a storm-swollen Dolores adding the difference. Live-verified 5,930 cfs at add time."
+    },
+    "usgs:09169500": {
+      "verifiedBy": "owen",
+      "verifiedOn": "2026-10-24",
+      "source": "usgs",
+      "notes": "Dolores at Bedrock — take-out of the Slick Rock–Bedrock trip, reports year-round. Chosen over 09168730 (nr Slick Rock), which is seasonal (USGS 'Ssn', -999999 off-season) and would read stale on the status page every winter. Live-verified 526 cfs at add time."
     }
   },
   "rituals": [

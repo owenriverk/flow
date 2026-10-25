@@ -554,6 +554,71 @@
     "name": "Colorado / Grand Canyon — Diamond",
     "location": "Above Diamond Creek, AZ"
   },
+  "ruby horsethief": {
+    "site": "09163500",
+    "name": "Colorado / Ruby–Horsethief",
+    "location": "Near CO-UT State Line"
+  },
+  "ruby-horsethief": {
+    "site": "09163500",
+    "name": "Colorado / Ruby–Horsethief",
+    "location": "Near CO-UT State Line"
+  },
+  "ruby horse thief": {
+    "site": "09163500",
+    "name": "Colorado / Ruby–Horsethief",
+    "location": "Near CO-UT State Line"
+  },
+  "ruby": {
+    "site": "09163500",
+    "name": "Colorado / Ruby–Horsethief",
+    "location": "Near CO-UT State Line"
+  },
+  "horsethief": {
+    "site": "09163500",
+    "name": "Colorado / Ruby–Horsethief",
+    "location": "Near CO-UT State Line"
+  },
+  "ruby horsethief canyon": {
+    "site": "09163500",
+    "name": "Colorado / Ruby–Horsethief",
+    "location": "Near CO-UT State Line"
+  },
+  "westwater": {
+    "site": "09163500",
+    "name": "Colorado / Westwater",
+    "location": "Near CO-UT State Line"
+  },
+  "westwater canyon": {
+    "site": "09163500",
+    "name": "Colorado / Westwater",
+    "location": "Near CO-UT State Line"
+  },
+  "dolores": {
+    "site": "09169500",
+    "name": "Dolores",
+    "location": "At Bedrock, CO"
+  },
+  "dolores river": {
+    "site": "09169500",
+    "name": "Dolores",
+    "location": "At Bedrock, CO"
+  },
+  "dolores at bedrock": {
+    "site": "09169500",
+    "name": "Dolores",
+    "location": "At Bedrock, CO"
+  },
+  "dolores bedrock": {
+    "site": "09169500",
+    "name": "Dolores",
+    "location": "At Bedrock, CO"
+  },
+  "the dolores": {
+    "site": "09169500",
+    "name": "Dolores",
+    "location": "At Bedrock, CO"
+  },
   "salt": {
     "site": "09497500",
     "name": "Salt",

@@ -48,6 +48,9 @@ answer on a satellite link is worse than none.
 | `grand canyon` / `phantom` / `phantom ranch` | Colorado / Grand Canyon — Phantom — mid-canyon reading; the default for a bare `grand canyon` (AKA: `gc`, `the ditch`, `grand canyon phantom`; see caveats) | 09402500 | USGS | Near Phantom Ranch, AZ |
 | `diamond` / `diamond creek` | Colorado / Grand Canyon — Diamond — takeout gauge, river mile 226 (AKA: `grand canyon diamond`) | 09404200 | USGS | Above Diamond Creek, AZ |
 | `cataract` | Colorado / Cataract Canyon (AKA: `cat`) | 09328960 | USGS | Near Hite, UT |
+| `ruby horsethief` / `ruby` / `horsethief` | Colorado / Ruby–Horsethief (AKA: `ruby-horsethief`, `ruby horse thief`; shares the State Line gauge with `westwater`) | 09163500 | USGS | Near CO-UT State Line |
+| `westwater` | Colorado / Westwater (AKA: `westwater canyon`; shares the State Line gauge with `ruby horsethief`) | 09163500 | USGS | Near CO-UT State Line |
+| `dolores` | Dolores — Slick Rock to Bedrock (AKA: `dolores river`, `dolores at bedrock`) | 09169500 | USGS | At Bedrock, CO |
 | `yampa` | Yampa | 09260050 | USGS | At Deerlodge Park, CO |
 | `gates of lodore` / `lodore` | Green / Gates of Lodore (AKA: `gates`) | 09234500 | USGS | Near Greendale, UT |
 | `desolation` / `deso` | Green / Desolation — Deso/Gray Canyon (AKA: `deso grey`) | 09315000 | USGS | At Green River, UT |
@@ -107,9 +110,6 @@ client-side; the site ID shown is what the phrase used to point to.
 | Magpie (QC) | Predates this compaction — reports to Quebec CEHQ, needs a fourth source adapter. |
 | Cache la Poudre | Was USGS `06752260`. |
 | Big South (Poudre) | Predates this compaction — no live gauge distinct from the main Poudre. |
-| Westwater Canyon | Was USGS `09180500`, shared with the old Cataract entry — Cataract now reads its own dedicated gauge (`09328960`) instead. |
-| Ruby / Ruby–Horsethief | Was USGS `09163500`. |
-| Dolores | Was USGS `09169500`. |
 | Rio Chama | Was USGS `08285500`. |
 | Rio Grande — Taos Box | Was USGS `08276500`. |
 | Black Canyon / Gunnison Gorge | Was USGS `09128000` — already flagged as a proxy (the inner Black Canyon is unrunnable/ungauged) even before it was removed. |

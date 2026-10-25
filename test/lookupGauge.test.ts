@@ -275,3 +275,25 @@ describe('punctuation + comma-qualifier hardening (from the 2026-08-30 exhaustiv
     expect(lookupGauge(q, real)).toBeNull();
   });
 });
+
+describe('Colorado Plateau re-adds (2026-10-24)', () => {
+  // Ruby–Horsethief and Westwater are two trips on one gauge (State Line), the
+  // way Main and Lower Salmon share White Bird. Westwater must never drift back
+  // to Cisco (09180500): Cisco is below the Dolores confluence.
+  test.each([
+    ['ruby', '09163500'],
+    ['ruby-horsethief', '09163500'],
+    ['horsethief', '09163500'],
+    ['westwater', '09163500'],
+    ['westwater canyon', '09163500'],
+    ['dolores', '09169500'],
+    ['dolores river at bedrock', '09169500'],
+  ])('%s resolves', (q, site) => {
+    expect(lookupGauge(q, real)?.site).toBe(site);
+  });
+
+  test('each trip names itself in the reply', () => {
+    expect(lookupGauge('westwater', real)?.name).toBe('Colorado / Westwater');
+    expect(lookupGauge('ruby', real)?.name).toBe('Colorado / Ruby–Horsethief');
+  });
+});
