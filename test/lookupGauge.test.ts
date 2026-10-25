@@ -293,7 +293,11 @@ describe('Colorado Plateau re-adds (2026-10-24)', () => {
   });
 
   test('each trip names itself in the reply', () => {
-    expect(lookupGauge('westwater', real)?.name).toBe('Colorado / Westwater');
-    expect(lookupGauge('ruby', real)?.name).toBe('Colorado / Ruby–Horsethief');
+    const name = (q: string) => {
+      const r = lookupGauge(q, real);
+      return r && 'name' in r ? r.name : null;
+    };
+    expect(name('westwater')).toBe('Colorado / Westwater');
+    expect(name('ruby')).toBe('Colorado / Ruby–Horsethief');
   });
 });
