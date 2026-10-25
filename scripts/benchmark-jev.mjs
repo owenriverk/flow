@@ -28,6 +28,7 @@ const LLAMA = '@cf/meta/llama-3.2-3b-instruct';
 
 const aliases = JSON.parse(readFileSync(join(ROOT, 'src/aliases.json'), 'utf8'));
 const { lookupGauge } = await import(join(ROOT, 'src/lookupGauge.ts')).catch(() => ({ lookupGauge: null }));
+const { AI_SYSTEM_PROMPT, parseAiReply, plausibleMatch } = await import(join(ROOT, 'src/aiResolve.ts'));
 
 // ── auth ─────────────────────────────────────────────────────────────────────
 const tomlPath = join(process.env.HOME, 'Library/Preferences/.wrangler/config/default.toml');
@@ -97,18 +98,27 @@ const CASES = [
   // deliberately do not carry must not be mapped to a neighbor.
   { q: 'lochsa', expect: 'NONE', src: 'off-roster' },
   { q: 'kern river', expect: 'NONE', src: 'off-roster (pulled)' },
-  { q: 'westwater', expect: 'NONE', src: 'off-roster (pulled)' },
+  { q: 'westwater cnyn', expect: ['Colorado / Westwater'], src: 'typo (re-added 2026-10-24)' },
   { q: 'pizza delivery to my house', expect: 'NONE', src: 'unrelated' },
   { q: 'we are a professional web design company based in india', expect: 'NONE', src: 'spam (real)' },
   // tiebreak round — harder slang, typos, and off-roster traps
   { q: 'tuolomne', expect: ['Tuolumne / Main', 'Tuolumne / Grand Canyon'], src: 'typo' },
   { q: 'cherry bomb gorge', expect: ['Cherry Creek / Upper'], src: 'slang (rapid name)' },
   { q: 'the box montana', expect: ['Clarks Fork / the Box'], src: 'slang+state' },
-  { q: 'is the ditch running yet?', expect: ['Colorado / Grand Canyon'], src: 'slang in sentence' },
+  { q: 'is the ditch running yet?', expect: ['Colorado / Grand Canyon — Phantom', 'Colorado / Grand Canyon'], src: 'slang in sentence' },
   { q: 'nf payete', expect: ['Payette / North Fork'], src: 'typo' },
   { q: 'gore canyon', expect: 'NONE', src: 'off-roster (CO classic)' },
   { q: 'illinois river oregon', expect: 'NONE', src: 'off-roster (OR classic)' },
   { q: 'futaleufu', expect: 'NONE', src: 'off-roster (Chile)' },
+  // station codes and off-roster Colorado rivers. RIODELCO (CDWR code for the
+  // Rio Grande near Del Norte) is a real 2026-10-24 SMS that the AI answered
+  // with Ruby-Horsethief: "CO" read as Colorado, the nearest Colorado run won.
+  { q: 'RIODELCO', expect: 'NONE', src: 'station code (real, 2026-10-24)' },
+  { q: 'ARKCANCO', expect: 'NONE', src: 'station code (CDWR-style)' },
+  { q: 'ANIDURCO', expect: 'NONE', src: 'station code (CDWR-style)' },
+  { q: 'rio grande del norte', expect: 'NONE', src: 'off-roster (CO)' },
+  { q: 'animas', expect: 'NONE', src: 'off-roster (CO)' },
+  { q: 'arkansas browns canyon', expect: 'NONE', src: 'off-roster (CO)' },
 ];
 
 // ── arms ─────────────────────────────────────────────────────────────────────
@@ -123,7 +133,7 @@ async function cf(path, body) {
   return { json, ms: Math.round(performance.now() - t0) };
 }
 
-// Verbatim replica of src/aiResolve.ts — prompt, params, and validation —
+// Replica of src/aiResolve.ts (prompt, reply parsing and plausibility gate are imported, not copied) —
 // parameterized over the model so any @cf chat model can audition for the
 // fallback slot. The only liberty taken: reasoning models wrap output in
 // <think> tags, which aiResolve would strip too if we adopted one.
@@ -131,13 +141,7 @@ const chatArm = (model) => (text) => llamaArm(text, model);
 async function llamaArm(text, model = LLAMA) {
   const keys = Object.keys(aliases);
   const menu = keys.map((k) => `${k} — ${aliases[k].name}, ${aliases[k].location}`).join('\n');
-  const system =
-    "You match a whitewater paddler's message to one river run from a fixed list. " +
-    'Common abbreviations: MF/mid fork = middle fork, NF = north fork, SF = south fork. ' +
-    'Typos are common — match the closest run even with misspelling. ' +
-    'Be aggressive: prefer a best-guess match over NONE. ' +
-    'Reply NONE only if the message is completely unrelated to any listed river. ' +
-    'Reply with ONLY the exact run key (text before the dash), or NONE. No explanation.';
+  const system = AI_SYSTEM_PROMPT;
   const user = `Runs:\n${menu}\n\nMessage: "${text}"\nRun key:`;
   const { json, ms } = await cf(`/ai/run/${model}`, {
     messages: [
@@ -152,11 +156,8 @@ async function llamaArm(text, model = LLAMA) {
     return { pred: null, ms, raw: JSON.stringify(json?.errors ?? json?.result ?? json).slice(0, 120), err: !json?.success };
   }
   raw = raw.replace(/<think>[\s\S]*?(<\/think>|$)/, '');
-  const norm = raw.replace(/["'`]/g, '').trim().toLowerCase().replace(/\s+/g, ' ');
-  if (keys.includes(norm)) return { pred: norm, ms, raw };
-  const beforeDash = norm.split(/\s[—-]\s/)[0].trim();
-  if (keys.includes(beforeDash)) return { pred: beforeDash, ms, raw };
-  return { pred: null, ms, raw };
+  const key = parseAiReply(raw, keys);
+  return { pred: key && plausibleMatch(text, key, aliases) ? key : null, ms, raw };
 }
 
 async function jevArm(text) {
